@@ -1,0 +1,336 @@
+﻿.process-page {
+    padding-top: 80px;
+}
+
+/* Hero */
+.process-hero {
+    position: relative;
+    padding: var(--spacing-20) 0;
+    text-align: center;
+}
+
+.process-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-dark);
+}
+
+.process-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.process-hero h1 {
+    font-size: var(--font-size-5xl);
+    color: var(--white);
+    margin-bottom: var(--spacing-4);
+}
+
+.process-hero p {
+    font-size: var(--font-size-xl);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Steps Timeline */
+.steps-timeline {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.step-item {
+    display: flex;
+    gap: var(--spacing-6);
+    padding-bottom: var(--spacing-8);
+}
+
+.step-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.step-number {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    color: var(--white);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.step-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--white);
+    border: 3px solid var(--primary);
+    color: var(--primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.step-line {
+    position: absolute;
+    top: 60px;
+    width: 3px;
+    height: calc(100% - 20px);
+    background: linear-gradient(to bottom, var(--primary) 50%, transparent 50%);
+    background-size: 3px 10px;
+}
+
+.step-content {
+    flex: 1;
+    padding-top: var(--spacing-2);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-3);
+}
+
+.step-header h3 {
+    margin: 0;
+}
+
+.step-duration {
+    padding: var(--spacing-1) var(--spacing-3);
+    background: rgba(27, 58, 92, 0.1);
+    color: var(--primary);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    border-radius: var(--radius-full);
+}
+
+.step-content>p {
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-4);
+    line-height: 1.7;
+}
+
+.step-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.step-details li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.step-details svg {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* Payment */
+.payment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-6);
+}
+
+.payment-card {
+    padding: var(--spacing-6);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    text-align: center;
+}
+
+.payment-card svg {
+    color: var(--primary);
+    margin-bottom: var(--spacing-4);
+}
+
+.payment-card h4 {
+    color: var(--white);
+    margin-bottom: var(--spacing-2);
+}
+
+.payment-card p {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Documents */
+.documents-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-8);
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-6);
+}
+
+.document-item svg {
+    color: var(--primary);
+}
+
+.documents-cta {
+    text-align: center;
+}
+
+/* FAQ */
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.faq-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    width: 100%;
+    padding: var(--spacing-5);
+    color: var(--white);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    text-align: right;
+}
+
+.faq-question svg:first-child {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.faq-question span {
+    flex: 1;
+}
+
+.faq-arrow {
+    transition: transform var(--transition);
+}
+
+.faq-open .faq-arrow {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow);
+}
+
+.faq-open .faq-answer {
+    max-height: 200px;
+}
+
+.faq-answer p {
+    padding: 0 var(--spacing-5) var(--spacing-5);
+    padding-right: 52px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+}
+
+/* CTA */
+.process-cta {
+    background: var(--light);
+}
+
+.process-cta .cta-box {
+    text-align: center;
+    padding: var(--spacing-16);
+    background: var(--white);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+}
+
+.process-cta h2 {
+    margin-bottom: var(--spacing-4);
+}
+
+.process-cta p {
+    font-size: var(--font-size-lg);
+    color: var(--gray-500);
+    margin-bottom: var(--spacing-8);
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .payment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .process-hero h1 {
+        font-size: var(--font-size-3xl);
+    }
+
+    .step-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .step-marker {
+        flex-direction: row;
+    }
+
+    .step-line {
+        display: none;
+    }
+
+    .step-header {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+
+    .step-details {
+        align-items: center;
+    }
+
+    .payment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .documents-list {
+        flex-direction: column;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+}

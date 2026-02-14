@@ -1,0 +1,432 @@
+﻿.car-details-page {
+    padding-top: 80px;
+}
+
+/* Hero */
+.car-details-hero {
+    position: relative;
+    padding: var(--spacing-20) 0;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.car-details-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.car-details-hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.car-details-hero-bg .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%);
+}
+
+.car-details-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--spacing-4);
+    transition: color var(--transition);
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.car-brand-badge {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-3);
+    background: var(--gradient-primary);
+    color: var(--white);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-4);
+}
+
+.car-details-hero h1 {
+    font-size: var(--font-size-5xl);
+    color: var(--white);
+    margin-bottom: var(--spacing-4);
+}
+
+.car-details-hero p {
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--spacing-6);
+}
+
+.price-box {
+    display: inline-flex;
+    flex-direction: column;
+    padding: var(--spacing-4) var(--spacing-6);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+}
+
+.price-box span {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.price-box strong {
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    color: var(--primary);
+}
+
+/* Specs */
+.specs-section h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-4);
+}
+
+.spec-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5);
+}
+
+.spec-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(27, 58, 92, 0.1);
+    color: var(--primary);
+    border-radius: var(--radius-lg);
+}
+
+.spec-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.spec-label {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+}
+
+.spec-value {
+    font-size: var(--font-size-lg);
+}
+
+/* Features */
+.features-section h2 {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: var(--spacing-8);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-4);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    color: var(--white);
+}
+
+.feature-item svg {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* Colors */
+.colors-section h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+}
+
+.colors-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+}
+
+.color-item {
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--gray-100);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+}
+
+/* Contact CTA */
+.contact-cta {
+    background: var(--light);
+}
+
+.contact-cta .cta-card {
+    text-align: center;
+    padding: var(--spacing-12);
+}
+
+.contact-cta h2 {
+    margin-bottom: var(--spacing-3);
+}
+
+.contact-cta p {
+    color: var(--gray-500);
+    margin-bottom: var(--spacing-6);
+}
+
+.cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+}
+
+/* Similar Cars */
+.similar-section h2 {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: var(--spacing-8);
+}
+
+.similar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+}
+
+.similar-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition);
+}
+
+.similar-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.similar-image {
+    height: 180px;
+    overflow: hidden;
+}
+
+.similar-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.similar-info {
+    padding: var(--spacing-4);
+}
+
+.similar-brand {
+    font-size: var(--font-size-xs);
+    color: var(--primary);
+    text-transform: uppercase;
+}
+
+.similar-info h4 {
+    color: var(--white);
+    margin-bottom: var(--spacing-2);
+}
+
+.similar-info strong {
+    color: var(--primary);
+}
+
+/* Image Gallery Carousel */
+.gallery-section {
+    background: var(--light);
+}
+
+.gallery-section h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+}
+
+.gallery-carousel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.carousel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-full);
+    color: var(--dark);
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-nav:hover {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.carousel-main {
+    flex: 1;
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--dark);
+}
+
+.carousel-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-counter {
+    position: absolute;
+    bottom: var(--spacing-4);
+    right: var(--spacing-4);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--white);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.gallery-thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-3);
+    margin-top: var(--spacing-6);
+    flex-wrap: wrap;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 60px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all var(--transition);
+    opacity: 0.6;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail:hover {
+    opacity: 1;
+    border-color: var(--gray-300);
+}
+
+.thumbnail-active {
+    opacity: 1;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(27, 58, 92, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .similar-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .car-details-hero h1 {
+        font-size: var(--font-size-3xl);
+    }
+
+    .specs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .similar-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-actions {
+        flex-direction: column;
+    }
+
+    /* Carousel responsive */
+    .carousel-image {
+        height: 280px;
+    }
+
+    .carousel-nav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .thumbnail {
+        width: 60px;
+        height: 45px;
+    }
+
+    .gallery-carousel {
+        gap: var(--spacing-2);
+    }
+}
