@@ -25,7 +25,7 @@ import './Home.css'
 // EmailJS configuration - Gmail
 const EMAILJS_SERVICE_ID = 'service_u8c498u'
 const EMAILJS_TEMPLATE_ID = 'template_iftksee'
-const EMAILJS_PUBLIC_KEY = 'v00jNbJkzIBI1HQyE'
+const EMAILJS_PUBLIC_KEY = 'jXCdC22u9FmNvH_Yz'
 
 export default function Home() {
     const { isRTL, language } = useLanguage()
@@ -330,8 +330,8 @@ export default function Home() {
                     },
                     EMAILJS_PUBLIC_KEY
                 )
-            } catch (emailError) {
-                console.error('Email notification failed:', emailError)
+            } catch (emailError: any) {
+                console.error('Email notification failed:', emailError?.text || emailError?.message || JSON.stringify(emailError))
             }
 
             setReferenceNumber(refNumber)

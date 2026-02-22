@@ -8,7 +8,7 @@ import './Contact.css'
 // EmailJS configuration - Gmail
 const EMAILJS_SERVICE_ID = 'service_u8c498u'
 const EMAILJS_TEMPLATE_ID = 'template_535lqd7'
-const EMAILJS_PUBLIC_KEY = 'v00jNbJkzIBI1HQyE'
+const EMAILJS_PUBLIC_KEY = 'jXCdC22u9FmNvH_Yz'
 
 export default function Contact() {
     const { language, isRTL } = useLanguage()
