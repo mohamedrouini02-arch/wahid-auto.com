@@ -1,4 +1,4 @@
-﻿import { Award, CheckCircle, Globe, Heart, Shield, Target, Users, Zap } from 'lucide-react'
+import { Award, CheckCircle, Globe, Heart, Shield, Target, Users, Zap } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import './About.css'
 
@@ -9,10 +9,10 @@ export default function About() {
         ar: {
             heroTag: 'من نحن',
             heroTitle: 'وحيد أوتو',
-            heroSubtitle: 'شريكك الموثوق لاستيراد السيارات الكورية والصينية',
+            heroSubtitle: 'شريكك الموثوق لاستيراد السيارات الجديدة والمستعملة من الصين وكوريا',
             storyTitle: 'قصتنا',
-            storyP1: 'وحيد أوتو هي شركة جزائرية متخصصة في استيراد السيارات المستعملة من كوريا الجنوبية والصين. نعمل بشغف لتوفير أفضل السيارات بأسعار منافسة مع ضمان الجودة.',
-            storyP2: 'بفضل خبرتنا الواسعة وشبكة علاقاتنا القوية في كوريا، نضمن لعملائنا الحصول على سيارات بحالة ممتازة وبأسعار أقل بكثير من السوق المحلية.',
+            storyP1: 'وحيد أوتو هي شركة جزائرية متخصصة في استيراد السيارات الجديدة والمستعملة من الصين وكوريا الجنوبية. نعمل بشغف لتوفير أفضل السيارات بأسعار منافسة مع ضمان الجودة.',
+            storyP2: 'بفضل خبرتنا الواسعة وشبكة علاقاتنا القوية في الصين وكوريا، نضمن لعملائنا الحصول على سيارات بحالة ممتازة وبأسعار أقل بكثير من السوق المحلية.',
             storyP3: 'نحن نرافق عملاءنا في كل خطوة من عملية الاستيراد، من اختيار السيارة وحتى تسليمها أمام باب المنزل.',
             storyBadge: 'سنوات خبرة',
             missionTitle: 'مهمتنا',
@@ -35,9 +35,9 @@ export default function About() {
             whyUsSubtitle: 'أسباب تجعلنا الخيار الأفضل لاستيراد سيارتك',
             reason1: 'خبرة واسعة - سنوات من الخبرة في مجال استيراد السيارات',
             reason2: 'أسعار تنافسية - وفر حتى 40% مقارنة بالوكلاء المحليين',
-            reason3: 'شحن آمن - شحن بحري مؤمن وسريع من كوريا للجزائر',
+            reason3: 'شحن آمن - شحن بحري مؤمن وسريع من الصين وكوريا للجزائر',
             reason4: 'دعم كامل - نرافقك من الاختيار حتى التسليم',
-            reason5: 'فريق متخصص في كوريا الجنوبية',
+            reason5: 'فريق متخصص في الصين وكوريا الجنوبية',
             reason6: 'تقرير فحص كامل لكل سيارة',
             reason7: 'تتبع الشحنة لحظة بلحظة',
             reason8: 'ضمان الجودة على جميع السيارات',
@@ -53,10 +53,10 @@ export default function About() {
         fr: {
             heroTag: 'À propos',
             heroTitle: 'Wahid Auto',
-            heroSubtitle: 'Votre partenaire de confiance pour l\'importation de voitures coréennes et chinoises',
+            heroSubtitle: 'Votre partenaire de confiance pour l\'importation de voitures neuves et d\'occasion de Chine et de Corée',
             storyTitle: 'Notre histoire',
-            storyP1: 'Wahid Auto est une entreprise algérienne spécialisée dans l\'importation de voitures d\'occasion de Corée du Sud et de Chine. Nous travaillons avec passion pour offrir les meilleures voitures à des prix compétitifs avec garantie de qualité.',
-            storyP2: 'Grâce à notre grande expérience et notre solide réseau de relations en Corée, nous garantissons à nos clients des voitures en excellent état à des prix bien inférieurs au marché local.',
+            storyP1: 'Wahid Auto est une entreprise algérienne spécialisée dans l\'importation de voitures neuves et d\'occasion de Chine et de Corée du Sud. Nous travaillons avec passion pour offrir les meilleures voitures à des prix compétitifs avec garantie de qualité.',
+            storyP2: 'Grâce à notre grande expérience et notre solide réseau de relations en Chine et en Corée, nous garantissons à nos clients des voitures en excellent état à des prix bien inférieurs au marché local.',
             storyP3: 'Nous accompagnons nos clients à chaque étape du processus d\'importation, du choix de la voiture jusqu\'à la livraison à domicile.',
             storyBadge: 'ans d\'expérience',
             missionTitle: 'Notre mission',
@@ -79,9 +79,9 @@ export default function About() {
             whyUsSubtitle: 'Les raisons qui font de nous le meilleur choix pour importer votre voiture',
             reason1: 'Grande expérience - Des années d\'expertise en importation',
             reason2: 'Prix compétitifs - Économisez jusqu\'à 40% vs les concessionnaires',
-            reason3: 'Expédition sécurisée - Transport maritime assuré de la Corée',
+            reason3: 'Expédition sécurisée - Transport maritime assuré de la Chine et la Corée',
             reason4: 'Support complet - Nous vous accompagnons du choix à la livraison',
-            reason5: 'Équipe spécialisée en Corée du Sud',
+            reason5: 'Équipe spécialisée en Chine et en Corée du Sud',
             reason6: 'Rapport d\'inspection complet pour chaque voiture',
             reason7: 'Suivi de l\'expédition en temps réel',
             reason8: 'Garantie de qualité sur toutes les voitures',

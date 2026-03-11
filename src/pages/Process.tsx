@@ -1,4 +1,4 @@
-﻿import {
+import {
     CheckCircle,
     ChevronDown,
     CreditCard,
@@ -36,7 +36,7 @@ export default function Process() {
             step2Detail2: 'يشمل سعر السيارة + الشحن + الجمارك',
             step2Detail3: 'بدون رسوم مخفية',
             step3Title: 'الشحن البحري',
-            step3Desc: 'شحن السيارة عبر البحر من كوريا (25-35 يوم) مع إمكانية تتبع الشحنة.',
+            step3Desc: 'شحن السيارة عبر البحر من الصين أو كوريا (25-35 يوم) مع إمكانية تتبع الشحنة.',
             step3Duration: '25-35 يوم',
             step3Detail1: 'شحن بحري مؤمن',
             step3Detail2: 'تتبع الشحنة لحظة بلحظة',
@@ -104,7 +104,7 @@ export default function Process() {
             step2Detail2: 'Inclut prix voiture + expédition + douane',
             step2Detail3: 'Sans frais cachés',
             step3Title: 'Transport maritime',
-            step3Desc: 'Expédition de la voiture par mer depuis la Corée (25-35 jours) avec suivi en temps réel.',
+            step3Desc: 'Expédition de la voiture par mer depuis la Chine ou la Corée (25-35 jours) avec suivi en temps réel.',
             step3Duration: '25-35 jours',
             step3Detail1: 'Transport maritime assuré',
             step3Detail2: 'Suivi en temps réel',

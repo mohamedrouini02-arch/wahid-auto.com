@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Filter, X, ChevronDown, ChevronUp } from 'lucide-react'
 import { cars, CarData, formatPrice, getYearDisplay } from '../data/cars'
@@ -84,7 +84,7 @@ export default function Cars() {
         ar: {
             title: 'السيارات',
             headline: 'اكتشف تشكيلتنا من السيارات',
-            subtitle: 'أفضل السيارات الكورية المستعملة بأسعار منافسة',
+            subtitle: 'أفضل السيارات الصينية والكورية الجديدة والمستعملة بأسعار منافسة',
             search: 'ابحث عن سيارة...',
             filters: 'الفلاتر',
             allBrands: 'كل العلامات',
@@ -105,7 +105,7 @@ export default function Cars() {
         fr: {
             title: 'Voitures',
             headline: 'Découvrez notre collection',
-            subtitle: 'Les meilleures voitures coréennes d\'occasion à prix compétitifs',
+            subtitle: 'Les meilleures voitures chinoises et coréennes neuves et d\'occasion à prix compétitifs',
             search: 'Rechercher une voiture...',
             filters: 'Filtres',
             allBrands: 'Toutes les marques',
