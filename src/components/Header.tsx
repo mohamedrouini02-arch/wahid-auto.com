@@ -1,52 +1,55 @@
-import { ChevronDown, Menu, Phone, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
+import { Logo } from './Logo'
 import './Header.css'
+
+const navLinks = [
+    { path: '/cars', labelKey: 'nav.cars' },
+    { path: '/process', labelKey: 'nav.process' },
+    { path: '/about', labelKey: 'nav.about' },
+    { path: '/tracking', labelKey: 'nav.tracking' },
+    { path: '/contact', labelKey: 'nav.contact' }
+]
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isScrolled, setIsScrolled] = useState(false)
     const location = useLocation()
-    const { language, setLanguage, t, isRTL } = useLanguage()
-
-    const navLinks = [
-        { path: '/', labelKey: 'nav.home' },
-        { path: '/cars', labelKey: 'nav.cars' },
-        { path: '/about', labelKey: 'nav.about' },
-        { path: '/process', labelKey: 'nav.process' },
-        { path: '/tracking', labelKey: 'nav.tracking' },
-        { path: '/contact', labelKey: 'nav.contact' }
-    ]
+    const { language, setLanguage, t } = useLanguage()
 
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 50)
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
+        const onScroll = () => setIsScrolled(window.scrollY > 8)
+        onScroll()
+        window.addEventListener('scroll', onScroll, { passive: true })
+        return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
     useEffect(() => { setIsMenuOpen(false) }, [location])
 
-    const handleLanguageSwitch = () => {
-        setLanguage(language === 'ar' ? 'fr' : 'ar')
-    }
+    useEffect(() => {
+        document.body.style.overflow = isMenuOpen ? 'hidden' : ''
+        return () => { document.body.style.overflow = '' }
+    }, [isMenuOpen])
 
-    const isHomePage = location.pathname === '/'
-    const showBackground = isScrolled || !isHomePage
+    const nextLanguage = language === 'ar' ? 'fr' : 'ar'
+    const orderLabel = language === 'ar' ? 'اطلب سيارتك' : 'Commander'
 
     return (
-        <header className={`header ${showBackground ? 'header-scrolled' : ''} ${!isRTL ? 'header-ltr' : ''}`}>
-            <div className="header-container">
-                <Link to="/" className="logo">
-                    <img src="/logo.png" alt="Wahid Auto" className="logo-image" />
+        <header className={`header ${isScrolled || isMenuOpen ? 'is-scrolled' : ''}`}>
+            <div className="header-bar container">
+                <Link to="/" className="header-logo" aria-label="Wahid Auto">
+                    <Logo size={34} />
                 </Link>
 
-                <nav className="nav-desktop">
+                <nav className="nav-desktop" aria-label={language === 'ar' ? 'القائمة' : 'Menu'}>
                     {navLinks.map(link => (
                         <Link
                             key={link.path}
                             to={link.path}
-                            className={`nav-link ${location.pathname === link.path ? 'nav-link-active' : ''}`}
+                            className={`nav-link ${location.pathname.startsWith(link.path) ? 'is-active' : ''}`}
                         >
                             {t(link.labelKey)}
                         </Link>
@@ -54,45 +57,38 @@ export default function Header() {
                 </nav>
 
                 <div className="header-actions">
-                    <div className="language-switcher">
-                        <button className="language-btn" onClick={handleLanguageSwitch}>
-                            {language === 'ar' ? 'FR' : 'عربي'}
-                            <ChevronDown size={16} />
-                        </button>
-                    </div>
-
-                    <a href="tel:+213557060478" className="header-cta btn btn-primary">
-                        <Phone size={18} />
-                        <span>{t('header.callUs')}</span>
-                    </a>
-
+                    <button
+                        className="lang-btn"
+                        onClick={() => setLanguage(nextLanguage)}
+                        aria-label={language === 'ar' ? 'Passer en français' : 'التبديل إلى العربية'}
+                    >
+                        {language === 'ar' ? 'FR' : 'ع'}
+                    </button>
+                    <Link to="/#order" className="btn btn-primary btn-sm header-cta">{orderLabel}</Link>
                     <button
                         className="menu-toggle"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        aria-label="Toggle menu"
+                        onClick={() => setIsMenuOpen(open => !open)}
+                        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                        aria-expanded={isMenuOpen}
                     >
-                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        {isMenuOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
                     </button>
                 </div>
             </div>
 
-            <div className={`nav-mobile ${isMenuOpen ? 'nav-mobile-open' : ''}`}>
-                <nav className="nav-mobile-links">
+            <div className={`nav-mobile ${isMenuOpen ? 'is-open' : ''}`} hidden={!isMenuOpen}>
+                <nav className="nav-mobile-links container">
+                    <Link to="/" className="nav-mobile-link">{t('nav.home')}</Link>
                     {navLinks.map(link => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`nav-mobile-link ${location.pathname === link.path ? 'nav-mobile-link-active' : ''}`}
-                        >
+                        <Link key={link.path} to={link.path} className="nav-mobile-link">
                             {t(link.labelKey)}
                         </Link>
                     ))}
                 </nav>
-                <div className="nav-mobile-footer">
-                    <a href="tel:+213557060478" className="btn btn-primary w-full">
-                        <Phone size={18} />
-                        {language === 'ar' ? 'اتصل بنا الآن' : 'Appelez maintenant'}
-                    </a>
+                <div className="nav-mobile-footer container">
+                    <Link to="/#order" className="btn btn-primary w-full">{orderLabel}</Link>
+                    <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-secondary w-full">WhatsApp</a>
+                    <a href={site.phoneHref} className="nav-mobile-phone num" dir="ltr">{site.phoneDisplay}</a>
                 </div>
             </div>
         </header>
