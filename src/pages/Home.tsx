@@ -2,11 +2,13 @@ import emailjs from '@emailjs/browser'
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import BudgetFinder from '../components/BudgetFinder'
 import { Monogram } from '../components/Logo'
+import RouteMap from '../components/RouteMap'
 import { featuredModelIds, site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
-import { getCarById, getPriceRangeDisplay, getYearDisplay, type CarData } from '../data/cars'
 import { budgetRanges, carBrands, carModelsByBrand, wilayas } from '../data/wilayas'
+import { useCountUp, useScrollReveal } from '../lib/motion'
 import { formatStockPrice, useWebsiteStock } from '../lib/stock'
 import { generateReferenceNumber, supabase } from '../lib/supabase'
 import './Home.css'
@@ -25,9 +27,9 @@ const copy = {
         heroOrder: 'اطلب سيارتك',
         heroCars: 'تصفح السيارات',
         facts: [
-            { value: '270+', label: 'سيارة سلمناها خلال آخر 12 شهراً' },
-            { value: '20+', label: 'ولاية فيها زبائن وحيد أوتو' },
-            { value: '2', label: 'مصدران: كوريا الجنوبية والصين' }
+            { value: 270, suffix: '+', label: 'سيارة سلمناها خلال آخر 12 شهراً' },
+            { value: 20, suffix: '+', label: 'ولاية فيها زبائن وحيد أوتو' },
+            { value: 2, suffix: '', label: 'مصدران: كوريا الجنوبية والصين' }
         ],
         stepsEyebrow: 'كيف نعمل',
         stepsTitle: 'أربع خطوات. لا مفاجآت.',
@@ -37,8 +39,9 @@ const copy = {
             { title: 'نشحن', text: 'نشحن السيارة ونرسل لك تحديثات حتى وصولها إلى الميناء.' },
             { title: 'تستلم', text: 'نتكفل بالجمركة والأوراق، وتستلم سيارتك جاهزة.' }
         ],
-        modelsEyebrow: 'الأكثر طلباً',
-        modelsTitle: 'السيارات التي يختارها زبائننا.',
+        modelsEyebrow: 'ابحث عن سيارتك',
+        modelsTitle: 'حرّك الميزانية، شاهد ما يناسبك.',
+        map: { korea: 'كوريا', china: 'الصين', algeria: 'الجزائر' },
         modelsLead: 'الأسعار تقريبية وتتغير مع سعر الصرف. نرسل لك السعر النهائي قبل أي دفع.',
         allCars: 'كل السيارات',
         stockEyebrow: 'متوفرة الآن',
@@ -92,9 +95,9 @@ const copy = {
         heroOrder: 'Commander',
         heroCars: 'Voir les voitures',
         facts: [
-            { value: '270+', label: 'voitures livrées ces 12 derniers mois' },
-            { value: '20+', label: 'wilayas où vivent nos clients' },
-            { value: '2', label: 'origines : Corée du Sud et Chine' }
+            { value: 270, suffix: '+', label: 'voitures livrées ces 12 derniers mois' },
+            { value: 20, suffix: '+', label: 'wilayas où vivent nos clients' },
+            { value: 2, suffix: '', label: 'origines : Corée du Sud et Chine' }
         ],
         stepsEyebrow: 'Comment ça marche',
         stepsTitle: 'Quatre étapes. Aucune surprise.',
@@ -104,8 +107,9 @@ const copy = {
             { title: 'Expédier', text: 'Nous expédions la voiture et vous tenons informé jusqu’au port.' },
             { title: 'Recevoir', text: 'Nous gérons le dédouanement et les papiers. Vous recevez une voiture prête.' }
         ],
-        modelsEyebrow: 'Les plus demandées',
-        modelsTitle: 'Les voitures que nos clients choisissent.',
+        modelsEyebrow: 'Trouver votre voiture',
+        modelsTitle: 'Bougez le budget, voyez ce qui vous va.',
+        map: { korea: 'Corée', china: 'Chine', algeria: 'Algérie' },
         modelsLead: 'Prix indicatifs, ils suivent le taux de change. Vous recevez le prix final avant tout paiement.',
         allCars: 'Toutes les voitures',
         stockEyebrow: 'Disponibles maintenant',
@@ -159,9 +163,17 @@ const emptyForm = {
     carBrand: '', carModel: '', budget: '', customBudget: '', notes: ''
 }
 
-const featuredCars = featuredModelIds
-    .map(id => getCarById(id))
-    .filter((car): car is CarData => Boolean(car))
+const brands = ['KIA', 'HYUNDAI', 'RENAULT', 'CHEVROLET', 'GEELY', 'MG', 'CHERY', 'BYD', 'LIVAN', 'GAC']
+
+const Fact = ({ value, suffix, label }: { value: number; suffix: string; label: string }) => {
+    const { ref, value: shown } = useCountUp(value)
+    return (
+        <div className="fact">
+            <dt className="fact-value latin num" ref={ref}>{shown}{suffix}</dt>
+            <dd className="fact-label">{label}</dd>
+        </div>
+    )
+}
 
 export default function Home() {
     const { language, isRTL } = useLanguage()
@@ -169,6 +181,8 @@ export default function Home() {
     const Arrow = isRTL ? ArrowLeft : ArrowRight
     const location = useLocation()
     const stock = useWebsiteStock(8)
+    const [activeStep, setActiveStep] = useState(0)
+    useScrollReveal()
 
     const [formData, setFormData] = useState(emptyForm)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -237,7 +251,7 @@ export default function Home() {
     return (
         <div className="home">
             {/* ---------- HERO ---------- */}
-            <section className="hero">
+            <section className="hero section-dark">
                 <div className="container hero-inner">
                     <div className="hero-copy">
                         <p className="eyebrow animate-fadeInUp">{tx.heroEyebrow}</p>
@@ -248,27 +262,28 @@ export default function Home() {
                             <Link to="/cars" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
                         </div>
                     </div>
-                    <div className="hero-mark" aria-hidden="true">
-                        <Monogram size={360} className="hero-monogram" />
+                    <div className="hero-mark">
+                        <RouteMap labels={tx.map} />
                     </div>
                 </div>
 
                 <div className="container">
                     <dl className="facts">
-                        {tx.facts.map(fact => (
-                            <div className="fact" key={fact.label}>
-                                <dt className="fact-value latin num">{fact.value}</dt>
-                                <dd className="fact-label">{fact.label}</dd>
-                            </div>
-                        ))}
+                        {tx.facts.map(fact => <Fact key={fact.label} {...fact} />)}
                     </dl>
                 </div>
             </section>
 
+            <div className="marquee" aria-hidden="true">
+                <div className="marquee-track latin">
+                    {[...brands, ...brands].map((brand, i) => <span key={i}>{brand}</span>)}
+                </div>
+            </div>
+
             {/* ---------- MODELS ---------- */}
             <section className="section models">
                 <div className="container">
-                    <div className="section-row">
+                    <div className="section-row" data-reveal>
                         <div className="section-header">
                             <p className="eyebrow">{tx.modelsEyebrow}</p>
                             <h2 className="section-title">{tx.modelsTitle}</h2>
@@ -277,24 +292,7 @@ export default function Home() {
                         <Link to="/cars" className="btn btn-secondary">{tx.allCars}</Link>
                     </div>
 
-                    <div className="model-grid">
-                        {featuredCars.map(car => (
-                            <Link to={`/cars/${car.id}`} className="model-card" key={car.id}>
-                                <div className="model-media">
-                                    <img src={car.image} alt={`${car.brand} ${car.model}`} loading="lazy" decoding="async" />
-                                </div>
-                                <div className="model-body">
-                                    <div className="model-head">
-                                        <h3 className="model-name">
-                                            {language === 'ar' ? `${car.brandAr} ${car.modelAr}` : `${car.brandFr} ${car.modelFr}`}
-                                        </h3>
-                                        <span className="model-years latin num">{getYearDisplay(car)}</span>
-                                    </div>
-                                    <p className="model-price num">{getPriceRangeDisplay(car, language)}</p>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                    <BudgetFinder language={language} featuredIds={featuredModelIds} />
                 </div>
             </section>
 
@@ -306,7 +304,7 @@ export default function Home() {
                             <p className="eyebrow">{tx.stockEyebrow}</p>
                             <h2 className="section-title">{tx.stockTitle}</h2>
                         </div>
-                        <div className="stock-grid">
+                        <div className="stock-grid" data-reveal>
                             {stock.cars.map(car => {
                                 const photo = car.photos_urls?.[0]
                                 return (
@@ -339,9 +337,18 @@ export default function Home() {
                         <p className="eyebrow">{tx.stepsEyebrow}</p>
                         <h2 className="section-title">{tx.stepsTitle}</h2>
                     </div>
-                    <ol className="steps">
+                    <div className="steps-progress" aria-hidden="true">
+                        <span style={{ width: `${((activeStep + 1) / tx.steps.length) * 100}%` }} />
+                    </div>
+                    <ol className="steps" data-reveal>
                         {tx.steps.map((step, index) => (
-                            <li className="step" key={step.title}>
+                            <li
+                                className={`step ${activeStep === index ? 'is-active' : ''}`}
+                                key={step.title}
+                                tabIndex={0}
+                                onMouseEnter={() => setActiveStep(index)}
+                                onFocus={() => setActiveStep(index)}
+                            >
                                 <span className="step-index latin num">{String(index + 1).padStart(2, '0')}</span>
                                 <h3 className="step-title">{step.title}</h3>
                                 <p className="step-text">{step.text}</p>
@@ -359,7 +366,7 @@ export default function Home() {
                         <h2 className="section-title">{tx.rulesTitle}</h2>
                         <p className="section-subtitle">{tx.rulesNote}</p>
                     </div>
-                    <ul className="rules-list">
+                    <ul className="rules-list" data-reveal>
                         {tx.rules.map(rule => (
                             <li key={rule.title}>
                                 <h3 className="rule-title">{rule.title}</h3>
@@ -386,7 +393,7 @@ export default function Home() {
                         </ul>
                     </div>
 
-                    <div className="order-panel">
+                    <div className="order-panel" data-reveal>
                         {referenceNumber ? (
                             <div className="order-success" role="status">
                                 <Monogram size={56} />
@@ -469,7 +476,7 @@ export default function Home() {
 
             {/* ---------- CLOSING ---------- */}
             <section className="section closing">
-                <div className="container closing-inner">
+                <div className="container closing-inner" data-reveal>
                     <h2 className="section-title">{tx.closingTitle}</h2>
                     <p className="section-subtitle">{tx.closingLead}</p>
                     <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-accent btn-lg">{tx.whatsapp}</a>
