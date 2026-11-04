@@ -47,7 +47,8 @@ export const useSmoothScroll = (pathname: string) => {
                 const p = clamp(-rect.top / Math.max(1, rect.height - vh))
                 el.style.setProperty('--p', p.toFixed(4))
                 const track = el.querySelector<HTMLElement>('[data-hscroll]')
-                if (track) {
+                if (track && window.innerWidth < 860) track.style.transform = ''
+                else if (track) {
                     const distance = Math.max(0, track.scrollWidth - track.clientWidth)
                     const dir = document.documentElement.dir === 'rtl' ? 1 : -1
                     track.style.transform = `translate3d(${(dir * p * distance).toFixed(1)}px, 0, 0)`
@@ -56,7 +57,7 @@ export const useSmoothScroll = (pathname: string) => {
         }
 
         const tick = () => {
-            current += (target - current) * 0.09
+            current += (target - current) * 0.16
             if (Math.abs(target - current) < 0.4) { current = target; smoothing = false }
             window.scrollTo(0, current)
             update()

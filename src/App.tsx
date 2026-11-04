@@ -3,7 +3,6 @@ import Footer from './components/Footer'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
-import Experience from './components/motion/Experience'
 import { Cursor, Loader, PageTransition } from './components/motion/Shell'
 import './motion.css'
 import { LanguageProvider } from './context/LanguageContext'
@@ -30,7 +29,6 @@ function App() {
             <Router>
                 <ScrollToTop />
                 <SmoothScroll />
-                <Experience />
                 <Loader />
                 <PageTransition />
                 <Cursor />

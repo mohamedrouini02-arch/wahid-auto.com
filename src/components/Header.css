@@ -52,7 +52,7 @@ html[dir='rtl'] .menu-overlay.is-open { clip-path: circle(150% at 60px 32px); }
 .menu-overlay.is-open .menu-links li { opacity: 1; transform: none; }
 .menu-links a { display: flex; align-items: baseline; gap: 18px; padding-block: 6px; color: var(--ink); }
 .menu-index { font-size: .8rem; color: var(--muted); width: 2ch; }
-.menu-label { font-size: clamp(2.2rem, 6.5vw, 5.2rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; transition: color 250ms var(--ease), transform 400ms var(--ease); }
+.menu-label { font-size: clamp(1.9rem, 5vw, 3.6rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; transition: color 250ms var(--ease), transform 400ms var(--ease); }
 html[dir='rtl'] .menu-label { letter-spacing: 0; line-height: 1.35; }
 .menu-links a:hover .menu-label, .menu-links a.is-active .menu-label { color: var(--accent); transform: translateX(12px); }
 html[dir='rtl'] .menu-links a:hover .menu-label, html[dir='rtl'] .menu-links a.is-active .menu-label { transform: translateX(-12px); }

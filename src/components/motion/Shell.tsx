@@ -6,14 +6,16 @@ export function Loader() {
     const [count, setCount] = useState(0)
     const [done, setDone] = useState(false)
     useEffect(() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setDone(true); return }
+        let seen = false
+        try { seen = sessionStorage.getItem('wa-loaded') === '1'; sessionStorage.setItem('wa-loaded', '1') } catch { /* storage blocked */ }
+        if (seen || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setDone(true); return }
         const start = performance.now()
         let frame = 0
         const tick = (now: number) => {
-            const p = Math.min(1, (now - start) / 1300)
+            const p = Math.min(1, (now - start) / 800)
             setCount(Math.round(100 * (1 - Math.pow(1 - p, 3))))
             if (p < 1) frame = requestAnimationFrame(tick)
-            else window.setTimeout(() => setDone(true), 250)
+            else window.setTimeout(() => setDone(true), 120)
         }
         frame = requestAnimationFrame(tick)
         return () => cancelAnimationFrame(frame)
