@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
 import { useScrollReveal } from '../lib/motion'
+import { SplitText } from './motion/Shell'
 import '../pages/Pages.css'
 
 export function PageHero({ eyebrow, title, lead, children }: { eyebrow: string; title: string; lead?: string; children?: ReactNode }) {
@@ -10,7 +11,7 @@ export function PageHero({ eyebrow, title, lead, children }: { eyebrow: string; 
         <section className="page-hero section-dark">
             <div className="container page-hero-inner">
                 <p className="eyebrow animate-fadeInUp">{eyebrow}</p>
-                <h1 className="page-hero-title animate-fadeInUp stagger-1">{title}</h1>
+                <SplitText as="h1" className="page-hero-title" text={title} delay={250} />
                 {lead && <p className="lead animate-fadeInUp stagger-2">{lead}</p>}
                 {children && <div className="page-hero-extra animate-fadeInUp stagger-3">{children}</div>}
             </div>
@@ -27,7 +28,7 @@ export function CtaBand() {
         <section className="cta-band">
             <div className="container cta-inner" data-reveal>
                 <div>
-                    <h2 className="section-title">{tx.title}</h2>
+                    <SplitText className="section-title display-md" text={tx.title} />
                     <p className="section-subtitle">{tx.lead}</p>
                 </div>
                 <div className="cta-actions">

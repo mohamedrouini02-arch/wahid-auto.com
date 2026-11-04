@@ -6,17 +6,19 @@
 
 :root {
   /* Core palette */
-  --paper: #FBFBF9;
-  --paper-2: #F3F3EF;
-  --ink: #121413;
-  --ink-2: #3A3E3B;
-  --muted: #6E726D;
-  --line: #E3E4DF;
-  --night: #0E100F;
+  --paper: #0A0B0B;
+  --paper-2: #111313;
+  --ink: #F2F2EE;
+  --ink-2: #C3C7C1;
+  --muted: #8C918B;
+  --line: rgba(242, 242, 238, 0.12);
+  --night: #0A0B0B;
   --night-ink: #F2F2EE;
-  --accent: #0E5A47;
-  --accent-ink: #FFFFFF;
-  --accent-soft: rgba(14, 90, 71, 0.08);
+  --accent: #5FB89B;
+  --accent-ink: #06110D;
+  --surface: rgba(20, 22, 22, 0.72);
+  --surface-solid: #141616;
+  --accent-soft: rgba(95, 184, 155, 0.12);
   --danger: #A33A2C;
   --success: #0E5A47;
   --warning: #9A6B12;
@@ -109,6 +111,7 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--paper);
+  color-scheme: dark;
   color: var(--ink);
   font-family: var(--font-family);
   font-size: var(--fs-body);
@@ -167,11 +170,11 @@ html[dir='rtl'] .section-tag, html[dir='rtl'] .eyebrow { letter-spacing: 0; font
 .btn:active { transform: scale(.97); }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 .btn-primary { background: var(--ink); color: var(--paper); }
-.btn-primary:hover { background: var(--accent); }
+.btn-primary:hover { background: var(--accent); color: var(--accent-ink); }
 .btn-secondary, .btn-outline { background: transparent; color: var(--ink); border-color: currentColor; }
 .btn-secondary:hover, .btn-outline:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .section-dark .btn-primary { background: var(--night-ink); color: var(--night); }
-.section-dark .btn-primary:hover { background: #fff; }
+.section-dark .btn-primary:hover { background: var(--accent); color: var(--accent-ink); }
 .section-dark .btn-secondary, .section-dark .btn-outline { color: var(--night-ink); }
 .section-dark .btn-secondary:hover, .section-dark .btn-outline:hover { background: var(--night-ink); color: var(--night); }
 .btn-accent { background: var(--accent); color: var(--accent-ink); }
@@ -183,7 +186,7 @@ html[dir='rtl'] .section-tag, html[dir='rtl'] .eyebrow { letter-spacing: 0; font
 .w-full { width: 100%; }
 
 /* ========== CARDS ========== */
-.card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-m); padding: clamp(20px, 3vw, 32px); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-m); padding: clamp(20px, 3vw, 32px); }
 .card-glass { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-m); }
 .section-dark .card { background: #151817; border-color: #26292A; }
 
@@ -201,7 +204,7 @@ html[dir='rtl'] .section-tag, html[dir='rtl'] .eyebrow { letter-spacing: 0; font
 .form-input-dark, .form-select-dark, .form-textarea-dark {
   width: 100%; min-height: 50px; padding: 12px 16px;
   font: inherit; font-size: 1rem; color: var(--ink);
-  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-s);
+  background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: var(--radius-s);
   transition: border-color var(--transition), box-shadow var(--transition);
   appearance: none;
 }
@@ -212,13 +215,14 @@ html[dir='rtl'] .section-tag, html[dir='rtl'] .eyebrow { letter-spacing: 0; font
 html[dir='ltr'] .form-select, html[dir='ltr'] .form-select-dark { background-position: right 16px center; padding-left: 16px; padding-right: 40px; }
 .form-textarea, .form-textarea-dark { min-height: 120px; resize: vertical; }
 .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px var(--accent-soft); }
-.form-input::placeholder, .form-textarea::placeholder { color: #A3A6A1; }
+.form-input::placeholder, .form-textarea::placeholder { color: #6A6E69; }
+.form-select option { background: var(--surface-solid); color: var(--ink); }
 .form-error .form-input, .form-error .form-select { border-color: var(--danger); }
 .form-error-message { color: var(--danger); font-size: var(--fs-small); }
 
 /* ========== SPINNER / SKELETON ========== */
 .spinner { width: 18px; height: 18px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; }
-.skeleton { background: linear-gradient(90deg, var(--paper-2), #ECECE7, var(--paper-2)); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: var(--radius-s); }
+.skeleton { background: linear-gradient(90deg, var(--paper-2), #1C1F1F, var(--paper-2)); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: var(--radius-s); }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes shimmer { to { background-position: -200% 0; } }
 

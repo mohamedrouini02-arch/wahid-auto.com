@@ -3,10 +3,11 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import BudgetFinder from '../components/BudgetFinder'
-import Hero3D from '../components/Hero3D'
+import { ScrubText, SplitText } from '../components/motion/Shell'
 import { Monogram } from '../components/Logo'
 import RouteMap from '../components/RouteMap'
 import { featuredModelIds, site } from '../config/site'
+import { getCarById, getPriceRangeDisplay, type CarData } from '../data/cars'
 import { useLanguage } from '../context/LanguageContext'
 import { budgetRanges, carBrands, carModelsByBrand, wilayas } from '../data/wilayas'
 import { useCountUp, useScrollReveal } from '../lib/motion'
@@ -25,6 +26,12 @@ const copy = {
         heroTitle: 'سيارتك الجاية من كوريا والصين،\nبسعر واضح من النهار الأول.',
         heroLead: 'نختارو السيارة معاك، نفحصوها، نشحنوها ونتكفلو بالأوراق. تعرف السعر النهائي قبل ما تخلص.',
         heroOrder: 'اطلب سيارتك',
+        scrollHint: 'مرّر',
+        manifestoEyebrow: 'وحيد أوتو',
+        manifesto: 'نجيبولك سيارتك من كوريا ولا الصين كيما لازم: نختاروها معاك، نفحصوها بعينينا، نشحنوها ونخلصو أوراقها. أنت تعرف السعر قبل ما تخلص، وتتبع سيارتك من الميناء حتى لباب دارك.',
+        galleryEyebrow: 'الأكثر طلباً',
+        galleryTitle: 'السيارات اللي يختاروها الدزيريين.',
+        megaCta: 'نبداو؟',
         heroCars: 'السيارات المتوفرة',
         facts: [
             { value: 270, suffix: '+', label: 'سيارة سلمناها خلال آخر 12 شهراً' },
@@ -92,6 +99,12 @@ const copy = {
         heroTitle: 'Votre prochaine voiture,\nau prix clair dès le premier jour.',
         heroLead: 'Nous choisissons la voiture avec vous, l’inspectons, l’expédions et gérons les papiers. Vous connaissez le prix final avant de payer.',
         heroOrder: 'Commander',
+        scrollHint: 'Défiler',
+        manifestoEyebrow: 'Wahid Auto',
+        manifesto: 'Nous ramenons votre voiture de Corée ou de Chine comme il faut : choisie avec vous, inspectée de près, expédiée et dédouanée. Vous connaissez le prix avant de payer et suivez votre voiture du port jusqu’à chez vous.',
+        galleryEyebrow: 'Les plus demandées',
+        galleryTitle: 'Les voitures que les Algériens choisissent.',
+        megaCta: 'On commence ?',
         heroCars: 'Voitures disponibles',
         facts: [
             { value: 270, suffix: '+', label: 'voitures livrées ces 12 derniers mois' },
@@ -161,6 +174,8 @@ const emptyForm = {
     carBrand: '', carModel: '', budget: '', customBudget: '', notes: ''
 }
 
+const featuredCars = featuredModelIds.map(id => getCarById(id)).filter((car): car is CarData => Boolean(car))
+
 const brands = ['KIA', 'HYUNDAI', 'RENAULT', 'CHEVROLET', 'GEELY', 'MG', 'CHERY', 'BYD', 'LIVAN', 'GAC']
 
 const Fact = ({ value, suffix, label }: { value: number; suffix: string; label: string }) => {
@@ -178,7 +193,6 @@ export default function Home() {
     const tx = copy[language]
     const Arrow = isRTL ? ArrowLeft : ArrowRight
     const location = useLocation()
-    const [activeStep, setActiveStep] = useState(0)
     useScrollReveal()
 
     const [formData, setFormData] = useState(emptyForm)
@@ -247,22 +261,25 @@ export default function Home() {
 
     return (
         <div className="home">
-            {/* ---------- HERO ---------- */}
-            <section className="hero hero-3d section-dark">
-                <Hero3D />
-                <div className="container hero-inner">
-                    <div className="hero-copy">
-                        <p className="eyebrow animate-fadeInUp">{tx.heroEyebrow}</p>
-                        <h1 className="hero-title animate-fadeInUp stagger-1">{tx.heroTitle}</h1>
-                        <p className="lead hero-lead animate-fadeInUp stagger-2">{tx.heroLead}</p>
-                        <div className="hero-actions animate-fadeInUp stagger-3">
-                            <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
-                            <Link to="/stock" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
-                        </div>
+            {/* ---------- HERO: type over the 3D world ---------- */}
+            <section className="home-hero">
+                <div className="container home-hero-inner">
+                    <p className="eyebrow animate-fadeInUp">{tx.heroEyebrow}</p>
+                    <SplitText as="h1" className="display home-hero-title" text={tx.heroTitle} delay={1500} />
+                    <p className="lead home-hero-lead animate-fadeInUp stagger-3">{tx.heroLead}</p>
+                    <div className="hero-actions animate-fadeInUp stagger-4">
+                        <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
+                        <Link to="/stock" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
                     </div>
                 </div>
+                <div className="scroll-hint" aria-hidden="true"><span>{tx.scrollHint}</span><i /></div>
+            </section>
 
+            {/* ---------- MANIFESTO ---------- */}
+            <section className="section manifesto">
                 <div className="container">
+                    <p className="eyebrow">{tx.manifestoEyebrow}</p>
+                    <ScrubText text={tx.manifesto} />
                     <dl className="facts">
                         {tx.facts.map(fact => <Fact key={fact.label} {...fact} />)}
                     </dl>
@@ -274,6 +291,44 @@ export default function Home() {
                     {[...brands, ...brands].map((brand, i) => <span key={i}>{brand}</span>)}
                 </div>
             </div>
+
+            {/* ---------- PINNED HORIZONTAL GALLERY ---------- */}
+            <section className="hpin" data-pin>
+                <div className="hpin-sticky">
+                    <div className="container">
+                        <p className="eyebrow">{tx.galleryEyebrow}</p>
+                        <SplitText className="section-title display-md" text={tx.galleryTitle} />
+                    </div>
+                    <div className="hpin-track" data-hscroll>
+                        {featuredCars.map((car, i) => (
+                            <Link to={`/cars/${car.id}`} className="model-card hpin-card" key={car.id}>
+                                <div className="model-media"><img src={car.image} alt={`${car.brand} ${car.model}`} loading="lazy" decoding="async" /></div>
+                                <div className="model-body">
+                                    <div className="model-head">
+                                        <h3 className="model-name">{language === 'ar' ? `${car.brandAr} ${car.modelAr}` : `${car.brandFr} ${car.modelFr}`}</h3>
+                                        <span className="model-years latin num">{String(i + 1).padStart(2, '0')}</span>
+                                    </div>
+                                    <p className="model-price num">{getPriceRangeDisplay(car, language)}</p>
+                                </div>
+                            </Link>
+                        ))}
+                        <Link to="/cars" className="hpin-card hpin-more"><span>{tx.allCars}</span><Arrow size={28} strokeWidth={1} /></Link>
+                    </div>
+                    <div className="hpin-progress"><span /></div>
+                </div>
+            </section>
+
+            {/* ---------- BUDGET FINDER ---------- */}
+            <section className="section models">
+                <div className="container">
+                    <div className="section-header">
+                        <p className="eyebrow">{tx.modelsEyebrow}</p>
+                        <SplitText className="section-title" text={tx.modelsTitle} />
+                        <p className="section-subtitle">{tx.modelsLead}</p>
+                    </div>
+                    <BudgetFinder language={language} featuredIds={featuredModelIds} />
+                </div>
+            </section>
 
             {/* ---------- TWO ROADS ---------- */}
             <section className="section section-dark roads">
@@ -289,44 +344,21 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ---------- MODELS ---------- */}
-            <section className="section models">
-                <div className="container">
-                    <div className="section-row" data-reveal>
-                        <div className="section-header">
-                            <p className="eyebrow">{tx.modelsEyebrow}</p>
-                            <h2 className="section-title" data-speed="-0.06">{tx.modelsTitle}</h2>
-                            <p className="section-subtitle">{tx.modelsLead}</p>
-                        </div>
-                        <Link to="/cars" className="btn btn-secondary">{tx.allCars}</Link>
-                    </div>
-
-                    <BudgetFinder language={language} featuredIds={featuredModelIds} />
-                </div>
-            </section>
-
-            {/* ---------- PROCESS ---------- */}
-            <section className="section section-dark process">
+            {/* ---------- PROCESS: stacking cards ---------- */}
+            <section className="section process">
                 <div className="container">
                     <div className="section-header">
                         <p className="eyebrow">{tx.stepsEyebrow}</p>
-                        <h2 className="section-title" data-speed="-0.06">{tx.stepsTitle}</h2>
+                        <SplitText className="section-title" text={tx.stepsTitle} />
                     </div>
-                    <div className="steps-progress" aria-hidden="true">
-                        <span style={{ width: `${((activeStep + 1) / tx.steps.length) * 100}%` }} />
-                    </div>
-                    <ol className="steps" data-reveal>
+                    <ol className="stack">
                         {tx.steps.map((step, index) => (
-                            <li
-                                className={`step ${activeStep === index ? 'is-active' : ''}`}
-                                key={step.title}
-                                tabIndex={0}
-                                onMouseEnter={() => setActiveStep(index)}
-                                onFocus={() => setActiveStep(index)}
-                            >
-                                <span className="step-index latin num">{String(index + 1).padStart(2, '0')}</span>
-                                <h3 className="step-title">{step.title}</h3>
-                                <p className="step-text">{step.text}</p>
+                            <li className="stack-card" key={step.title} style={{ top: `calc(var(--header-h) + ${24 + index * 22}px)` }}>
+                                <span className="stack-index latin num">{String(index + 1).padStart(2, '0')}</span>
+                                <div>
+                                    <h3>{step.title}</h3>
+                                    <p>{step.text}</p>
+                                </div>
                             </li>
                         ))}
                     </ol>
@@ -449,12 +481,13 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ---------- CLOSING ---------- */}
-            <section className="section closing">
-                <div className="container closing-inner" data-reveal>
-                    <h2 className="section-title">{tx.closingTitle}</h2>
-                    <p className="section-subtitle">{tx.closingLead}</p>
-                    <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-accent btn-lg">{tx.whatsapp}</a>
+            {/* ---------- MEGA CTA ---------- */}
+            <section className="closing">
+                <div className="container">
+                    <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="mega-cta">
+                        <span className="mega-cta-label">{tx.megaCta}</span>
+                        <span className="mega-cta-sub">{tx.closingLead}</span>
+                    </a>
                 </div>
             </section>
         </div>

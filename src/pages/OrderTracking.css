@@ -53,7 +53,7 @@
     gap: var(--spacing-3);
     flex: 1;
     padding: var(--spacing-4);
-    background: var(--white);
+    background: var(--surface);
     border: 2px solid var(--gray-200);
     border-radius: var(--radius-xl);
     transition: border-color var(--transition);
@@ -235,7 +235,7 @@
 
 /* Placeholder */
 .tracking-placeholder {
-    background: var(--white);
+    background: var(--surface);
 }
 
 .placeholder-content {

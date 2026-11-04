@@ -31,7 +31,7 @@ html[dir='rtl'] .page-hero-title { line-height: 1.35; }
 
 /* Value cards */
 .value-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.value-card { padding: 26px 22px; border-radius: var(--radius-m); background: #fff; border: 1px solid var(--line); display: grid; gap: 10px; align-content: start; transition: transform 300ms var(--ease), border-color 300ms var(--ease); }
+.value-card { padding: 26px 22px; border-radius: var(--radius-m); background: var(--surface); border: 1px solid var(--line); display: grid; gap: 10px; align-content: start; transition: transform 300ms var(--ease), border-color 300ms var(--ease); }
 .value-card:hover { transform: translateY(-3px); border-color: var(--accent); }
 .value-card svg { color: var(--accent); }
 .value-card h3 { font-size: 1.15rem; font-weight: 400; }
@@ -64,16 +64,16 @@ html[dir='rtl'] .page-hero-title { line-height: 1.35; }
 /* Contact */
 .contact-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
 .contact-cards { display: grid; gap: 12px; }
-.contact-card { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: var(--radius-m); border: 1px solid var(--line); background: #fff; transition: border-color 200ms var(--ease), transform 200ms var(--ease); }
+.contact-card { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: var(--radius-m); border: 1px solid var(--line); background: var(--surface); transition: border-color 200ms var(--ease), transform 200ms var(--ease); }
 .contact-card:hover { border-color: var(--ink); transform: translateY(-2px); }
 .contact-card svg { color: var(--accent); flex-shrink: 0; }
 .contact-card small { display: block; color: var(--muted); font-size: var(--fs-tiny); }
 .contact-card strong { font-weight: 400; }
-.form-panel { background: #fff; border-radius: var(--radius-l); padding: clamp(22px, 4vw, 40px); border: 1px solid var(--line); display: grid; gap: 18px; }
+.form-panel { background: var(--surface); border-radius: var(--radius-l); padding: clamp(22px, 4vw, 40px); border: 1px solid var(--line); display: grid; gap: 18px; }
 .form-success { text-align: center; display: grid; gap: 12px; justify-items: center; padding-block: 24px; }
 
 /* Catalog */
-.catalog-toolbar { position: sticky; top: var(--header-h); z-index: 10; background: rgba(251, 251, 249, .92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.catalog-toolbar { position: sticky; top: var(--header-h); z-index: 10; background: rgba(10, 11, 11, .78); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
 .catalog-toolbar-inner { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-block: 14px; }
 .catalog-search { flex: 1 1 220px; min-width: 0; position: relative; }
 .catalog-search input { padding-inline-start: 42px; border-radius: 999px; min-height: 44px; }
