@@ -13,6 +13,7 @@ export type StockCar = {
     location: string | null
     photos_urls: string[] | null
     video_url: string | null
+    notes?: string | null
     created_at: string
 }
 

@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Monogram } from '../components/Logo'
+import StockGallery from '../components/StockGallery'
 import { CtaBand, PageHero } from '../components/PageParts'
 import { site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
@@ -20,6 +21,12 @@ const copy = {
         emptyText: 'حالياً ما كاين حتى سيارة معروضة. قل لنا واش تحوس ونلقاولك سيارة في كوريا أو الصين.',
         emptyCta: 'اطلب سيارتك',
         catalog: 'شوف الكتالوج',
+        details: 'كل التفاصيل والصور',
+        close: 'إغلاق',
+        specs: { year: 'السنة', mileage: 'العداد', color: 'اللون', location: 'مكانها', price: 'السعر' },
+        notes: 'ملاحظات',
+        photos: (n: number) => `${n} صورة`,
+        video: 'شوف الفيديو',
         location: { korea: 'في كوريا', china: 'في الصين', algeria: 'في الجزائر' } as Record<string, string>,
         message: (car: StockCar) => `السلام عليكم، راني مهتم بالسيارة ${car.brand} ${car.model} ${car.year ?? ''} المعروضة في الموقع. واش مازالت متوفرة؟`
     },
@@ -36,6 +43,12 @@ const copy = {
         emptyText: 'Aucune voiture affichée pour le moment. Dites-nous ce que vous cherchez, nous la trouvons en Corée ou en Chine.',
         emptyCta: 'Commander',
         catalog: 'Voir le catalogue',
+        details: 'Détails et toutes les photos',
+        close: 'Fermer',
+        specs: { year: 'Année', mileage: 'Kilométrage', color: 'Couleur', location: 'Emplacement', price: 'Prix' },
+        notes: 'Notes',
+        photos: (n: number) => `${n} photos`,
+        video: 'Voir la vidéo',
         location: { korea: 'En Corée', china: 'En Chine', algeria: 'En Algérie' } as Record<string, string>,
         message: (car: StockCar) => `Bonjour, je suis intéressé par la ${car.brand} ${car.model} ${car.year ?? ''} affichée sur le site. Est-elle toujours disponible ?`
     }
@@ -48,11 +61,20 @@ export default function Stock() {
     const tx = copy[language]
     const stock = useWebsiteStock(60)
     const [brand, setBrand] = useState('all')
+    const [open, setOpen] = useState<{ car: StockCar; photo: number } | null>(null)
 
     const cars = stock.status === 'ready' ? stock.cars : []
     const brands = useMemo(() => [...new Set(cars.map(c => c.brand))], [cars])
     const visible = brand === 'all' ? cars : cars.filter(c => c.brand === brand)
     const locationLabel = (loc: string | null) => (loc ? tx.location[loc.toLowerCase()] ?? loc : null)
+    const km = (n: number | null) => (n != null ? `${new Intl.NumberFormat('fr-DZ').format(n)} ${tx.km}` : null)
+    const waLink = (car: StockCar) => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(tx.message(car))}`
+    const specRows = (car: StockCar) => ([
+        [tx.specs.year, car.year ? String(car.year) : null],
+        [tx.specs.mileage, km(car.mileage)],
+        [tx.specs.color, car.color],
+        [tx.specs.location, locationLabel(car.location)],
+    ] as const).filter((r): r is readonly [string, string] => Boolean(r[1]))
 
     return (
         <div className="stock-page">
@@ -86,25 +108,26 @@ export default function Stock() {
                                     ))}
                                 </div>
                             )}
-                            <div className="stock-grid">
+                            <div className="stock-grid stock-grid-full">
                                 {visible.map(car => {
-                                    const photo = car.photos_urls?.[0]
-                                    const where = locationLabel(car.location)
-                                    const link = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(tx.message(car))}`
+                                    const photos = car.photos_urls ?? []
                                     return (
                                         <article className="stock-card" key={car.id}>
-                                            <div className="stock-media" style={{ position: 'relative' }}>
-                                                {photo ? <img src={photo} alt={`${car.brand} ${car.model}`} loading="lazy" decoding="async" /> : <Monogram size={64} />}
-                                                {where && <span className="stock-badge">{where}</span>}
-                                            </div>
+                                            <StockGallery photos={photos} alt={`${car.brand} ${car.model}`} badge={locationLabel(car.location)} onOpen={i => setOpen({ car, photo: i })} />
                                             <div className="stock-body">
-                                                <h3 className="stock-name latin">{car.brand} {car.model}</h3>
-                                                <p className="stock-meta num">
-                                                    {[car.year, car.color, car.mileage != null ? `${new Intl.NumberFormat('fr-DZ').format(car.mileage)} ${tx.km}` : null].filter(Boolean).join(' · ')}
-                                                </p>
+                                                <h3 className="stock-name latin">{car.brand.trim()} {car.model.trim()}</h3>
                                                 <p className="stock-price num">{formatStockPrice(car, language) ?? tx.priceOnRequest}</p>
+                                                <dl className="stock-specs">
+                                                    {specRows(car).map(([label, value]) => (
+                                                        <div key={label}><dt>{label}</dt><dd className="num">{value}</dd></div>
+                                                    ))}
+                                                </dl>
+                                                {car.notes && <p className="stock-notes">{car.notes}</p>}
                                                 <div className="stock-actions">
-                                                    <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-accent btn-sm">{tx.reserve}</a>
+                                                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setOpen({ car, photo: 0 })}>
+                                                        {tx.details}{photos.length > 1 ? ` · ${tx.photos(photos.length)}` : ''}
+                                                    </button>
+                                                    <a href={waLink(car)} target="_blank" rel="noopener noreferrer" className="btn btn-accent btn-sm">{tx.reserve}</a>
                                                 </div>
                                             </div>
                                         </article>
@@ -116,7 +139,83 @@ export default function Stock() {
                 </div>
             </section>
 
+            {open && (
+                <CarSheet
+                    car={open.car}
+                    startPhoto={open.photo}
+                    onClose={() => setOpen(null)}
+                    title={`${open.car.brand.trim()} ${open.car.model.trim()}`}
+                    price={formatStockPrice(open.car, language) ?? tx.priceOnRequest}
+                    specs={specRows(open.car)}
+                    tx={tx}
+                    whatsapp={waLink(open.car)}
+                />
+            )}
+
             <CtaBand />
+        </div>
+    )
+}
+
+type SheetProps = {
+    car: StockCar
+    startPhoto: number
+    onClose: () => void
+    title: string
+    price: string
+    specs: (readonly [string, string])[]
+    tx: (typeof copy)['fr'] | (typeof copy)['ar']
+    whatsapp: string
+}
+
+function CarSheet({ car, startPhoto, onClose, title, price, specs, tx, whatsapp }: SheetProps) {
+    const photos = car.photos_urls ?? []
+    const [jump, setJump] = useState(startPhoto)
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+        const previous = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        window.addEventListener('keydown', onKey)
+        return () => { document.body.style.overflow = previous; window.removeEventListener('keydown', onKey) }
+    }, [onClose])
+
+    return (
+        <div className="car-sheet" role="dialog" aria-modal="true" aria-label={title} data-native-scroll onClick={onClose}>
+            <div className="car-sheet-panel" onClick={e => e.stopPropagation()}>
+                <button type="button" className="car-sheet-close" onClick={onClose} aria-label={tx.close}>×</button>
+                <StockGallery key={jump} photos={photos} alt={title} large startIndex={jump} />
+                {photos.length > 1 && (
+                    <div className="car-sheet-thumbs">
+                        {photos.map((src, i) => (
+                            <button type="button" key={src + i} className={i === jump ? 'is-active' : ''} onClick={() => setJump(i)} aria-label={`${i + 1}`}>
+                                <img src={src} alt="" loading="lazy" decoding="async" />
+                            </button>
+                        ))}
+                    </div>
+                )}
+                <div className="car-sheet-body">
+                    <div className="car-sheet-head">
+                        <h2 className="latin">{title}</h2>
+                        <p className="stock-price num">{price}</p>
+                    </div>
+                    <dl className="stock-specs stock-specs-lg">
+                        {specs.map(([label, value]) => (
+                            <div key={label}><dt>{label}</dt><dd className="num">{value}</dd></div>
+                        ))}
+                    </dl>
+                    {car.notes && (
+                        <div className="car-sheet-notes">
+                            <h3>{tx.notes}</h3>
+                            <p>{car.notes}</p>
+                        </div>
+                    )}
+                    <div className="stock-actions">
+                        {car.video_url && <a href={car.video_url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">{tx.video}</a>}
+                        <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-accent">{tx.reserve}</a>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
