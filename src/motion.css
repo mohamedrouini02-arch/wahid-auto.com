@@ -41,7 +41,7 @@ html:not(.has-cursor) .cursor-dot, html:not(.has-cursor) .cursor-ring { display:
 
 /* Split text: words slide up from a mask */
 .split-line { display: block; }
-.split-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+.split-mask { display: inline-block; overflow: hidden; white-space: pre; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
 .split-word { display: inline-block; transform: translateY(105%); transition: transform 1000ms cubic-bezier(.2, .8, .2, 1); }
 .split.is-in .split-word { transform: none; }
 

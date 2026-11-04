@@ -62,7 +62,9 @@ html[dir='rtl'] .menu-links a:hover .menu-label, html[dir='rtl'] .menu-links a.i
 
 @media (max-width: 760px) {
     .menu-inner { grid-template-columns: 1fr; align-items: start; }
-    .header-cta { display: none; }
+    .header .header-cta { display: none; }
     .menu-btn-label { display: none; }
-    .menu-btn { padding: 0 5px; }
+    .menu-btn, html[dir='rtl'] .menu-btn { padding: 0 5px; }
+    .header-actions { gap: 8px; }
+    .header-bar { gap: 12px; }
 }
