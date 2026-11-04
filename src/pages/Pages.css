@@ -115,3 +115,68 @@ html[dir='rtl'] .page-hero-title { line-height: 1.35; }
 @media (max-width: 520px) {
     .value-grid { grid-template-columns: 1fr; }
 }
+
+/* Stock: full cards with every photo, specs and notes */
+.stock-grid-full { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.stock-grid-full .stock-card:hover { transform: none; }
+.stock-grid-full .stock-body { gap: 10px; padding: 18px 20px 22px; }
+.stock-grid-full .stock-name { font-size: 1.15rem; }
+.stock-grid-full .stock-price { margin-top: 0; font-size: 1.05rem; color: var(--accent); }
+.stock-specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin: 4px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); }
+.stock-specs > div { min-width: 0; }
+.stock-specs dt { font-size: var(--fs-tiny); color: var(--muted); }
+.stock-specs dd { margin: 2px 0 0; font-size: .95rem; overflow-wrap: anywhere; }
+.stock-notes { color: var(--muted); font-size: var(--fs-small); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
+.stock-grid-full .stock-actions { flex-direction: column; margin-top: 6px; }
+
+/* Gallery */
+.sg { position: relative; background: var(--paper-2, #111); }
+.sg-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; aspect-ratio: 4 / 3; }
+.sg-track::-webkit-scrollbar { display: none; }
+.sg-slide { flex: 0 0 100%; scroll-snap-align: start; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.sg-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sg-empty { aspect-ratio: 4 / 3; display: grid; place-items: center; color: var(--muted); }
+.sg-count { position: absolute; bottom: 12px; inset-inline-end: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(14, 16, 15, .72); color: #F2F2EE; font-size: var(--fs-tiny); pointer-events: none; }
+.sg-arrow { position: absolute; top: 50%; translate: 0 -50%; width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(14, 16, 15, .62); color: #F2F2EE; font-size: 1.5rem; line-height: 1; cursor: pointer; opacity: 0; transition: opacity 200ms var(--ease); }
+.sg-prev { inset-inline-start: 10px; }
+.sg-next { inset-inline-end: 10px; }
+html[dir='rtl'] .sg-arrow { transform: scaleX(-1); }
+.sg:hover .sg-arrow:not(:disabled) { opacity: 1; }
+.sg-arrow:disabled { pointer-events: none; }
+.sg-large .sg-track { aspect-ratio: 16 / 10; }
+.sg-large .sg-slide { cursor: default; }
+.sg-large .sg-slide img { object-fit: contain; background: #050606; }
+.sg-large .sg-arrow { opacity: 1; }
+.sg-large .sg-arrow:disabled { opacity: .25; }
+@media (hover: none) { .sg-arrow { display: none; } }
+
+/* Detail sheet */
+.car-sheet { position: fixed; inset: 0; z-index: 80; background: rgba(5, 6, 6, .82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); overflow-y: auto; overscroll-behavior: contain; padding: max(24px, env(safe-area-inset-top, 0px)) 16px max(24px, env(safe-area-inset-bottom, 0px)); animation: sheet-in 300ms var(--ease); }
+@keyframes sheet-in { from { opacity: 0; } }
+.car-sheet-panel { position: relative; max-width: 980px; margin: 0 auto; background: var(--surface-solid); border: 1px solid var(--line); border-radius: var(--radius-l); overflow: hidden; }
+.car-sheet-close { position: absolute; top: 12px; inset-inline-end: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(14, 16, 15, .72); color: #F2F2EE; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.car-sheet-thumbs { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px 0; scrollbar-width: thin; }
+.car-sheet-thumbs button { flex: 0 0 76px; aspect-ratio: 4 / 3; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: none; cursor: pointer; opacity: .6; transition: opacity 200ms var(--ease), border-color 200ms var(--ease); }
+.car-sheet-thumbs button.is-active, .car-sheet-thumbs button:hover { opacity: 1; border-color: var(--accent); }
+.car-sheet-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.car-sheet-body { display: grid; gap: 22px; padding: 22px clamp(18px, 4vw, 36px) 30px; }
+.car-sheet-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 20px; }
+.car-sheet-head h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 300; margin: 0; }
+.car-sheet-head .stock-price { font-size: 1.25rem; color: var(--accent); margin: 0; }
+.stock-specs-lg { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.stock-specs-lg dd { font-size: 1.05rem; }
+.car-sheet-notes h3 { font-size: var(--fs-tiny); color: var(--muted); font-weight: 400; margin: 0 0 6px; text-transform: uppercase; letter-spacing: .08em; }
+.car-sheet-notes p { margin: 0; line-height: 1.7; white-space: pre-line; }
+.car-sheet .stock-actions { margin-top: 0; }
+
+@media (max-width: 1000px) { .stock-grid-full { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+    .stock-grid-full { grid-template-columns: 1fr; }
+    .stock-specs-lg { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .car-sheet { padding: 0; }
+    .car-sheet-panel { border-radius: 0; border: 0; min-height: 100%; }
+    .sg-large .sg-track { aspect-ratio: 4 / 3; }
+    .car-sheet .stock-actions { flex-direction: column; }
+    .car-sheet-close { top: max(12px, env(safe-area-inset-top, 0px)); }
+}
+.stock-card > * { min-width: 0; }
