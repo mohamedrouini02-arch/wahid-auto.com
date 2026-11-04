@@ -1,5 +1,6 @@
 export const ar = {
     nav: {
+        stock: 'متوفرة الآن',
         home: 'الرئيسية',
         cars: 'السيارات',
         about: 'من نحن',
