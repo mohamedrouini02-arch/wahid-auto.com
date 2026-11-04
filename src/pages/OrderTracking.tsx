@@ -62,11 +62,17 @@ export default function OrderTracking() {
         setOrder(null)
 
         try {
-            const { data, error: fetchError } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('reference_number', referenceNumber.trim().toUpperCase())
-                .single()
+            // Safe lookup: returns only this order's status fields (track_order function).
+            // Falls back to the direct query until that function is installed.
+            const ref = referenceNumber.trim().toUpperCase()
+            const rpc = await supabase.rpc('track_order', { ref })
+            let data = Array.isArray(rpc.data) ? rpc.data[0] ?? null : null
+            let fetchError = rpc.error && rpc.error.code !== 'PGRST202' ? rpc.error : null
+            if (rpc.error?.code === 'PGRST202') {
+                const direct = await supabase.from('orders').select('reference_number, status, car_brand, car_model, customer_name, created_at').eq('reference_number', ref).single()
+                data = direct.data
+                fetchError = direct.error
+            }
 
             if (fetchError || !data) {
                 setError('لم نتمكن من العثور على طلب بهذا الرقم. تأكد من صحة رقم المرجع.')

@@ -9,7 +9,6 @@ import { featuredModelIds, site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
 import { budgetRanges, carBrands, carModelsByBrand, wilayas } from '../data/wilayas'
 import { useCountUp, useScrollReveal } from '../lib/motion'
-import { formatStockPrice, useWebsiteStock } from '../lib/stock'
 import { generateReferenceNumber, supabase } from '../lib/supabase'
 import './Home.css'
 
@@ -44,10 +43,6 @@ const copy = {
         map: { korea: 'كوريا', china: 'الصين', algeria: 'الجزائر' },
         modelsLead: 'الأسعار تقريبية وتتغير مع سعر الصرف. نرسل لك السعر النهائي قبل أي دفع.',
         allCars: 'كل السيارات',
-        stockEyebrow: 'متوفرة الآن',
-        stockTitle: 'سيارات جاهزة للطلب.',
-        priceOnRequest: 'السعر عند الطلب',
-        km: 'كم',
         rulesEyebrow: 'قوانين الاستيراد 2026',
         rulesTitle: 'ما يمكنك استيراده هذا العام.',
         rules: [
@@ -112,10 +107,6 @@ const copy = {
         map: { korea: 'Corée', china: 'Chine', algeria: 'Algérie' },
         modelsLead: 'Prix indicatifs, ils suivent le taux de change. Vous recevez le prix final avant tout paiement.',
         allCars: 'Toutes les voitures',
-        stockEyebrow: 'Disponibles maintenant',
-        stockTitle: 'Prêtes à commander.',
-        priceOnRequest: 'Prix sur demande',
-        km: 'km',
         rulesEyebrow: 'Règles d’importation 2026',
         rulesTitle: 'Ce que vous pouvez importer cette année.',
         rules: [
@@ -180,7 +171,6 @@ export default function Home() {
     const tx = copy[language]
     const Arrow = isRTL ? ArrowLeft : ArrowRight
     const location = useLocation()
-    const stock = useWebsiteStock(8)
     const [activeStep, setActiveStep] = useState(0)
     useScrollReveal()
 
@@ -295,40 +285,6 @@ export default function Home() {
                     <BudgetFinder language={language} featuredIds={featuredModelIds} />
                 </div>
             </section>
-
-            {/* ---------- LIVE STOCK (only when the team publishes cars) ---------- */}
-            {stock.status === 'ready' && stock.cars.length > 0 && (
-                <section className="section stock">
-                    <div className="container">
-                        <div className="section-header">
-                            <p className="eyebrow">{tx.stockEyebrow}</p>
-                            <h2 className="section-title">{tx.stockTitle}</h2>
-                        </div>
-                        <div className="stock-grid" data-reveal>
-                            {stock.cars.map(car => {
-                                const photo = car.photos_urls?.[0]
-                                return (
-                                <article className="stock-card" key={car.id}>
-                                    <div className="stock-media">
-                                        {photo
-                                            ? <img src={photo} alt={`${car.brand} ${car.model}`} loading="lazy" decoding="async" />
-                                            : <Monogram size={64} />}
-                                    </div>
-                                    <div className="stock-body">
-                                        <h3 className="stock-name latin">{car.brand} {car.model}</h3>
-                                        <p className="stock-meta num">
-                                            {[car.year, car.color, car.mileage != null ? `${new Intl.NumberFormat('fr-DZ').format(car.mileage)} ${tx.km}` : null]
-                                                .filter(Boolean).join(' · ')}
-                                        </p>
-                                        <p className="stock-price num">{formatStockPrice(car, language) ?? tx.priceOnRequest}</p>
-                                    </div>
-                                </article>
-                                )
-                            })}
-                        </div>
-                    </div>
-                </section>
-            )}
 
             {/* ---------- PROCESS ---------- */}
             <section className="section section-dark process">
