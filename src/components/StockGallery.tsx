@@ -51,7 +51,7 @@ export default function StockGallery({ photos, alt, onOpen, badge, large, startI
             {badge && <span className="stock-badge">{badge}</span>}
             {photos.length > 1 && (
                 <>
-                    <span className="sg-count num">{index + 1} / {photos.length}</span>
+                    <span className="sg-count num" dir="ltr">{index + 1} / {photos.length}</span>
                     <button type="button" className="sg-arrow sg-prev" onClick={() => go(-1)} disabled={index === 0} aria-label="‹">‹</button>
                     <button type="button" className="sg-arrow sg-next" onClick={() => go(1)} disabled={index === photos.length - 1} aria-label="›">›</button>
                 </>
