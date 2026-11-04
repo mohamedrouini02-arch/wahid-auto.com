@@ -1,5 +1,6 @@
 import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
+import WavingFlags from './components/motion/WavingFlags'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
@@ -32,6 +33,7 @@ function App() {
                 <Loader />
                 <PageTransition />
                 <Cursor />
+                <WavingFlags />
                 <div className="app">
                     <Header />
                     <main>
