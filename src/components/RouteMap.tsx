@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FlagAlgeria, FlagChina, FlagKorea } from './Flags'
 
 type Origin = 'korea' | 'china' | null
 
@@ -38,9 +39,9 @@ export default function RouteMap({ labels }: Props) {
             </g>
 
             {/* Algeria: the meeting point */}
-            <circle cx="104" cy="300" r="46" fill="url(#route-glow)" className="route-pulse" />
-            <circle cx="104" cy="300" r="6" className="route-node route-node-home" />
-            <text x="104" y="342" textAnchor="middle" className="route-label route-label-home">{labels.algeria}</text>
+            <circle cx="104" cy="300" r="60" fill="url(#route-glow)" className="route-pulse" />
+            <FlagAlgeria cx={104} cy={300} r={22} id="flag-dz" />
+            <text x="104" y="348" textAnchor="middle" className="route-label route-label-home">{labels.algeria}</text>
 
             <g
                 className="route-origin"
@@ -54,8 +55,8 @@ export default function RouteMap({ labels }: Props) {
                 onClick={() => setActive(a => (a === 'korea' ? null : 'korea'))}
             >
                 <circle cx="478" cy="96" r="22" fill="transparent" />
-                <circle cx="478" cy="96" r="6" className="route-node route-node-light" />
-                <text x="478" y="70" textAnchor="middle" className="route-label">{labels.korea}</text>
+                <FlagKorea cx={478} cy={96} r={18} id="flag-kr" />
+                <text x="478" y="64" textAnchor="middle" className="route-label">{labels.korea}</text>
             </g>
             <g
                 className="route-origin"
@@ -69,8 +70,8 @@ export default function RouteMap({ labels }: Props) {
                 onClick={() => setActive(a => (a === 'china' ? null : 'china'))}
             >
                 <circle cx="432" cy="232" r="22" fill="transparent" />
-                <circle cx="432" cy="232" r="6" className="route-node route-node-accent" />
-                <text x="432" y="266" textAnchor="middle" className="route-label">{labels.china}</text>
+                <FlagChina cx={432} cy={232} r={18} id="flag-cn" />
+                <text x="432" y="272" textAnchor="middle" className="route-label">{labels.china}</text>
             </g>
         </svg>
     )

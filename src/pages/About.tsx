@@ -1,249 +1,150 @@
-import { Award, CheckCircle, Globe, Heart, Shield, Target, Users, Zap } from 'lucide-react'
+import { BadgeCheck, Eye, HandCoins, MessageCircle } from 'lucide-react'
+import { CtaBand, PageHero } from '../components/PageParts'
+import { site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
-import './About.css'
+
+const copy = {
+    ar: {
+        eyebrow: 'من نحن',
+        title: 'وحيد أوتو، من جيجل إلى كل الجزائر.',
+        lead: 'معرض حقيقي، فريق حقيقي، وسيارات تصل فعلاً. نستورد من كوريا الجنوبية والصين منذ سنوات، ونسلّم لزبائن في أكثر من 20 ولاية.',
+        storyTitle: 'القصة',
+        story: [
+            'بدأنا بفكرة بسيطة: الجزائري يستحق يشري سيارة مستوردة بلا خوف، بلا مفاجآت في السعر، وبلا تعب في الأوراق.',
+            'اليوم عندنا معرض في بازول، الطاهير، جيجل، وشركاء على الأرض في كوريا والصين. نختار السيارة، نفحصها، نشحنها، ونتابعها حتى تستلمها.',
+            'أغلب زبائننا جاونا من توصية صديق أو من فيديوهاتنا على تيك توك. هذا أكبر دليل على الثقة.'
+        ],
+        photoCaption: 'افتتاح معرض وحيد أوتو، بازول، الطاهير، جيجل',
+        stats: [
+            { value: '270+', label: 'سيارة مسلّمة في 12 شهراً' },
+            { value: '20+', label: 'ولاية' },
+            { value: '45K', label: 'متابع على تيك توك' },
+            { value: '2', label: 'بلدان مصدر' }
+        ],
+        valuesTitle: 'وعدنا لك',
+        values: [
+            { title: 'سعر واضح', text: 'السعر النهائي مكتوب قبل أي دفع. لا رسوم مخفية.' },
+            { title: 'فحص حقيقي', text: 'صور وتقرير لكل سيارة قبل الشراء.' },
+            { title: 'متابعة على واتساب', text: 'تعرف وين راهي سيارتك في كل مرحلة.' },
+            { title: 'أموالك في أمان', text: 'إذا ما وصلتش السيارة بسببنا، نرجعولك كامل المبلغ.' }
+        ],
+        socialTitle: 'شوف بعينك',
+        socialLead: 'كل أسبوع نصور السيارات الواصلة وتسليمها للزبائن.',
+        tiktok: 'متابع على تيك توك',
+        facebook: 'صفحة فيسبوك',
+        visit: 'زورنا في المعرض',
+        visitText: 'بازول، الطاهير، جيجل'
+    },
+    fr: {
+        eyebrow: 'À propos',
+        title: 'Wahid Auto, de Jijel à toute l’Algérie.',
+        lead: 'Un vrai showroom, une vraie équipe, des voitures qui arrivent vraiment. Nous importons de Corée du Sud et de Chine et livrons des clients dans plus de 20 wilayas.',
+        storyTitle: 'Notre histoire',
+        story: [
+            'Une idée simple : acheter une voiture importée sans crainte, sans surprise sur le prix et sans casse-tête administratif.',
+            'Aujourd’hui, notre showroom est à Bazoul, Taher, Jijel, avec des partenaires sur place en Corée et en Chine. Nous choisissons, inspectons, expédions et suivons la voiture jusqu’à vous.',
+            'La plupart de nos clients viennent par recommandation ou par nos vidéos TikTok. C’est notre meilleure preuve de confiance.'
+        ],
+        photoCaption: 'Inauguration du showroom Wahid Auto, Bazoul, Taher, Jijel',
+        stats: [
+            { value: '270+', label: 'voitures livrées en 12 mois' },
+            { value: '20+', label: 'wilayas' },
+            { value: '45K', label: 'abonnés TikTok' },
+            { value: '2', label: 'pays d’origine' }
+        ],
+        valuesTitle: 'Notre promesse',
+        values: [
+            { title: 'Prix clair', text: 'Prix final écrit avant tout paiement. Aucun frais caché.' },
+            { title: 'Vraie inspection', text: 'Photos et rapport pour chaque voiture avant l’achat.' },
+            { title: 'Suivi WhatsApp', text: 'Vous savez où est votre voiture à chaque étape.' },
+            { title: 'Fonds protégés', text: 'Si la voiture n’arrive pas par notre faute, remboursement intégral.' }
+        ],
+        socialTitle: 'Voyez par vous-même',
+        socialLead: 'Chaque semaine, nous filmons les arrivages et les remises de clés.',
+        tiktok: 'abonnés TikTok',
+        facebook: 'Page Facebook',
+        visit: 'Visitez le showroom',
+        visitText: 'Bazoul, Taher, Jijel'
+    }
+}
+
+const icons = [HandCoins, Eye, MessageCircle, BadgeCheck]
 
 export default function About() {
-    const { language, isRTL } = useLanguage()
-
-    const text = {
-        ar: {
-            heroTag: 'من نحن',
-            heroTitle: 'وحيد أوتو',
-            heroSubtitle: 'شريكك الموثوق لاستيراد السيارات الجديدة والمستعملة من الصين وكوريا',
-            storyTitle: 'قصتنا',
-            storyP1: 'وحيد أوتو هي شركة جزائرية متخصصة في استيراد السيارات الجديدة والمستعملة من الصين وكوريا الجنوبية. نعمل بشغف لتوفير أفضل السيارات بأسعار منافسة مع ضمان الجودة.',
-            storyP2: 'بفضل خبرتنا الواسعة وشبكة علاقاتنا القوية في الصين وكوريا، نضمن لعملائنا الحصول على سيارات بحالة ممتازة وبأسعار أقل بكثير من السوق المحلية.',
-            storyP3: 'نحن نرافق عملاءنا في كل خطوة من عملية الاستيراد، من اختيار السيارة وحتى تسليمها أمام باب المنزل.',
-            storyBadge: 'سنوات خبرة',
-            missionTitle: 'مهمتنا',
-            missionDesc: 'توفير سيارات عالية الجودة بأسعار عادلة مع خدمة عملاء استثنائية',
-            visionTitle: 'رؤيتنا',
-            visionDesc: 'أن نصبح الخيار الأول لاستيراد السيارات في الجزائر',
-            valuesTitle: 'قيمنا',
-            valuesDesc: 'المبادئ التي نلتزم بها في كل تعامل',
-            valuesTag: 'مبادئنا',
-            transparency: 'الشفافية',
-            transparencyDesc: 'أسعار واضحة بدون رسوم مخفية',
-            quality: 'الجودة',
-            qualityDesc: 'فحص شامل لكل سيارة قبل الشراء',
-            trust: 'الثقة',
-            trustDesc: 'بناء علاقات طويلة الأمد مع عملائنا',
-            support: 'الدعم',
-            supportDesc: 'خدمة عملاء متاحة دائماً',
-            whyUsTag: 'مميزاتنا',
-            whyUsTitle: 'لماذا وحيد أوتو؟',
-            whyUsSubtitle: 'أسباب تجعلنا الخيار الأفضل لاستيراد سيارتك',
-            reason1: 'خبرة واسعة - سنوات من الخبرة في مجال استيراد السيارات',
-            reason2: 'أسعار تنافسية - وفر حتى 40% مقارنة بالوكلاء المحليين',
-            reason3: 'شحن آمن - شحن بحري مؤمن وسريع من الصين وكوريا للجزائر',
-            reason4: 'دعم كامل - نرافقك من الاختيار حتى التسليم',
-            reason5: 'فريق متخصص في الصين وكوريا الجنوبية',
-            reason6: 'تقرير فحص كامل لكل سيارة',
-            reason7: 'تتبع الشحنة لحظة بلحظة',
-            reason8: 'ضمان الجودة على جميع السيارات',
-            ctaTitle: 'مستعد لاستيراد سيارتك؟',
-            ctaDesc: 'تواصل معنا اليوم وابدأ رحلتك نحو سيارة أحلامك',
-            ctaWhatsapp: 'تواصل عبر واتساب',
-            ctaCall: 'اتصل بنا',
-            statCars: 'سيارة تم استيرادها',
-            statClients: 'عميل سعيد',
-            statYears: 'سنوات خبرة',
-            statSatisfaction: 'رضا العملاء'
-        },
-        fr: {
-            heroTag: 'À propos',
-            heroTitle: 'Wahid Auto',
-            heroSubtitle: 'Votre partenaire de confiance pour l\'importation de voitures neuves et d\'occasion de Chine et de Corée',
-            storyTitle: 'Notre histoire',
-            storyP1: 'Wahid Auto est une entreprise algérienne spécialisée dans l\'importation de voitures neuves et d\'occasion de Chine et de Corée du Sud. Nous travaillons avec passion pour offrir les meilleures voitures à des prix compétitifs avec garantie de qualité.',
-            storyP2: 'Grâce à notre grande expérience et notre solide réseau de relations en Chine et en Corée, nous garantissons à nos clients des voitures en excellent état à des prix bien inférieurs au marché local.',
-            storyP3: 'Nous accompagnons nos clients à chaque étape du processus d\'importation, du choix de la voiture jusqu\'à la livraison à domicile.',
-            storyBadge: 'ans d\'expérience',
-            missionTitle: 'Notre mission',
-            missionDesc: 'Fournir des voitures de haute qualité à des prix justes avec un service client exceptionnel',
-            visionTitle: 'Notre vision',
-            visionDesc: 'Devenir le premier choix pour l\'importation de voitures en Algérie',
-            valuesTitle: 'Nos valeurs',
-            valuesDesc: 'Les principes auxquels nous adhérons dans chaque interaction',
-            valuesTag: 'Nos principes',
-            transparency: 'Transparence',
-            transparencyDesc: 'Prix clairs sans frais cachés',
-            quality: 'Qualité',
-            qualityDesc: 'Inspection complète de chaque voiture avant achat',
-            trust: 'Confiance',
-            trustDesc: 'Construire des relations durables avec nos clients',
-            support: 'Support',
-            supportDesc: 'Service client toujours disponible',
-            whyUsTag: 'Nos avantages',
-            whyUsTitle: 'Pourquoi Wahid Auto?',
-            whyUsSubtitle: 'Les raisons qui font de nous le meilleur choix pour importer votre voiture',
-            reason1: 'Grande expérience - Des années d\'expertise en importation',
-            reason2: 'Prix compétitifs - Économisez jusqu\'à 40% vs les concessionnaires',
-            reason3: 'Expédition sécurisée - Transport maritime assuré de la Chine et la Corée',
-            reason4: 'Support complet - Nous vous accompagnons du choix à la livraison',
-            reason5: 'Équipe spécialisée en Chine et en Corée du Sud',
-            reason6: 'Rapport d\'inspection complet pour chaque voiture',
-            reason7: 'Suivi de l\'expédition en temps réel',
-            reason8: 'Garantie de qualité sur toutes les voitures',
-            ctaTitle: 'Prêt à importer votre voiture?',
-            ctaDesc: 'Contactez-nous aujourd\'hui et commencez votre voyage vers la voiture de vos rêves',
-            ctaWhatsapp: 'Contactez via WhatsApp',
-            ctaCall: 'Appelez-nous',
-            statCars: 'voitures importées',
-            statClients: 'clients satisfaits',
-            statYears: 'ans d\'expérience',
-            statSatisfaction: 'satisfaction client'
-        }
-    }
-
-    const tx = text[language]
-
-    const stats = [
-        { number: '500+', label: tx.statCars },
-        { number: '1000+', label: tx.statClients },
-        { number: '2', label: tx.statYears },
-        { number: '98%', label: tx.statSatisfaction }
-    ]
-
-    const values = [
-        { icon: Shield, title: tx.transparency, desc: tx.transparencyDesc },
-        { icon: Heart, title: tx.quality, desc: tx.qualityDesc },
-        { icon: Zap, title: tx.trust, desc: tx.trustDesc },
-        { icon: Globe, title: tx.support, desc: tx.supportDesc }
-    ]
-
-    const reasons = [tx.reason1, tx.reason2, tx.reason3, tx.reason4, tx.reason5, tx.reason6, tx.reason7, tx.reason8]
+    const { language } = useLanguage()
+    const tx = copy[language]
 
     return (
-        <div className={`about-page ${!isRTL ? 'ltr' : ''}`}>
-            {/* Hero Section */}
-            <section className="about-hero">
-                <div className="about-hero-bg"></div>
+        <div className="about">
+            <PageHero eyebrow={tx.eyebrow} title={tx.title} lead={tx.lead} />
+
+            <section className="section">
+                <div className="container split">
+                    <div className="prose" data-reveal>
+                        <p className="eyebrow">{tx.storyTitle}</p>
+                        {tx.story.map(p => <p key={p}>{p}</p>)}
+                    </div>
+                    <figure className="split-media" style={{ margin: 0, aspectRatio: '4 / 5' }} data-reveal>
+                        <img src="/brand/showroom-aerial.jpg" alt={tx.photoCaption} loading="lazy" decoding="async" />
+                        <figcaption>{tx.photoCaption}</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section className="section" style={{ paddingTop: 0 }}>
                 <div className="container">
-                    <div className="about-hero-content">
-                        <span className="section-tag">{tx.heroTag}</span>
-                        <h1>{tx.heroTitle}</h1>
-                        <p>{tx.heroSubtitle}</p>
+                    <div className="stat-row" data-reveal>
+                        {tx.stats.map(s => (
+                            <div className="stat" key={s.label}>
+                                <span className="stat-value num">{s.value}</span>
+                                <span className="stat-label">{s.label}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Story Section */}
-            <section className="story-section section">
-                <div className="container">
-                    <div className="story-grid">
-                        <div className="story-content">
-                            <h2>{tx.storyTitle}</h2>
-                            <p>{tx.storyP1}</p>
-                            <p>{tx.storyP2}</p>
-                            <p>{tx.storyP3}</p>
-                            <div className="story-stats">
-                                {stats.map((stat, index) => (
-                                    <div key={index} className="story-stat">
-                                        <span className="stat-number">{stat.number}</span>
-                                        <span className="stat-label">{stat.label}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="story-image">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=600" alt={isRTL ? 'فريقنا' : 'Notre équipe'} />
-                            <div className="story-badge">
-                                <span>2</span>
-                                <span>{tx.storyBadge}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Mission Section */}
-            <section className="mission-section section section-dark">
-                <div className="container">
-                    <div className="mission-grid">
-                        <div className="mission-card">
-                            <div className="mission-icon">
-                                <Target size={40} />
-                            </div>
-                            <h3>{tx.missionTitle}</h3>
-                            <p>{tx.missionDesc}</p>
-                        </div>
-                        <div className="mission-card">
-                            <div className="mission-icon">
-                                <Award size={40} />
-                            </div>
-                            <h3>{tx.visionTitle}</h3>
-                            <p>{tx.visionDesc}</p>
-                        </div>
-                        <div className="mission-card">
-                            <div className="mission-icon">
-                                <Users size={40} />
-                            </div>
-                            <h3>{tx.valuesTitle}</h3>
-                            <p>{tx.valuesDesc}</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Values Section */}
-            <section className="values-section section">
+            <section className="section" style={{ background: 'var(--paper-2)' }}>
                 <div className="container">
                     <div className="section-header">
-                        <span className="section-tag">{tx.valuesTag}</span>
-                        <h2>{tx.valuesTitle}</h2>
-                        <p>{tx.valuesDesc}</p>
+                        <h2 className="section-title">{tx.valuesTitle}</h2>
                     </div>
-                    <div className="values-grid">
-                        {values.map((value, index) => (
-                            <div key={index} className="value-card card">
-                                <div className="value-icon">
-                                    <value.icon size={32} />
+                    <div className="value-grid" data-reveal>
+                        {tx.values.map((v, i) => {
+                            const Icon = icons[i]
+                            return (
+                                <div className="value-card" key={v.title}>
+                                    <Icon size={22} strokeWidth={1.5} />
+                                    <h3>{v.title}</h3>
+                                    <p>{v.text}</p>
                                 </div>
-                                <h3>{value.title}</h3>
-                                <p>{value.desc}</p>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 </div>
             </section>
 
-            {/* Why Choose Us */}
-            <section className="why-us-section section section-dark">
+            <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <span className="section-tag">{tx.whyUsTag}</span>
-                        <h2>{tx.whyUsTitle}</h2>
-                        <p>{tx.whyUsSubtitle}</p>
+                        <h2 className="section-title">{tx.socialTitle}</h2>
+                        <p className="section-subtitle">{tx.socialLead}</p>
                     </div>
-                    <div className="reasons-grid">
-                        {reasons.map((reason, index) => (
-                            <div key={index} className="reason-item">
-                                <CheckCircle size={24} />
-                                <span>{reason}</span>
-                            </div>
-                        ))}
+                    <div className="social-proof" data-reveal>
+                        <a className="social-tile" href={site.tiktokHref} target="_blank" rel="noopener noreferrer">
+                            <strong>45K</strong><span>{tx.tiktok} · @wahidautokr</span>
+                        </a>
+                        <a className="social-tile" href={site.facebookHref} target="_blank" rel="noopener noreferrer">
+                            <strong>5K</strong><span>{tx.facebook}</span>
+                        </a>
+                        <a className="social-tile" href={site.mapsHref} target="_blank" rel="noopener noreferrer">
+                            <strong className="latin" style={{ fontSize: '1.4rem' }}>{tx.visit}</strong><span>{tx.visitText}</span>
+                        </a>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="about-cta section">
-                <div className="container">
-                    <div className="cta-box">
-                        <h2>{tx.ctaTitle}</h2>
-                        <p>{tx.ctaDesc}</p>
-                        <div className="cta-buttons">
-                            <a href="https://wa.me/821080890802" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-                                {tx.ctaWhatsapp}
-                            </a>
-                            <a href="tel:+213557060478" className="btn btn-outline btn-lg">
-                                {tx.ctaCall}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <CtaBand />
         </div>
     )
 }

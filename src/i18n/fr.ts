@@ -1,5 +1,6 @@
 export const fr = {
     nav: {
+        stock: 'Disponibles',
         home: 'Accueil',
         cars: 'Voitures',
         about: 'À propos',

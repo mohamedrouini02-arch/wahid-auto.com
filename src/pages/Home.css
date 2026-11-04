@@ -153,8 +153,8 @@ html[dir='rtl'] .step { padding: 28px 0 8px 24px; }
 .route-label { fill: #C9CCC6; font-size: 15px; font-family: var(--font-family); }
 .route-label-home { fill: #F2F2EE; font-size: 17px; }
 .route-origin { cursor: pointer; outline: none; }
-.route-origin:focus-visible .route-node { stroke-width: 5; }
-.route-origin:hover .route-node { stroke-width: 5; }
+.route-origin:focus-visible > g, .route-origin:hover > g { transform-box: fill-box; transform-origin: center; transform: scale(1.15); }
+
 @media (prefers-reduced-motion: reduce) { .route-flow, .route-pulse { animation: none; } }
 
 /* Brand marquee */

@@ -183,7 +183,7 @@ export default function OrderTracking() {
                         <div className="tracking-cta">
                             <p>هل لديك استفسار؟</p>
                             <a
-                                href={`https://wa.me/821080890802?text=مرحباً، لدي سؤال حول طلبي رقم ${order.reference_number}`}
+                                href={`https://wa.me/213557060478?text=مرحباً، لدي سؤال حول طلبي رقم ${order.reference_number}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn btn-primary"

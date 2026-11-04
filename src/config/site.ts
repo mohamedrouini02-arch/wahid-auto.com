@@ -2,7 +2,7 @@
 export const site = {
     phoneDisplay: '0557 06 04 78',
     phoneHref: 'tel:+213557060478',
-    whatsappHref: 'https://wa.me/821080890802',
+    whatsappHref: 'https://wa.me/213557060478',
     email: 'contact@wahid-auto.com',
     mapsHref: 'https://share.google/8n7nTrjsS6UiuW5qY',
     tiktokHref: 'https://www.tiktok.com/@wahidautokr',

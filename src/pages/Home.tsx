@@ -22,10 +22,10 @@ const OTHER_BUDGET = 'أخرى (حدد الميزانية)'
 const copy = {
     ar: {
         heroEyebrow: 'من كوريا والصين إلى الجزائر',
-        heroTitle: 'سيارتك القادمة،\nبسعر واضح من أول يوم.',
-        heroLead: 'نختار السيارة معك، نفحصها، نشحنها ونتكفل بالأوراق. أنت تعرف السعر النهائي قبل أن تدفع.',
+        heroTitle: 'سيارتك الجاية من كوريا والصين،\nبسعر واضح من النهار الأول.',
+        heroLead: 'نختارو السيارة معاك، نفحصوها، نشحنوها ونتكفلو بالأوراق. تعرف السعر النهائي قبل ما تخلص.',
         heroOrder: 'اطلب سيارتك',
-        heroCars: 'تصفح السيارات',
+        heroCars: 'السيارات المتوفرة',
         facts: [
             { value: 270, suffix: '+', label: 'سيارة سلمناها خلال آخر 12 شهراً' },
             { value: 20, suffix: '+', label: 'ولاية فيها زبائن وحيد أوتو' },
@@ -93,7 +93,7 @@ const copy = {
         heroTitle: 'Votre prochaine voiture,\nau prix clair dès le premier jour.',
         heroLead: 'Nous choisissons la voiture avec vous, l’inspectons, l’expédions et gérons les papiers. Vous connaissez le prix final avant de payer.',
         heroOrder: 'Commander',
-        heroCars: 'Voir les voitures',
+        heroCars: 'Voitures disponibles',
         facts: [
             { value: 270, suffix: '+', label: 'voitures livrées ces 12 derniers mois' },
             { value: 20, suffix: '+', label: 'wilayas où vivent nos clients' },
@@ -259,7 +259,7 @@ export default function Home() {
                         <p className="lead hero-lead animate-fadeInUp stagger-2">{tx.heroLead}</p>
                         <div className="hero-actions animate-fadeInUp stagger-3">
                             <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
-                            <Link to="/cars" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
+                            <Link to="/stock" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
                         </div>
                     </div>
                     <div className="hero-mark">

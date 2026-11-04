@@ -322,7 +322,7 @@ export default function CarDetails() {
                         <p>{text.interestedDesc}</p>
                         <div className="cta-actions">
                             <a
-                                href={`https://wa.me/821080890802?text=${encodeURIComponent(language === 'ar' ? `مرحباً، أريد الاستفسار عن سيارة ${carBrand} ${carName}` : `Bonjour, je suis intéressé par ${carBrand} ${carName}`)}`}
+                                href={`https://wa.me/213557060478?text=${encodeURIComponent(language === 'ar' ? `مرحباً، أريد الاستفسار عن سيارة ${carBrand} ${carName}` : `Bonjour, je suis intéressé par ${carBrand} ${carName}`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn btn-primary btn-lg"

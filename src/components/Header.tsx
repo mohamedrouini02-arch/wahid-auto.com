@@ -7,6 +7,7 @@ import { Logo } from './Logo'
 import './Header.css'
 
 const navLinks = [
+    { path: '/stock', labelKey: 'nav.stock' },
     { path: '/cars', labelKey: 'nav.cars' },
     { path: '/process', labelKey: 'nav.process' },
     { path: '/about', labelKey: 'nav.about' },

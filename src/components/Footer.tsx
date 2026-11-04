@@ -11,6 +11,7 @@ const copy = {
         follow: 'تابعنا',
         contact: 'تواصل',
         links: [
+            { path: '/stock', label: 'متوفرة الآن' },
             { path: '/cars', label: 'السيارات' },
             { path: '/process', label: 'كيف نعمل' },
             { path: '/about', label: 'من نحن' },
@@ -27,6 +28,7 @@ const copy = {
         follow: 'Suivez-nous',
         contact: 'Contact',
         links: [
+            { path: '/stock', label: 'Disponibles maintenant' },
             { path: '/cars', label: 'Voitures' },
             { path: '/process', label: 'Comment ça marche' },
             { path: '/about', label: 'À propos' },
