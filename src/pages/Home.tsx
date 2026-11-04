@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import BudgetFinder from '../components/BudgetFinder'
+import Hero3D from '../components/Hero3D'
 import { Monogram } from '../components/Logo'
 import RouteMap from '../components/RouteMap'
 import { featuredModelIds, site } from '../config/site'
@@ -41,6 +42,9 @@ const copy = {
         modelsEyebrow: 'ابحث عن سيارتك',
         modelsTitle: 'حرّك الميزانية، شاهد ما يناسبك.',
         map: { korea: 'كوريا', china: 'الصين', algeria: 'الجزائر' },
+        roadsEyebrow: 'طريقان، وجهة واحدة',
+        roadsTitle: 'من سيول وشنغهاي إلى باب دارك.',
+        roadsLead: 'شركاء على الأرض في كوريا والصين، ومعرض في جيجل. اضغط على أي بلد لترى طريقه.',
         modelsLead: 'الأسعار تقريبية وتتغير مع سعر الصرف. نرسل لك السعر النهائي قبل أي دفع.',
         allCars: 'كل السيارات',
         rulesEyebrow: 'قوانين الاستيراد 2026',
@@ -105,6 +109,9 @@ const copy = {
         modelsEyebrow: 'Trouver votre voiture',
         modelsTitle: 'Bougez le budget, voyez ce qui vous va.',
         map: { korea: 'Corée', china: 'Chine', algeria: 'Algérie' },
+        roadsEyebrow: 'Deux routes, une destination',
+        roadsTitle: 'De Séoul et Shanghai jusqu’à chez vous.',
+        roadsLead: 'Des partenaires sur place en Corée et en Chine, un showroom à Jijel. Touchez un pays pour voir sa route.',
         modelsLead: 'Prix indicatifs, ils suivent le taux de change. Vous recevez le prix final avant tout paiement.',
         allCars: 'Toutes les voitures',
         rulesEyebrow: 'Règles d’importation 2026',
@@ -241,7 +248,8 @@ export default function Home() {
     return (
         <div className="home">
             {/* ---------- HERO ---------- */}
-            <section className="hero section-dark">
+            <section className="hero hero-3d section-dark">
+                <Hero3D />
                 <div className="container hero-inner">
                     <div className="hero-copy">
                         <p className="eyebrow animate-fadeInUp">{tx.heroEyebrow}</p>
@@ -251,9 +259,6 @@ export default function Home() {
                             <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
                             <Link to="/stock" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
                         </div>
-                    </div>
-                    <div className="hero-mark">
-                        <RouteMap labels={tx.map} />
                     </div>
                 </div>
 
@@ -270,13 +275,27 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* ---------- TWO ROADS ---------- */}
+            <section className="section section-dark roads">
+                <div className="container roads-grid">
+                    <div className="section-header" data-reveal>
+                        <p className="eyebrow">{tx.roadsEyebrow}</p>
+                        <h2 className="section-title">{tx.roadsTitle}</h2>
+                        <p className="section-subtitle">{tx.roadsLead}</p>
+                    </div>
+                    <div className="hero-mark" data-reveal>
+                        <RouteMap labels={tx.map} />
+                    </div>
+                </div>
+            </section>
+
             {/* ---------- MODELS ---------- */}
             <section className="section models">
                 <div className="container">
                     <div className="section-row" data-reveal>
                         <div className="section-header">
                             <p className="eyebrow">{tx.modelsEyebrow}</p>
-                            <h2 className="section-title">{tx.modelsTitle}</h2>
+                            <h2 className="section-title" data-speed="-0.06">{tx.modelsTitle}</h2>
                             <p className="section-subtitle">{tx.modelsLead}</p>
                         </div>
                         <Link to="/cars" className="btn btn-secondary">{tx.allCars}</Link>
@@ -291,7 +310,7 @@ export default function Home() {
                 <div className="container">
                     <div className="section-header">
                         <p className="eyebrow">{tx.stepsEyebrow}</p>
-                        <h2 className="section-title">{tx.stepsTitle}</h2>
+                        <h2 className="section-title" data-speed="-0.06">{tx.stepsTitle}</h2>
                     </div>
                     <div className="steps-progress" aria-hidden="true">
                         <span style={{ width: `${((activeStep + 1) / tx.steps.length) * 100}%` }} />
@@ -339,7 +358,7 @@ export default function Home() {
                     <div className="order-intro">
                         <div className="section-header">
                             <p className="eyebrow">{tx.orderEyebrow}</p>
-                            <h2 className="section-title">{tx.orderTitle}</h2>
+                            <h2 className="section-title" data-speed="-0.05">{tx.orderTitle}</h2>
                             <p className="section-subtitle">{tx.orderLead}</p>
                         </div>
                         <ul className="promises">

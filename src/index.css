@@ -105,7 +105,7 @@ html[dir='ltr'] { --font-family: var(--font-latin), var(--font-arabic); }
 
 /* ========== BASE ========== */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--paper);

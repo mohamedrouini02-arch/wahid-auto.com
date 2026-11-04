@@ -1,9 +1,10 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
 import { LanguageProvider } from './context/LanguageContext'
+import { useSmoothScroll } from './lib/smoothScroll'
 import About from './pages/About'
 import CarDetails from './pages/CarDetails'
 import Cars from './pages/Cars'
@@ -15,11 +16,17 @@ import Process from './pages/Process'
 import Stock from './pages/Stock'
 import ShippingForm from './pages/ShippingForm'
 
+function SmoothScroll() {
+    useSmoothScroll(useLocation().pathname)
+    return null
+}
+
 function App() {
     return (
         <LanguageProvider>
             <Router>
                 <ScrollToTop />
+                <SmoothScroll />
                 <div className="app">
                     <Header />
                     <main>
