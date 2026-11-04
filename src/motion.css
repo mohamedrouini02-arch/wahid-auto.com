@@ -133,3 +133,23 @@ html[dir='rtl'] .hpin-more svg { transform: scaleX(-1); }
 @media (max-width: 860px) {
     .home-hero-title { max-width: none; }
 }
+
+/* Waving flags: Korea and Algeria, faint, behind every page */
+.flags-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; --flags-o: 1; --flags-y: 0px; }
+.flag-wave {
+    position: absolute; display: block; width: min(48vw, 680px); aspect-ratio: 3 / 2.3;
+    opacity: calc(var(--flags-o) * .18);
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 35%, transparent 100%);
+    filter: saturate(.9) brightness(.8);
+    transition: opacity 400ms linear;
+    will-change: transform;
+}
+.flag-kr { top: 9vh; right: -5vw; transform: translate3d(0, var(--flags-y), 0) rotate(-7deg); }
+.flag-dz { bottom: 4vh; left: -6vw; transform: translate3d(0, calc(var(--flags-y) * -1), 0) rotate(6deg); }
+@media (max-width: 760px) {
+    .flag-wave { width: 92vw; opacity: calc(var(--flags-o) * .15); }
+    .flag-kr { top: 7vh; right: -30vw; }
+    .flag-dz { bottom: 6vh; left: -32vw; }
+}
+@media print { .flags-bg { display: none; } }
