@@ -147,7 +147,9 @@ html[dir='rtl'] .menu-overlay .menu-label { font-family: var(--f-arabic); letter
 .o-hero-meta { position: absolute; top: 112px; inset-inline: clamp(16px, 4vw, 56px); display: flex; justify-content: space-between; gap: 16px; }
 .o-hero-meta > span { display: flex; align-items: center; gap: 10px; }
 .o-hero-title { font-size: clamp(54px, 10vw, 176px) !important; letter-spacing: -.065em !important; line-height: .88 !important; max-width: 12ch; }
-html[dir='rtl'] .o-hero-title { font-size: clamp(46px, 7.6vw, 128px) !important; letter-spacing: 0 !important; line-height: 1.12 !important; max-width: 14ch; }
+html[dir='rtl'] .o-hero-title { font-size: clamp(44px, 6.2vw, 108px) !important; letter-spacing: 0 !important; line-height: 1.15 !important; max-width: 22ch; }
+html[dir='rtl'] .o-hero-title .split-line { white-space: nowrap; }
+@media (max-width: 760px) { html[dir='rtl'] .o-hero-title .split-line { white-space: normal; } }
 .o-hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
 .o-hero-copy { max-width: 480px; display: grid; gap: 28px; }
 .o-hero-copy p { font-size: 18px; line-height: 1.6; }

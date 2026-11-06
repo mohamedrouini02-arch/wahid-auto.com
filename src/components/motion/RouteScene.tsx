@@ -209,7 +209,8 @@ export default function RouteScene() {
             const shot = SHOTS[body.dataset.scene || 'hero'] || SHOTS.quiet
             const mobile = W < 760, k = reduce ? 1 : 0.05
             cam.x = lerp(cam.x, shot.x, k); cam.y = lerp(cam.y, shot.y, k); cam.z = lerp(cam.z, shot.z * (mobile ? 2.1 : 1), k)
-            let gx = mobile ? 0.5 : shot.ax, gy = mobile ? 0.42 : shot.ay
+            const rtl = document.documentElement.dir === 'rtl'   // text on the right: the world goes left
+            let gx = mobile ? 0.5 : rtl ? 1 - shot.ax : shot.ax, gy = mobile ? 0.42 : shot.ay
             const anchor = document.querySelector('[data-active-section] [data-anchor]')
             if (anchor) { const r = anchor.getBoundingClientRect(); if (r.bottom > 0 && r.top < H) { gx = (r.left + r.width / 2) / W; gy = (r.top + r.height / 2) / H } }
             cam.ax = lerp(cam.ax, gx, k * 2); cam.ay = lerp(cam.ay, gy, k * 2)
