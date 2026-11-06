@@ -216,3 +216,48 @@ html[dir='rtl'] .statement .marquee-track { animation-name: o-marquee-rtl; }
 
 /* animated headlines share the class name "split" with an old two-column layout: keep them blocks */
 :is(h1, h2, h3, p).split { display: block !important; grid-template-columns: none; }
+
+/* ---------- the journey: one chapter per step ---------- */
+.journey-step, .journey-dossier { position: relative; padding-block: clamp(80px, 11vw, 150px); }
+.journey-grid { max-width: 1440px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 56px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 16px; align-items: stretch; }
+.journey-step.is-flipped .journey-copy { order: 2; }
+.journey-copy { display: flex; flex-direction: column; justify-content: center; gap: 22px; min-width: 0; padding: clamp(28px, 3.6vw, 52px);
+    background: var(--card); border: 1px solid var(--line); border-radius: 28px; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    transition: background-color 1s var(--ease-o), border-color 1s var(--ease-o), opacity 1.2s var(--ease-o), transform 1.4s var(--ease-o); }
+.journey-copy.is-plain { background: transparent; border-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; padding-inline: 0; }
+.reveal-ready .journey-copy[data-reveal]:not(.is-visible), .reveal-ready .dossier-card[data-reveal]:not(.is-visible) { opacity: 0; transform: translateY(36px); }
+.journey-num { display: flex; align-items: center; gap: 12px; font: 500 12px var(--f-mono); letter-spacing: .14em; color: var(--muted); }
+.journey-num span:first-child { color: var(--accent); font-size: 14px; }
+.journey-num i { width: 40px; height: 1px; background: var(--line); }
+.journey-title { font-size: clamp(36px, 4.4vw, 72px) !important; letter-spacing: -.055em; line-height: .98; }
+html[dir='rtl'] .journey-title { font-size: clamp(32px, 3.8vw, 58px) !important; line-height: 1.25; }
+.journey-text { font-size: 17px; line-height: 1.65; max-width: 46ch; }
+.journey-docs { display: grid; gap: 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.journey-docs-label { font: 500 11px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+html[dir='rtl'] .journey-docs-label { font-family: var(--f-arabic); font-size: 13px; letter-spacing: 0; }
+.journey-docs ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.journey-docs li { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-size: 14px; color: var(--fg); }
+.journey-docs li svg { color: var(--accent); }
+.journey-step .scene-window { min-height: clamp(380px, 46vw, 600px); }
+
+/* the file */
+.dossier-card { position: relative; align-self: center; background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: clamp(22px, 3vw, 36px);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); transition: opacity 1.2s var(--ease-o), transform 1.4s var(--ease-o); }
+.dossier-head { display: flex; align-items: center; gap: 10px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font: 500 12px var(--f-mono); letter-spacing: .1em; color: var(--fg); }
+.dossier-head svg { color: var(--accent); }
+.dossier-head small { margin-inline-start: auto; color: var(--muted); letter-spacing: .1em; font-size: 10px; text-transform: uppercase; }
+.dossier-card ol { list-style: none; margin: 0; padding: 0; }
+.dossier-card li { display: grid; grid-template-columns: 34px minmax(0, 1fr) 26px; gap: 14px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--line); }
+.dossier-card li:last-child { border-bottom: 0; }
+.dossier-card li > span { font: 500 11px var(--f-mono); color: var(--muted); }
+.dossier-card li b { display: block; font-weight: 600; color: var(--fg); }
+.dossier-card li small { display: block; color: var(--muted); font-size: 13px; }
+.dossier-card li i { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff;
+    transform: scale(0); transition: transform .6s var(--ease-o); transition-delay: inherit; }
+.dossier-card.is-visible li i { transform: none; }
+
+@media (max-width: 900px) {
+    .journey-grid { grid-template-columns: 1fr; }
+    .journey-step.is-flipped .journey-copy { order: 0; }
+    .journey-step .scene-window { min-height: 300px; }
+}

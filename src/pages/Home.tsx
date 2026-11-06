@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 import BudgetFinder from '../components/BudgetFinder'
 import { ScrubText, SplitText } from '../components/motion/Shell'
 import { Monogram } from '../components/Logo'
-import RouteMap from '../components/RouteMap'
+import Journey from '../components/Journey'
 import { featuredModelIds, site } from '../config/site'
 import { getCarById, getPriceRangeDisplay, type CarData } from '../data/cars'
 import { useLanguage } from '../context/LanguageContext'
@@ -26,12 +26,12 @@ const copy = {
         heroTitle: 'سيارتك الجاية من كوريا والصين،\nبسعر واضح من النهار الأول.',
         heroLead: 'نختارو السيارة معاك، نفحصوها، نشحنوها ونتكفلو بالأوراق. تعرف السعر النهائي قبل ما تخلص.',
         heroOrder: 'اطلب سيارتك',
-        heroLines: 'سيارتك الجاية\nمن كوريا والصين.\n*بسعر واضح.*',
-        metaLeft: 'من كوريا والصين إلى الجزائر', metaMid: 'نختارو، نفحصو، نشحنو، نسلمو', metaRight: 'وحيد أوتو / 01',
+        heroLines: 'من طلبك\nحتى المفاتيح\n*في يدك.*',
+        metaLeft: 'من كوريا والصين إلى الجزائر', metaMid: '6 مراحل · كل شيء واضح وموثّق', metaRight: 'وحيد أوتو / 01',
         tagTitle: 'نفحصوها بعينينا.', tagText: 'صور وتقرير قبل ما تخلص.',
         heroNotes: ['كيا', 'هيونداي', 'رينو', 'جيلي'],
-        flow: [['export', 'كوريا · الصين'], ['sea', 'البحر'], ['port', 'الميناء'], ['home', 'دارك']] as [string, string][],
-        statement: ['سيارة واحدة.', 'من الساحة حتى باب دارك.', 'سعر واضح.', 'بلا مفاجآت.'],
+        flow: [['buy', 'الشراء'], ['ship', 'الشحن'], ['customs', 'الجمارك'], ['keys', 'المفاتيح']] as [string, string][],
+        statement: ['طلب واحد.', 'من الطلب حتى المفاتيح.', 'كل شيء واضح.', 'وكل شيء موثّق.'],
         scrollHint: 'مرّر',
         manifestoEyebrow: 'وحيد أوتو',
         manifesto: 'نجيبولك سيارتك من كوريا ولا الصين كيما لازم: نختاروها معاك، نفحصوها بعينينا، نشحنوها ونخلصو أوراقها. أنت تعرف السعر قبل ما تخلص، وتتبع سيارتك من الميناء حتى لباب دارك.',
@@ -105,12 +105,12 @@ const copy = {
         heroTitle: 'Votre prochaine voiture,\nau prix clair dès le premier jour.',
         heroLead: 'Nous choisissons la voiture avec vous, l’inspectons, l’expédions et gérons les papiers. Vous connaissez le prix final avant de payer.',
         heroOrder: 'Commander',
-        heroLines: 'Votre voiture,\nde Corée et de Chine.\n*Au prix clair.*',
-        metaLeft: 'Corée · Chine → Algérie', metaMid: 'Choisir. Inspecter. Expédier. Livrer.', metaRight: 'Wahid Auto / 01',
+        heroLines: 'De votre commande\naux clés\n*dans votre main.*',
+        metaLeft: 'Corée · Chine → Algérie', metaMid: '6 étapes · tout est clair et documenté', metaRight: 'Wahid Auto / 01',
         tagTitle: 'Inspectée sur place.', tagText: 'Photos et rapport avant de payer.',
         heroNotes: ['Kia', 'Hyundai', 'Renault', 'Geely'],
-        flow: [['export', 'Corée · Chine'], ['sea', 'En mer'], ['port', 'Port'], ['home', 'Chez vous']] as [string, string][],
-        statement: ['Une voiture.', 'Du parc jusqu’à chez vous.', 'Un prix clair.', 'Sans surprise.'],
+        flow: [['buy', 'Achat'], ['ship', 'Mer'], ['customs', 'Douane'], ['keys', 'Clés']] as [string, string][],
+        statement: ['Une commande.', 'De la demande aux clés.', 'Tout est clair.', 'Tout est documenté.'],
         scrollHint: 'Défiler',
         manifestoEyebrow: 'Wahid Auto',
         manifesto: 'Nous ramenons votre voiture de Corée ou de Chine comme il faut : choisie avec vous, inspectée de près, expédiée et dédouanée. Vous connaissez le prix avant de payer et suivez votre voiture du port jusqu’à chez vous.',
@@ -318,8 +318,10 @@ export default function Home() {
                 </div>
             </section>
 
+            <Journey language={language} />
+
             {/* ---------- MANIFESTO ---------- */}
-            <section className="section manifesto" data-tone="dark" data-scene="korea">
+            <section className="section manifesto" data-tone="dark" data-scene="quiet">
                 <div className="container">
                     <p className="eyebrow">{tx.manifestoEyebrow}</p>
                     <ScrubText text={tx.manifesto} />
@@ -373,41 +375,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ---------- TWO ROADS ---------- */}
-            <section className="section section-dark roads" data-tone="dark" data-scene="sea">
-                <div className="container roads-grid">
-                    <div className="section-header" data-reveal>
-                        <p className="eyebrow">{tx.roadsEyebrow}</p>
-                        <SplitText className="section-title" text={tx.roadsTitle} />
-                        <p className="section-subtitle">{tx.roadsLead}</p>
-                    </div>
-                    <div className="hero-mark" data-reveal>
-                        <RouteMap labels={tx.map} />
-                    </div>
-                </div>
-            </section>
-
-            {/* ---------- PROCESS: stacking cards ---------- */}
-            <section className="section process" data-tone="light" data-scene="algeria">
-                <div className="container">
-                    <div className="section-header">
-                        <p className="eyebrow">{tx.stepsEyebrow}</p>
-                        <SplitText className="section-title" text={tx.stepsTitle} />
-                    </div>
-                    <ol className="stack">
-                        {tx.steps.map((step, index) => (
-                            <li className="stack-card" key={step.title} style={{ top: `calc(var(--header-h) + ${24 + index * 22}px)` }}>
-                                <span className="stack-index latin num">{String(index + 1).padStart(2, '0')}</span>
-                                <div>
-                                    <h3>{step.title}</h3>
-                                    <p>{step.text}</p>
-                                </div>
-                            </li>
-                        ))}
-                    </ol>
-                </div>
-            </section>
-
             {/* ---------- RULES ---------- */}
             <section className="section rules" data-tone="light" data-scene="quiet">
                 <div className="container rules-grid">
@@ -428,7 +395,7 @@ export default function Home() {
             </section>
 
             {/* ---------- ORDER ---------- */}
-            <section className="section order" id="order" data-tone="dark" data-scene="algeria">
+            <section className="section order" id="order" data-tone="dark" data-scene="order">
                 <div className="container order-grid">
                     <div className="order-intro">
                         <div className="section-header">
