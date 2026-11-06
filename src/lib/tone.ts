@@ -11,7 +11,7 @@ export function useTone(pathname: string) {
         const update = () => {
             frame = 0
             const mid = window.innerHeight * 0.5
-            const sections = Array.from(document.querySelectorAll('[data-tone]'))
+            const sections = Array.from(document.querySelectorAll('main [data-tone], footer[data-tone]'))
             const hit = sections.find(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom > mid }) || null
             if (hit === active) return
             active?.removeAttribute('data-active-section')
