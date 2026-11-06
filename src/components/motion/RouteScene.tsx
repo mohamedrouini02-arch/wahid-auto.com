@@ -33,7 +33,7 @@ const PAL: Record<'dark' | 'light', Record<string, RGB>> = {
 
 // camera goals per section (world centre, zoom); x of the anchor as a fraction of the screen
 const SHOTS: Record<string, { x: number; y: number; z: number; ax: number; ay: number; alpha: number }> = {
-    hero: { x: 4, y: 0, z: 0.6, ax: 0.6, ay: 0.5, alpha: 1 },
+    hero: { x: 4, y: 0, z: 0.52, ax: 0.7, ay: 0.55, alpha: 0.85 },
     korea: { x: -22, y: 0, z: 1.45, ax: 0.62, ay: 0.5, alpha: 0.75 },
     sea: { x: -2, y: 0, z: 1.15, ax: 0.6, ay: 0.52, alpha: 0.7 },
     algeria: { x: 21, y: -1, z: 1.4, ax: 0.62, ay: 0.5, alpha: 0.75 },
@@ -97,10 +97,11 @@ export default function RouteScene() {
         palette()
 
         const cam = { ...SHOTS.hero }
-        let SU = 1
+        let SU = 1, mirror = false   // Arabic: the whole picture is mirrored so the route reads right to left
         const P = (x: number, y: number, z = 0): [number, number] => {
             const dx = x - cam.x, dy = y - cam.y
-            return [cam.ax * W + (dx - dy) * C30 * SU, cam.ay * H + ((dx + dy) * 0.5 - z * 0.92) * SU]
+            const sx = cam.ax * W + (dx - dy) * C30 * SU
+            return [mirror ? W - sx : sx, cam.ay * H + ((dx + dy) * 0.5 - z * 0.92) * SU]
         }
 
         // ---------- primitives ----------
@@ -142,7 +143,7 @@ export default function RouteScene() {
                         const u = i / strips, wave = Math.sin(u * 5.5 - t * 3.2) * SU * 0.13 * u
                         const shadeK = 0.86 + 0.14 * Math.cos(u * 5.5 - t * 3.2)
                         ctx.filter = `brightness(${shadeK.toFixed(2)})`
-                        ctx.drawImage(img, u * img.width, 0, img.width / strips + 0.6, img.height, tx + u * fw, ty + wave, fw / strips + 0.6, fh)
+                        ctx.drawImage(img, u * img.width, 0, img.width / strips + 0.6, img.height, mirror ? tx - fw + u * fw : tx + u * fw, ty + wave, fw / strips + 0.6, fh)
                     }
                     ctx.filter = 'none'; ctx.globalAlpha = 1
                 },
@@ -209,10 +210,13 @@ export default function RouteScene() {
             const shot = SHOTS[body.dataset.scene || 'hero'] || SHOTS.quiet
             const mobile = W < 760, k = reduce ? 1 : 0.05
             cam.x = lerp(cam.x, shot.x, k); cam.y = lerp(cam.y, shot.y, k); cam.z = lerp(cam.z, shot.z * (mobile ? 2.1 : 1), k)
-            const rtl = document.documentElement.dir === 'rtl'   // text on the right: the world goes left
-            let gx = mobile ? 0.5 : rtl ? 1 - shot.ax : shot.ax, gy = mobile ? 0.42 : shot.ay
+            mirror = document.documentElement.dir === 'rtl'
+            let gx = mobile ? 0.5 : shot.ax, gy = mobile ? 0.42 : shot.ay
             const anchor = document.querySelector('[data-active-section] [data-anchor]')
-            if (anchor) { const r = anchor.getBoundingClientRect(); if (r.bottom > 0 && r.top < H) { gx = (r.left + r.width / 2) / W; gy = (r.top + r.height / 2) / H } }
+            if (anchor) {
+                const r = anchor.getBoundingClientRect()
+                if (r.bottom > 0 && r.top < H) { const cx = (r.left + r.width / 2) / W; gx = mirror ? 1 - cx : cx; gy = (r.top + r.height / 2) / H }
+            }
             cam.ax = lerp(cam.ax, gx, k * 2); cam.ay = lerp(cam.ay, gy, k * 2)
             cam.alpha = lerp(cam.alpha, shot.alpha * (mobile ? 0.55 : 1), k)
             SU = (24 * cam.z * Math.min(W, H * 1.6)) / 1200
