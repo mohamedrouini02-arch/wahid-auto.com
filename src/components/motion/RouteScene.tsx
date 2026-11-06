@@ -45,7 +45,7 @@ const SHOTS: Record<string, Shot> = {
     buy: { x: -19, y: -2, z: 1.35, ax: 0.66, ay: 0.55, alpha: 1 },
     ship: { x: -3, y: 0, z: 1.05, ax: 0.62, ay: 0.55, alpha: 1 },
     customs: { x: 19, y: 0, z: 1.6, ax: 0.64, ay: 0.55, alpha: 1 },
-    keys: { x: 36, y: -3, z: 1.7, ax: 0.64, ay: 0.55, alpha: 1 },
+    keys: { x: 37, y: -2.6, z: 1.3, ax: 0.64, ay: 0.55, alpha: 1 },
     all: { x: 5, y: 0, z: 0.5, ax: 0.5, ay: 0.55, alpha: 0.8 },
     quiet: { x: 5, y: 0, z: 0.55, ax: 0.5, ay: 0.55, alpha: 0.25 },
 }
