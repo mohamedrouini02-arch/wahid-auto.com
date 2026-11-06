@@ -261,3 +261,4 @@ html[dir='rtl'] .journey-docs-label { font-family: var(--f-arabic); font-size: 1
     .journey-step.is-flipped .journey-copy { order: 0; }
     .journey-step .scene-window { min-height: 300px; }
 }
+html[dir='rtl'] .dossier-head { font-family: var(--f-arabic); letter-spacing: 0; font-size: 14px; }
