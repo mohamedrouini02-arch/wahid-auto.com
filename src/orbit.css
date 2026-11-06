@@ -146,8 +146,8 @@ html[dir='rtl'] .menu-overlay .menu-label { font-family: var(--f-arabic); letter
     padding: 150px max(var(--gutter, 20px), clamp(16px, 4vw, 56px)) 28px; }
 .o-hero-meta { position: absolute; top: 112px; inset-inline: clamp(16px, 4vw, 56px); display: flex; justify-content: space-between; gap: 16px; }
 .o-hero-meta > span { display: flex; align-items: center; gap: 10px; }
-.o-hero-title { font-size: clamp(54px, 10vw, 176px) !important; letter-spacing: -.065em !important; line-height: .88 !important; max-width: 12ch; }
-html[dir='rtl'] .o-hero-title { font-size: clamp(44px, 6.2vw, 108px) !important; letter-spacing: 0 !important; line-height: 1.15 !important; max-width: 22ch; }
+.o-hero-title { display: block !important; font-size: clamp(54px, 10vw, 176px) !important; letter-spacing: -.065em !important; line-height: .88 !important; max-width: 12ch; }
+html[dir='rtl'] .o-hero-title { font-size: clamp(44px, 6.2vw, 108px) !important; letter-spacing: 0 !important; line-height: 1.15 !important; max-width: none; }
 html[dir='rtl'] .o-hero-title .split-line { white-space: nowrap; }
 @media (max-width: 760px) { html[dir='rtl'] .o-hero-title .split-line { white-space: normal; } }
 .o-hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
@@ -213,3 +213,6 @@ html[dir='rtl'] .statement .marquee-track { animation-name: o-marquee-rtl; }
     .btn-primary { min-height: 52px; }
     .scene-window { min-height: 300px; }
 }
+
+/* animated headlines share the class name "split" with an old two-column layout: keep them blocks */
+:is(h1, h2, h3, p).split { display: block !important; grid-template-columns: none; }
