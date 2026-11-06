@@ -1,5 +1,6 @@
 import { createElement, useEffect, useRef, useState, type CSSProperties, type ElementType } from 'react'
 import { useLocation } from 'react-router-dom'
+import { Monogram } from '../Logo'
 
 // First-visit loader: a counter to 100, then the curtain lifts.
 export function Loader() {
@@ -12,19 +13,23 @@ export function Loader() {
         const start = performance.now()
         let frame = 0
         const tick = (now: number) => {
-            const p = Math.min(1, (now - start) / 800)
+            const p = Math.min(1, (now - start) / 1300)
             setCount(Math.round(100 * (1 - Math.pow(1 - p, 3))))
             if (p < 1) frame = requestAnimationFrame(tick)
-            else window.setTimeout(() => setDone(true), 120)
+            else window.setTimeout(() => setDone(true), 250)
         }
         frame = requestAnimationFrame(tick)
         return () => cancelAnimationFrame(frame)
     }, [])
     return (
         <div className={`loader ${done ? 'is-done' : ''}`} aria-hidden="true">
-            <span className="loader-brand latin">WAHID AUTO</span>
-            <span className="loader-count latin num">{String(count).padStart(3, '0')}</span>
-            <span className="loader-bar" style={{ transform: `scaleX(${count / 100})` }} />
+            <div className="loader-inner">
+                <div className="loader-logo" style={{ '--p': `${count}%` } as CSSProperties}>
+                    <Monogram size={120} /><span className="loader-fill"><Monogram size={120} /></span>
+                </div>
+                <div className="loader-row latin"><span>WAHID AUTO / KOREA · CHINA → DZ</span><span className="loader-count">{String(count).padStart(3, '0')}</span></div>
+                <div className="loader-line" style={{ '--s': count / 100 } as CSSProperties}><i /></div>
+            </div>
         </div>
     )
 }
@@ -93,16 +98,19 @@ export function SplitText({ text, as = 'h2', className = '', delay = 0 }: { text
     }, [])
     let index = 0
     const lines = text.split('\n')
-    return createElement(as, { ref, className: `split ${visible ? 'is-in' : ''} ${className}`, 'aria-label': text.replace(/\n/g, ' ') },
-        lines.map((line, li) => (
-            <span className="split-line" key={li} aria-hidden="true">
+    return createElement(as, { ref, className: `split ${visible ? 'is-in' : ''} ${className}`, 'aria-label': text.replace(/\n/g, ' ').replace(/\*/g, '') },
+        lines.map((raw, li) => {
+            const accent = raw.startsWith('*') && raw.endsWith('*')
+            const line = accent ? raw.slice(1, -1) : raw
+            return (
+            <span className={`split-line ${accent ? 'accent-line' : ''}`} key={li} aria-hidden="true">
                 {line.split(' ').map((word, wi) => (
                     <span className="split-mask" key={wi}>
                         <span className="split-word" style={{ transitionDelay: `${delay + (index++) * 45}ms` }}>{word}</span>{' '}
                     </span>
                 ))}
             </span>
-        )))
+        )}))
 }
 
 // Paragraph whose words light up as you scroll through it (driven by --p from the scroll engine).

@@ -26,11 +26,17 @@ const copy = {
         heroTitle: 'سيارتك الجاية من كوريا والصين،\nبسعر واضح من النهار الأول.',
         heroLead: 'نختارو السيارة معاك، نفحصوها، نشحنوها ونتكفلو بالأوراق. تعرف السعر النهائي قبل ما تخلص.',
         heroOrder: 'اطلب سيارتك',
+        heroLines: 'سيارتك الجاية\nمن كوريا والصين.\n*بسعر واضح.*',
+        metaLeft: 'من كوريا والصين إلى الجزائر', metaMid: 'نختارو، نفحصو، نشحنو، نسلمو', metaRight: 'وحيد أوتو / 01',
+        tagTitle: 'نفحصوها بعينينا.', tagText: 'صور وتقرير قبل ما تخلص.',
+        heroNotes: ['كيا', 'هيونداي', 'رينو', 'جيلي'],
+        flow: [['export', 'كوريا · الصين'], ['sea', 'البحر'], ['port', 'الميناء'], ['home', 'دارك']] as [string, string][],
+        statement: ['سيارة واحدة.', 'من الساحة حتى باب دارك.', 'سعر واضح.', 'بلا مفاجآت.'],
         scrollHint: 'مرّر',
         manifestoEyebrow: 'وحيد أوتو',
         manifesto: 'نجيبولك سيارتك من كوريا ولا الصين كيما لازم: نختاروها معاك، نفحصوها بعينينا، نشحنوها ونخلصو أوراقها. أنت تعرف السعر قبل ما تخلص، وتتبع سيارتك من الميناء حتى لباب دارك.',
         galleryEyebrow: 'الأكثر طلباً',
-        galleryTitle: 'السيارات اللي يختاروها الدزيريين.',
+        galleryTitle: 'السيارات اللي\n*يختاروها الدزيريين.*',
         megaCta: 'نبداو؟',
         heroCars: 'السيارات المتوفرة',
         facts: [
@@ -39,7 +45,7 @@ const copy = {
             { value: 2, suffix: '', label: 'مصدران: كوريا الجنوبية والصين' }
         ],
         stepsEyebrow: 'كيف نعمل',
-        stepsTitle: 'أربع خطوات. لا مفاجآت.',
+        stepsTitle: 'أربع خطوات.\n*لا مفاجآت.*',
         steps: [
             { title: 'اختر', text: 'قل لنا الموديل والميزانية. نقترح عليك سيارات حقيقية متوفرة الآن.' },
             { title: 'نفحص', text: 'نفحص السيارة في كوريا أو الصين ونرسل لك الصور والتقرير قبل الشراء.' },
@@ -47,10 +53,10 @@ const copy = {
             { title: 'تستلم', text: 'نتكفل بالجمركة والأوراق، وتستلم سيارتك جاهزة.' }
         ],
         modelsEyebrow: 'ابحث عن سيارتك',
-        modelsTitle: 'حرّك الميزانية، شاهد ما يناسبك.',
+        modelsTitle: 'حرّك الميزانية،\n*شاهد ما يناسبك.*',
         map: { korea: 'كوريا', china: 'الصين', algeria: 'الجزائر' },
         roadsEyebrow: 'طريقان، وجهة واحدة',
-        roadsTitle: 'من سيول وشنغهاي إلى باب دارك.',
+        roadsTitle: 'من سيول وشنغهاي\n*إلى باب دارك.*',
         roadsLead: 'شركاء على الأرض في كوريا والصين، ومعرض في جيجل. اضغط على أي بلد لترى طريقه.',
         modelsLead: 'الأسعار تقريبية وتتغير مع سعر الصرف. نرسل لك السعر النهائي قبل أي دفع.',
         allCars: 'كل السيارات',
@@ -99,11 +105,17 @@ const copy = {
         heroTitle: 'Votre prochaine voiture,\nau prix clair dès le premier jour.',
         heroLead: 'Nous choisissons la voiture avec vous, l’inspectons, l’expédions et gérons les papiers. Vous connaissez le prix final avant de payer.',
         heroOrder: 'Commander',
+        heroLines: 'Votre voiture,\nde Corée et de Chine.\n*Au prix clair.*',
+        metaLeft: 'Corée · Chine → Algérie', metaMid: 'Choisir. Inspecter. Expédier. Livrer.', metaRight: 'Wahid Auto / 01',
+        tagTitle: 'Inspectée sur place.', tagText: 'Photos et rapport avant de payer.',
+        heroNotes: ['Kia', 'Hyundai', 'Renault', 'Geely'],
+        flow: [['export', 'Corée · Chine'], ['sea', 'En mer'], ['port', 'Port'], ['home', 'Chez vous']] as [string, string][],
+        statement: ['Une voiture.', 'Du parc jusqu’à chez vous.', 'Un prix clair.', 'Sans surprise.'],
         scrollHint: 'Défiler',
         manifestoEyebrow: 'Wahid Auto',
         manifesto: 'Nous ramenons votre voiture de Corée ou de Chine comme il faut : choisie avec vous, inspectée de près, expédiée et dédouanée. Vous connaissez le prix avant de payer et suivez votre voiture du port jusqu’à chez vous.',
         galleryEyebrow: 'Les plus demandées',
-        galleryTitle: 'Les voitures que les Algériens choisissent.',
+        galleryTitle: 'Les voitures que\n*les Algériens choisissent.*',
         megaCta: 'On commence ?',
         heroCars: 'Voitures disponibles',
         facts: [
@@ -112,7 +124,7 @@ const copy = {
             { value: 2, suffix: '', label: 'origines : Corée du Sud et Chine' }
         ],
         stepsEyebrow: 'Comment ça marche',
-        stepsTitle: 'Quatre étapes. Aucune surprise.',
+        stepsTitle: 'Quatre étapes.\n*Aucune surprise.*',
         steps: [
             { title: 'Choisir', text: 'Donnez-nous le modèle et le budget. Nous proposons de vraies voitures disponibles.' },
             { title: 'Inspecter', text: 'Nous inspectons la voiture en Corée ou en Chine et vous envoyons photos et rapport avant l’achat.' },
@@ -120,10 +132,10 @@ const copy = {
             { title: 'Recevoir', text: 'Nous gérons le dédouanement et les papiers. Vous recevez une voiture prête.' }
         ],
         modelsEyebrow: 'Trouver votre voiture',
-        modelsTitle: 'Bougez le budget, voyez ce qui vous va.',
+        modelsTitle: 'Bougez le budget,\n*voyez ce qui vous va.*',
         map: { korea: 'Corée', china: 'Chine', algeria: 'Algérie' },
         roadsEyebrow: 'Deux routes, une destination',
-        roadsTitle: 'De Séoul et Shanghai jusqu’à chez vous.',
+        roadsTitle: 'De Séoul et Shanghai\n*jusqu’à chez vous.*',
         roadsLead: 'Des partenaires sur place en Corée et en Chine, un showroom à Jijel. Touchez un pays pour voir sa route.',
         modelsLead: 'Prix indicatifs, ils suivent le taux de change. Vous recevez le prix final avant tout paiement.',
         allCars: 'Toutes les voitures',
@@ -262,21 +274,52 @@ export default function Home() {
     return (
         <div className="home">
             {/* ---------- HERO: type over the 3D world ---------- */}
-            <section className="home-hero">
-                <div className="container home-hero-inner">
-                    <p className="eyebrow animate-fadeInUp">{tx.heroEyebrow}</p>
-                    <SplitText as="h1" className="display home-hero-title" text={tx.heroTitle} delay={1500} />
-                    <p className="lead home-hero-lead animate-fadeInUp stagger-3">{tx.heroLead}</p>
-                    <div className="hero-actions animate-fadeInUp stagger-4">
-                        <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
-                        <Link to="/stock" className="btn btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
+            <section className="o-hero" data-tone="dark" data-scene="hero">
+                <div className="o-hero-inner">
+                    <div className="o-hero-meta eyebrow animate-fadeInUp">
+                        <span><span className="live-dot" /> {tx.metaLeft}</span>
+                        <span className="hide-sm">{tx.metaMid}</span>
+                        <span className="latin">{tx.metaRight}</span>
+                    </div>
+                    <SplitText as="h1" className="o-hero-title" text={tx.heroLines} delay={1500} />
+                    <div className="o-hero-bottom">
+                        <div className="o-hero-copy animate-fadeInUp stagger-3">
+                            <p>{tx.heroLead}</p>
+                            <div className="o-hero-actions">
+                                <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
+                                <Link to="/stock" className="btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
+                            </div>
+                        </div>
+                        <div className="floating-tag animate-fadeInUp stagger-4" data-speed="-0.12">
+                            <span className="tag-icon"><Check size={18} /></span>
+                            <div><strong>{tx.tagTitle}</strong><small>{tx.tagText}</small></div>
+                        </div>
+                    </div>
+                    <div className="o-hero-foot animate-fadeInUp stagger-4">
+                        <div className="o-hero-note">{tx.heroNotes.map((n, i) => <span key={n} style={{ display: 'contents' }}>{i > 0 && <i />}<span>{n}</span></span>)}</div>
+                        <span className="flow-mini" aria-hidden="true">
+                            {tx.flow.map(([key, label], i) => <span key={key} style={{ display: 'contents' }}>{i > 0 && <b>{isRTL ? '←' : '→'}</b>}<span data-stage={key}>{label}</span></span>)}
+                        </span>
+                        <span className="scroll-cue"><i /> {tx.scrollHint}</span>
                     </div>
                 </div>
-                <div className="scroll-hint" aria-hidden="true"><span>{tx.scrollHint}</span><i /></div>
+            </section>
+
+            <section className="statement" data-tone="dark" data-scene="sea" aria-label={tx.statement.join(' ')}>
+                <div className="marquee-track" aria-hidden="true">
+                    {[0, 1].map(k => (
+                        <div className="marquee-group" key={k}>
+                            <span>{tx.statement[0]}</span><i className="orb" />
+                            <strong>{tx.statement[1]}</strong><i className="orb" />
+                            <span>{tx.statement[2]}</span><i className="orb" />
+                            <em>{tx.statement[3]}</em><i className="orb" />
+                        </div>
+                    ))}
+                </div>
             </section>
 
             {/* ---------- MANIFESTO ---------- */}
-            <section className="section manifesto">
+            <section className="section manifesto" data-tone="dark" data-scene="korea">
                 <div className="container">
                     <p className="eyebrow">{tx.manifestoEyebrow}</p>
                     <ScrubText text={tx.manifesto} />
@@ -293,7 +336,7 @@ export default function Home() {
             </div>
 
             {/* ---------- PINNED HORIZONTAL GALLERY ---------- */}
-            <section className="hpin" data-pin>
+            <section className="hpin" data-pin data-tone="light" data-scene="quiet">
                 <div className="hpin-sticky">
                     <div className="container">
                         <p className="eyebrow">{tx.galleryEyebrow}</p>
@@ -319,7 +362,7 @@ export default function Home() {
             </section>
 
             {/* ---------- BUDGET FINDER ---------- */}
-            <section className="section models">
+            <section className="section models" data-tone="light" data-scene="quiet">
                 <div className="container">
                     <div className="section-header">
                         <p className="eyebrow">{tx.modelsEyebrow}</p>
@@ -331,11 +374,11 @@ export default function Home() {
             </section>
 
             {/* ---------- TWO ROADS ---------- */}
-            <section className="section section-dark roads">
+            <section className="section section-dark roads" data-tone="dark" data-scene="sea">
                 <div className="container roads-grid">
                     <div className="section-header" data-reveal>
                         <p className="eyebrow">{tx.roadsEyebrow}</p>
-                        <h2 className="section-title">{tx.roadsTitle}</h2>
+                        <SplitText className="section-title" text={tx.roadsTitle} />
                         <p className="section-subtitle">{tx.roadsLead}</p>
                     </div>
                     <div className="hero-mark" data-reveal>
@@ -345,7 +388,7 @@ export default function Home() {
             </section>
 
             {/* ---------- PROCESS: stacking cards ---------- */}
-            <section className="section process">
+            <section className="section process" data-tone="light" data-scene="algeria">
                 <div className="container">
                     <div className="section-header">
                         <p className="eyebrow">{tx.stepsEyebrow}</p>
@@ -366,7 +409,7 @@ export default function Home() {
             </section>
 
             {/* ---------- RULES ---------- */}
-            <section className="section rules">
+            <section className="section rules" data-tone="light" data-scene="quiet">
                 <div className="container rules-grid">
                     <div className="section-header">
                         <p className="eyebrow">{tx.rulesEyebrow}</p>
@@ -385,7 +428,7 @@ export default function Home() {
             </section>
 
             {/* ---------- ORDER ---------- */}
-            <section className="section order" id="order">
+            <section className="section order" id="order" data-tone="dark" data-scene="algeria">
                 <div className="container order-grid">
                     <div className="order-intro">
                         <div className="section-header">
@@ -482,7 +525,7 @@ export default function Home() {
             </section>
 
             {/* ---------- MEGA CTA ---------- */}
-            <section className="closing">
+            <section className="closing" data-tone="dark" data-scene="all">
                 <div className="container">
                     <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="mega-cta">
                         <span className="mega-cta-label">{tx.megaCta}</span>
