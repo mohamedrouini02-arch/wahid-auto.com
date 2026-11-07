@@ -268,7 +268,7 @@ export default function RouteScene() {
         const t0 = performance.now()
         const draw = (now: number) => {
             raf = requestAnimationFrame(draw)
-            if (document.hidden) { prev = now; return }
+            if (document.hidden || !canvas.width || !canvas.height) { prev = now; return }
             const dt = Math.min(0.05, (now - prev) / 1000); prev = now
             const t = reduce ? 9 : (now - t0) / 1000
             const follow = (rate: number) => (reduce ? 1 : 1 - Math.exp(-rate * dt))   // same feel at any frame rate
