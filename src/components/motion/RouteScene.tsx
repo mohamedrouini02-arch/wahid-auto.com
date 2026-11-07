@@ -192,6 +192,7 @@ export default function RouteScene() {
             return tw
         }
         const label = (x: number, y: number, z: number, s: string, a: number, hi = 0) => {
+            if (W < 760) return
             push({
                 d: 999, f: () => {
                     const [px, py] = P(x, y, z), up = 30 + hi * 8
@@ -204,6 +205,7 @@ export default function RouteScene() {
         }
         // a chip that rises and fades (ticks, documents, stamp, keys)
         const chip = (x: number, y: number, z: number, s: string, life: number, a: number) => {
+            if (W < 760 && !document.querySelector('[data-active-section] [data-anchor]')) return
             if (life <= 0 || life >= 1 || a <= 0.01) return
             const k = Math.sin(Math.PI * life)
             push({
