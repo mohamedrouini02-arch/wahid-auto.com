@@ -280,16 +280,19 @@ export default function RouteScene() {
             mirror = document.documentElement.dir === 'rtl'
             let gx = mobile ? 0.5 : shot.ax, gy = mobile ? 0.4 : shot.ay
             const anchor = document.querySelector('[data-active-section] [data-anchor]')
-            if (anchor && !mobile) {
+            let framed = false
+            if (anchor) {
                 const r = anchor.getBoundingClientRect()
-                if (r.bottom > 0 && r.top < H) { const cx = (r.left + r.width / 2) / W; gx = mirror ? 1 - cx : cx; gy = (r.top + r.height / 2) / H }
+                if (r.bottom > 0 && r.top < H) { const cx = (r.left + r.width / 2) / W; gx = mirror ? 1 - cx : cx; gy = (r.top + r.height / 2) / H; framed = true }
             }
             const kc = follow(2.2)
-            cam.x = lerp(cam.x, shot.x, kc); cam.y = lerp(cam.y, shot.y, kc); cam.z = lerp(cam.z, shot.z * (mobile ? 1.9 : 1), kc)
+            cam.x = lerp(cam.x, shot.x, kc); cam.y = lerp(cam.y, shot.y, kc); const zoomK = mobile ? (framed ? 1.15 : 1.9) : 1
+            cam.z = lerp(cam.z, shot.z * zoomK, kc)
             cam.ax = lerp(cam.ax, gx, follow(4)); cam.ay = lerp(cam.ay, gy, follow(4))
-            cam.alpha = lerp(cam.alpha, shot.alpha * (mobile ? 0.5 : 1), follow(2.5))
+            const alphaK = mobile && !framed ? 0.5 : 1
+            cam.alpha = lerp(cam.alpha, shot.alpha * alphaK, follow(2.5))
             const snap = (k: 'x' | 'y' | 'z' | 'ax' | 'ay' | 'alpha', goal: number, eps: number) => { if (Math.abs(cam[k] - goal) < eps) cam[k] = goal }
-            snap('x', shot.x, 0.004); snap('y', shot.y, 0.004); snap('z', shot.z * (mobile ? 1.9 : 1), 0.0005); snap('ax', gx, 0.0004); snap('ay', gy, 0.0004); snap('alpha', shot.alpha * (mobile ? 0.5 : 1), 0.003)
+            snap('x', shot.x, 0.004); snap('y', shot.y, 0.004); snap('z', shot.z * zoomK, 0.0005); snap('ax', gx, 0.0004); snap('ay', gy, 0.0004); snap('alpha', shot.alpha * alphaK, 0.003)
             if (Math.abs(tone - (body.dataset.tone === 'light' ? 1 : 0)) < 0.004) tone = body.dataset.tone === 'light' ? 1 : 0
             for (const s of STEPS) focus[s] = lerp(focus[s], scene === s ? 1 : scene === 'hero' || scene === 'all' ? 0.35 : 0, follow(3))
             SU = (24 * cam.z * Math.min(W, H * 1.6)) / 1200
