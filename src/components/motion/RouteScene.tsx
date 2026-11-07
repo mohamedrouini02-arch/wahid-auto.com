@@ -48,6 +48,7 @@ const SHOTS: Record<string, Shot> = {
     keys: { x: 37, y: -2.6, z: 1.3, ax: 0.64, ay: 0.55, alpha: 1 },
     all: { x: 5, y: 0, z: 0.5, ax: 0.5, ay: 0.55, alpha: 0.4 },
     quiet: { x: 5, y: 0, z: 0.55, ax: 0.5, ay: 0.55, alpha: 0.25 },
+    photo: { x: 5, y: 0, z: 0.5, ax: 0.7, ay: 0.55, alpha: 0 },     // photo sections: the scene steps back
 }
 const STEPS = ['order', 'inspect', 'buy', 'ship', 'customs', 'keys'] as const
 

@@ -1,13 +1,14 @@
 import emailjs from '@emailjs/browser'
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import BudgetFinder from '../components/BudgetFinder'
 import { ScrubText, SplitText } from '../components/motion/Shell'
 import { Monogram } from '../components/Logo'
 import Journey from '../components/Journey'
+import PhotoHero from '../components/PhotoHero'
+import StockBento from '../components/StockBento'
 import { featuredModelIds, site } from '../config/site'
-import { getCarById, getPriceRangeDisplay, type CarData } from '../data/cars'
 import { useLanguage } from '../context/LanguageContext'
 import { budgetRanges, carBrands, carModelsByBrand, wilayas } from '../data/wilayas'
 import { useCountUp, useScrollReveal } from '../lib/motion'
@@ -186,8 +187,6 @@ const emptyForm = {
     carBrand: '', carModel: '', budget: '', customBudget: '', notes: ''
 }
 
-const featuredCars = featuredModelIds.map(id => getCarById(id)).filter((car): car is CarData => Boolean(car))
-
 const brands = ['KIA', 'HYUNDAI', 'RENAULT', 'CHEVROLET', 'GEELY', 'MG', 'CHERY', 'BYD', 'LIVAN', 'GAC']
 
 const Fact = ({ value, suffix, label }: { value: number; suffix: string; label: string }) => {
@@ -203,7 +202,6 @@ const Fact = ({ value, suffix, label }: { value: number; suffix: string; label: 
 export default function Home() {
     const { language, isRTL } = useLanguage()
     const tx = copy[language]
-    const Arrow = isRTL ? ArrowLeft : ArrowRight
     const location = useLocation()
     useScrollReveal()
 
@@ -273,37 +271,9 @@ export default function Home() {
 
     return (
         <div className="home">
-            {/* ---------- HERO: type over the 3D world ---------- */}
-            <section className="o-hero" data-tone="dark" data-scene="hero">
-                <div className="o-hero-inner">
-                    <div className="o-hero-meta eyebrow animate-fadeInUp">
-                        <span><span className="live-dot" /> {tx.metaLeft}</span>
-                        <span className="hide-sm">{tx.metaMid}</span>
-                        <span className="latin">{tx.metaRight}</span>
-                    </div>
-                    <SplitText as="h1" className="o-hero-title" text={tx.heroLines} delay={1500} />
-                    <div className="o-hero-bottom">
-                        <div className="o-hero-copy animate-fadeInUp stagger-3">
-                            <p>{tx.heroLead}</p>
-                            <div className="o-hero-actions">
-                                <a href="#order" className="btn btn-primary btn-lg">{tx.heroOrder}</a>
-                                <Link to="/stock" className="btn-link">{tx.heroCars} <Arrow size={18} strokeWidth={1.5} /></Link>
-                            </div>
-                        </div>
-                        <div className="floating-tag animate-fadeInUp stagger-4" data-speed="-0.12">
-                            <span className="tag-icon"><Check size={18} /></span>
-                            <div><strong>{tx.tagTitle}</strong><small>{tx.tagText}</small></div>
-                        </div>
-                    </div>
-                    <div className="o-hero-foot animate-fadeInUp stagger-4">
-                        <div className="o-hero-note">{tx.heroNotes.map((n, i) => <span key={n} style={{ display: 'contents' }}>{i > 0 && <i />}<span>{n}</span></span>)}</div>
-                        <span className="flow-mini" aria-hidden="true">
-                            {tx.flow.map(([key, label], i) => <span key={key} style={{ display: 'contents' }}>{i > 0 && <b>{isRTL ? '←' : '→'}</b>}<span data-stage={key}>{label}</span></span>)}
-                        </span>
-                        <span className="scroll-cue"><i /> {tx.scrollHint}</span>
-                    </div>
-                </div>
-            </section>
+            <PhotoHero language={language} isRTL={isRTL} />
+
+            <StockBento language={language} isRTL={isRTL} />
 
             <section className="statement" data-tone="dark" data-scene="sea" aria-label={tx.statement.join(' ')}>
                 <div className="marquee-track" aria-hidden="true">
@@ -336,32 +306,6 @@ export default function Home() {
                     {[...brands, ...brands].map((brand, i) => <span key={i}>{brand}</span>)}
                 </div>
             </div>
-
-            {/* ---------- PINNED HORIZONTAL GALLERY ---------- */}
-            <section className="hpin" data-pin data-tone="light" data-scene="quiet">
-                <div className="hpin-sticky">
-                    <div className="container">
-                        <p className="eyebrow">{tx.galleryEyebrow}</p>
-                        <SplitText className="section-title display-md" text={tx.galleryTitle} />
-                    </div>
-                    <div className="hpin-track" data-hscroll>
-                        {featuredCars.map((car, i) => (
-                            <Link to={`/cars/${car.id}`} className="model-card hpin-card" key={car.id}>
-                                <div className="model-media"><img src={car.image} alt={`${car.brand} ${car.model}`} loading="lazy" decoding="async" /></div>
-                                <div className="model-body">
-                                    <div className="model-head">
-                                        <h3 className="model-name">{language === 'ar' ? `${car.brandAr} ${car.modelAr}` : `${car.brandFr} ${car.modelFr}`}</h3>
-                                        <span className="model-years latin num">{String(i + 1).padStart(2, '0')}</span>
-                                    </div>
-                                    <p className="model-price num">{getPriceRangeDisplay(car, language)}</p>
-                                </div>
-                            </Link>
-                        ))}
-                        <Link to="/cars" className="hpin-card hpin-more"><span>{tx.allCars}</span><Arrow size={28} strokeWidth={1} /></Link>
-                    </div>
-                    <div className="hpin-progress"><span /></div>
-                </div>
-            </section>
 
             {/* ---------- BUDGET FINDER ---------- */}
             <section className="section models" data-tone="light" data-scene="quiet">
