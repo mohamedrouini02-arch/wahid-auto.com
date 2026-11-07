@@ -4,7 +4,7 @@ import RouteScene from './components/motion/RouteScene'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
-import { Cursor, Loader, PageTransition } from './components/motion/Shell'
+import { Loader, PageTransition } from './components/motion/Shell'
 import './motion.css'
 import './orbit.css'
 import { useTone } from './lib/tone'
@@ -36,7 +36,6 @@ function App() {
                 <SmoothScroll />
                 <Loader />
                 <PageTransition />
-                <Cursor />
                 <RouteScene />
                 <div className="app">
                     <Header />

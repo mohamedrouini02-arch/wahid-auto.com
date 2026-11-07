@@ -27,12 +27,12 @@ const PAL: Record<'dark' | 'light', Record<string, RGB>> = {
     dark: {
         pad: [20, 40, 33], padLine: [70, 110, 95], neutral: [44, 72, 61], accent: [95, 184, 155], ice: [168, 230, 207],
         line: [159, 227, 200], text: [128, 150, 140], textHi: [238, 244, 240], water: [95, 184, 155], hull: [26, 46, 39], deck: [58, 92, 79],
-        car1: [226, 234, 229], car2: [112, 138, 127], sand: [196, 170, 122], build: [36, 60, 51], tyre: [12, 20, 17], shadow: [0, 0, 0], roof: [95, 184, 155],
+        car1: [226, 234, 229], car2: [112, 138, 127], sand: [196, 170, 122], build: [36, 60, 51], tyre: [12, 20, 17], shadow: [0, 0, 0], roof: [95, 184, 155], glass: [20, 34, 30],
     },
     light: {
         pad: [214, 226, 218], padLine: [160, 182, 171], neutral: [170, 190, 180], accent: [46, 150, 116], ice: [14, 90, 71],
         line: [10, 23, 18], text: [82, 102, 93], textHi: [10, 23, 18], water: [30, 138, 102], hull: [70, 96, 86], deck: [160, 182, 171],
-        car1: [252, 253, 252], car2: [150, 170, 160], sand: [196, 160, 100], build: [236, 242, 238], tyre: [40, 52, 47], shadow: [10, 40, 30], roof: [46, 150, 116],
+        car1: [252, 253, 252], car2: [150, 170, 160], sand: [196, 160, 100], build: [236, 242, 238], tyre: [40, 52, 47], shadow: [10, 40, 30], roof: [46, 150, 116], glass: [44, 64, 58],
     },
 }
 
@@ -90,12 +90,15 @@ export default function RouteScene() {
     useEffect(() => {
         const canvas = ref.current
         if (!canvas) return
-        const ctx = canvas.getContext('2d')!
+        const main = canvas.getContext('2d')!
+        // the still world (ground, yards, buildings, parked cars) is drawn into its own canvas and only redrawn when the camera or tone moves
+        const still = document.createElement('canvas'), stillCtx = still.getContext('2d')!
+        let ctx = main, stillKey = ''
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         let W = 0, H = 0, DPR = 1
         const resize = () => {
-            DPR = Math.min(window.devicePixelRatio || 1, 2); W = window.innerWidth; H = window.innerHeight
-            canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR)
+            DPR = Math.min(window.devicePixelRatio || 1, 1.5); W = window.innerWidth; H = window.innerHeight
+            canvas.width = still.width = Math.round(W * DPR); canvas.height = still.height = Math.round(H * DPR); stillKey = ''
         }
         resize(); window.addEventListener('resize', resize)
         const flags = { kr: flagCanvas('kr'), dz: flagCanvas('dz'), cn: flagCanvas('cn') }
@@ -123,12 +126,12 @@ export default function RouteScene() {
             if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke() }
         }
         const quad = (x: number, y: number, w: number, d: number, z: number) => [P(x, y, z), P(x + w, y, z), P(x + w, y + d, z), P(x, y + d, z)]
-        const box = (x: number, y: number, z: number, w: number, d: number, h: number, c: RGB, a = 1, edge = 0.16) => {
+        const box = (x: number, y: number, z: number, w: number, d: number, h: number, c: RGB, a = 1, edge = 0.16, sides?: RGB) => {
             push({
                 d: x + w + y + d + z * 0.02, f: () => {
-                    const e = rgba(C.line, edge * a)
-                    poly([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)], rgba(shade(c, 0.8), a), e)
-                    poly([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)], rgba(shade(c, 0.62), a), e)
+                    const e = edge ? rgba(C.line, edge * a) : undefined, sc = sides || c
+                    poly([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)], rgba(shade(sc, 0.82), a), e)
+                    poly([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)], rgba(shade(sc, 0.64), a), e)
                     poly(quad(x, y, w, d, z + h), rgba(shade(c, 1.1), a), e)
                 },
             })
@@ -138,22 +141,26 @@ export default function RouteScene() {
             ctx.fillStyle = rgba(C.shadow, 0.28 * a * (1 - tone * 0.4))
             ctx.beginPath(); ctx.ellipse(sx, sy, rx * SU, ry * SU, 0, 0, TAU); ctx.fill()
         }
-        // a car: soft shadow, four tyres, body and cabin; `heading` 0 = along x, 1 = along y
+        // a car: soft shadow, wheels that show under the body, low painted body, glass cabin with painted roof
         const car = (x: number, y: number, heading: number, c: RGB, a = 1, lights = false) => {
             if (a <= 0.01) return
-            const alongX = heading < 0.5
-            const [w, d] = alongX ? [1.8, 0.86] : [0.86, 1.8]
-            shadow(x + 0.15, y + 0.15, 1.15, 0.55, a)
-            const tw = 0.34, th = 0.26
-            for (const [ox, oy] of [[-0.55, -0.43], [0.55, -0.43], [-0.55, 0.33], [0.55, 0.33]]) {
-                const [tx, ty] = alongX ? [ox, oy] : [oy, ox]
-                box(x + tx - tw / 2, y + ty - 0.05, 0, tw, 0.12, th, C.tyre, a, 0)
+            const ax = heading < 0.5
+            const L2 = 1.0, W2 = 0.46                       // half length / half width
+            const at = (along: number, across: number): [number, number] => (ax ? [x + along, y + across] : [x + across, y + along])
+            const bx = (along0: number, across0: number, len: number, wid: number, z: number, h: number, col: RGB, edge: number, sides?: RGB) => {
+                const [x0, y0] = at(along0, across0)
+                box(x0, y0, z, ax ? len : wid, ax ? wid : len, h, col, a, edge, sides)
             }
-            box(x - w / 2, y - d / 2, 0.14, w, d, 0.36, c, a, 0.2)
-            const [cw, cd] = alongX ? [1.0, 0.74] : [0.74, 1.0]
-            const [ox, oy] = alongX ? [-0.12, 0] : [0, -0.12]
-            box(x - cw / 2 + ox, y - cd / 2 + oy, 0.5, cw, cd, 0.3, mix(shade(c, 0.95), C.ice, 0.18), a, 0.2)
-            if (lights) push({ d: x + y + 3, f: () => { const [lx, ly] = P(x + (alongX ? w / 2 + 0.1 : 0), y + (alongX ? 0 : d / 2 + 0.1), 0.3); const r = SU * 0.45; const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, r); g.addColorStop(0, rgba(C.ice, 0.35 * a * (1 - tone))); g.addColorStop(1, rgba(C.ice, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(lx, ly, r, 0, TAU); ctx.fill() } })
+            shadow(x + 0.12, y + 0.12, 1.25, 0.6, a)
+            // one car = one group drawn in a fixed order, so the body never covers the windows
+            const outer = target, parts: Op[] = []; target = parts
+            for (const al of [-0.62, 0.52]) for (const ac of [-W2 - 0.02, W2 - 0.12]) bx(al, ac, 0.36, 0.14, 0, 0.3, C.tyre, 0)
+            bx(-L2, -W2, 2 * L2, 2 * W2, 0.16, 0.3, c, 0.14)                                  // body
+            bx(-0.56, -W2 + 0.07, 1.06, 2 * W2 - 0.14, 0.46, 0.27, c, 0.14, C.glass)          // cabin: glass sides, roof in body colour
+            target = outer
+            const body = parts.splice(4, 2), tyres = parts.sort((p1, p2) => p1.d - p2.d)
+            push({ d: x + y + 1.4, f: () => { tyres.forEach(o => o.f()); body.forEach(o => o.f()) } })
+            if (lights) push({ d: x + y + 3, f: () => { const [lx, ly] = P(...at(L2 + 0.05, 0), 0.3); ctx.fillStyle = rgba(C.ice, 0.55 * a * (1 - tone * 0.6)); ctx.beginPath(); ctx.ellipse(lx, ly, SU * 0.16, SU * 0.08, 0, 0, TAU); ctx.fill() } })
         }
         const person = (x: number, y: number, a: number) => {
             shadow(x, y, 0.35, 0.18, a)
@@ -166,14 +173,13 @@ export default function RouteScene() {
                     const [bx, by] = P(x, y, 0), [tx, ty] = P(x, y, 4.2)
                     ctx.strokeStyle = rgba(C.text, 0.8 * a); ctx.lineWidth = Math.max(1, SU * 0.06)
                     ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tx, ty); ctx.stroke()
-                    const fw = SU * 1.9, fh = SU * 1.26, img = flags[kind], strips = 16
+                    const fw = SU * 1.9, fh = SU * 1.26, img = flags[kind], strips = 10
                     ctx.globalAlpha = 0.95 * a
                     for (let i = 0; i < strips; i++) {
-                        const u = i / strips, ph = u * 5.2 - t * 2.6, wave = Math.sin(ph) * SU * 0.12 * u
-                        ctx.filter = `brightness(${(0.88 + 0.12 * Math.cos(ph)).toFixed(2)})`
+                        const u = i / strips, wave = Math.sin(u * 5.2 - t * 2.6) * SU * 0.12 * u
                         ctx.drawImage(img, u * img.width, 0, img.width / strips + 0.6, img.height, mirror ? tx - fw + u * fw : tx + u * fw, ty + wave, fw / strips + 0.6, fh)
                     }
-                    ctx.filter = 'none'; ctx.globalAlpha = 1
+                    ctx.globalAlpha = 1
                 },
             })
         }
@@ -243,8 +249,8 @@ export default function RouteScene() {
 
         // ---------- world layout ----------
         const SHIP_LEN = 7.4, SHIP_W = 2.7, CYCLE = 30
-        const KR: [number, number][] = [[-26.2, -6.6], [-21.5, -6.6], [-21.5, -1.1], [-14.5, -1.1]]
-        const CN: [number, number][] = [[-26.2, 6.6], [-21.5, 6.6], [-21.5, 1.1], [-14.5, 1.1]]
+        const KR: [number, number][] = [[-23.4, -6.6], [-21.5, -6.6], [-21.5, -1.1], [-14.5, -1.1]]
+        const CN: [number, number][] = [[-23.4, 6.6], [-21.5, 6.6], [-21.5, 1.1], [-14.5, 1.1]]
         const DZ: [number, number][] = [[14.5, 0], [39, 0], [39, -3.4]]
         const HOUSE = { x: 39.2, y: -6.4 }
         const ship = (t: number) => {
@@ -280,28 +286,51 @@ export default function RouteScene() {
             cam.x = lerp(cam.x, shot.x, kc); cam.y = lerp(cam.y, shot.y, kc); cam.z = lerp(cam.z, shot.z * (mobile ? 1.9 : 1), kc)
             cam.ax = lerp(cam.ax, gx, follow(4)); cam.ay = lerp(cam.ay, gy, follow(4))
             cam.alpha = lerp(cam.alpha, shot.alpha * (mobile ? 0.5 : 1), follow(2.5))
+            const snap = (k: 'x' | 'y' | 'z' | 'ax' | 'ay' | 'alpha', goal: number, eps: number) => { if (Math.abs(cam[k] - goal) < eps) cam[k] = goal }
+            snap('x', shot.x, 0.004); snap('y', shot.y, 0.004); snap('z', shot.z * (mobile ? 1.9 : 1), 0.0005); snap('ax', gx, 0.0004); snap('ay', gy, 0.0004); snap('alpha', shot.alpha * (mobile ? 0.5 : 1), 0.003)
+            if (Math.abs(tone - (body.dataset.tone === 'light' ? 1 : 0)) < 0.004) tone = body.dataset.tone === 'light' ? 1 : 0
             for (const s of STEPS) focus[s] = lerp(focus[s], scene === s ? 1 : scene === 'hero' || scene === 'all' ? 0.35 : 0, follow(3))
             SU = (24 * cam.z * Math.min(W, H * 1.6)) / 1200
             const A = cam.alpha, L = document.documentElement.lang === 'fr' ? LABELS.fr : LABELS.ar
+            if (A < 0.02) { main.setTransform(1, 0, 0, 1, 0, 0); main.clearRect(0, 0, canvas.width, canvas.height); stillKey = ''; return }
             const cols = [C.car1, C.car2, C.accent, C.sand, C.car1]
 
+            const key = [cam.x, cam.y, cam.z, cam.ax, cam.ay, cam.alpha, tone].map(v => v.toFixed(4)).join() + (mirror ? 'r' : 'l') + L.home
+            if (key !== stillKey) {
+                stillKey = key; ctx = stillCtx; ops = []
+                ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.clearRect(0, 0, W, H)
+
+                // ---- ground ----
+                pad(-30, -9.5, 7, 5, A); pad(-30, 4.5, 7, 5, A); pad(-20, -3.5, 8, 7, A); pad(12, -3.5, 8, 7, A)
+                road([[-23, -6.6], [-21.5, -6.6], [-21.5, 6.6], [-23, 6.6]], 1.3, A)
+                road([[-21.5, 0], [-20, 0]], 1.3, A)
+                road([[20, 0], [39, 0], [39, -4.6]], 1.5, A)
+                poly(quad(HOUSE.x - 3.6, HOUSE.y - 2.2, 6.4, 4.6, 0), rgba(C.pad, 0.7 * A), rgba(C.line, 0.12 * A))  // garden
+                // sea
+                poly(quad(-11.6, -6.6, 23.2, 13.2, -0.05), rgba(C.water, (0.08 + 0.05 * tone) * A), rgba(C.water, 0.22 * A))
+                for (let i = 0; i < 6; i++) {
+                    car(-29 + (i % 3) * 2.3, -8.5 + Math.floor(i / 3) * 2.3, 1, cols[i % 5], A)
+                    car(-29 + (i % 3) * 2.3, 5.4 + Math.floor(i / 3) * 2.3, 1, cols[(i + 2) % 5], A)
+                }
+                const gateX0 = 23.5
+                box(gateX0 - 0.2, 1.1, 0, 0.4, 0.4, 1.3, C.neutral, A)
+                // showroom + the client's house
+                box(26.5, -6.6, 0, 5, 3.4, 2.3, C.build, A, 0.3); box(26.5, -6.6, 2.3, 5, 3.4, 0.22, C.roof, A)
+                car(28, -1.9, 1, C.accent, A); car(30.2, -1.9, 1, C.car1, A)
+                box(HOUSE.x - 2.4, HOUSE.y - 1.4, 0, 3.2, 2.8, 1.8, C.build, A, 0.3)
+                box(HOUSE.x - 2.6, HOUSE.y - 1.6, 1.8, 3.6, 3.2, 0.5, C.roof, A, 0.25)
+
+                ops.sort((a, b) => a.d - b.d).forEach(o => o.f()); ctx = main
+            }
+            ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(still, 0, 0)
             ctx.setTransform(DPR, 0, 0, DPR, 0, 0)
-            ctx.clearRect(0, 0, W, H)
             ops = []
 
-            // ---- ground ----
-            pad(-30, -9.5, 7, 5, A); pad(-30, 4.5, 7, 5, A); pad(-20, -3.5, 8, 7, A); pad(12, -3.5, 8, 7, A)
-            road([[-23, -6.6], [-21.5, -6.6], [-21.5, 6.6], [-23, 6.6]], 1.3, A)
-            road([[-21.5, 0], [-20, 0]], 1.3, A)
-            road([[20, 0], [39, 0], [39, -4.6]], 1.5, A)
-            poly(quad(HOUSE.x - 3.6, HOUSE.y - 2.2, 6.4, 4.6, 0), rgba(C.pad, 0.7 * A), rgba(C.line, 0.12 * A))  // garden
-            // sea
-            poly(quad(-11.6, -6.6, 23.2, 13.2, -0.05), rgba(C.water, (0.08 + 0.05 * tone) * A), rgba(C.water, 0.22 * A))
             ctx.lineWidth = 1
-            for (let gx2 = -10.4; gx2 <= 10.4; gx2 += 1.3) {
+            for (let gx2 = -10.4; gx2 <= 10.4; gx2 += 1.75) {
                 ctx.strokeStyle = rgba(C.water, (0.18 + 0.12 * Math.sin(gx2 + t * 0.6)) * A)
                 ctx.beginPath()
-                for (let gy2 = -6.2; gy2 <= 6.2; gy2 += 0.4) {
+                for (let gy2 = -6.2; gy2 <= 6.2; gy2 += 0.8) {
                     const [sx, sy] = P(gx2 + Math.sin(gy2 * 0.8 + t * 0.9 + gx2) * 0.22, gy2, Math.sin(gx2 * 0.7 + gy2 * 0.5 + t * 1.3) * 0.08)
                     gy2 === -6.2 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy)
                 }
@@ -311,10 +340,6 @@ export default function RouteScene() {
             ctx.beginPath(); ctx.moveTo(...P(-11.4, 0, 0.02)); ctx.lineTo(...P(11.4, 0, 0.02)); ctx.stroke(); ctx.setLineDash([])
 
             // ---- 02 INSPECT: yards, inspector circling the first car, ticks ----
-            for (let i = 0; i < 6; i++) {
-                car(-29 + (i % 3) * 2.3, -8.5 + Math.floor(i / 3) * 2.3, 1, cols[i % 5], A)
-                car(-29 + (i % 3) * 2.3, 5.4 + Math.floor(i / 3) * 2.3, 1, cols[(i + 2) % 5], A)
-            }
             const ia = t * 0.55, ix = -29 + Math.cos(ia) * 1.6, iy = -8.5 + Math.sin(ia) * 1.5
             person(ix, iy, A * (0.4 + 0.6 * Math.max(focus.inspect, 0.35)))
             const tick = (t * 0.55) % 1
@@ -378,13 +403,7 @@ export default function RouteScene() {
                 chip(gateX, 0, 1.6, L.stamp, clamp((u - 0.38) / 0.16), A * focus.customs)
                 chip(39, -3.4, 1.2, L.keys, clamp((u - 0.86) / 0.13), A * Math.max(focus.keys, 0.3))
             }
-            box(gateX - 0.2, 1.1, 0, 0.4, 0.4, 1.3, C.neutral, A)
             push({ d: gateX + 1.6, f: () => { const [px, py] = P(gateX, 1.3, 1.2); ctx.save(); ctx.translate(px, py); ctx.rotate((mirror ? 1.2 : -1.2) * gate); ctx.strokeStyle = rgba(C.accent, A); ctx.lineWidth = Math.max(2, SU * 0.14); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo((mirror ? 1 : -1) * SU * 1.7, -SU * 0.85); ctx.stroke(); ctx.restore() } })
-            // showroom + the client's house
-            box(26.5, -6.6, 0, 5, 3.4, 2.3, C.build, A, 0.3); box(26.5, -6.6, 2.3, 5, 3.4, 0.22, C.roof, A)
-            car(28, -1.9, 1, C.accent, A); car(30.2, -1.9, 1, C.car1, A)
-            box(HOUSE.x - 2.4, HOUSE.y - 1.4, 0, 3.2, 2.8, 1.8, C.build, A, 0.3)
-            box(HOUSE.x - 2.6, HOUSE.y - 1.6, 1.8, 3.6, 3.2, 0.5, C.roof, A, 0.25)
             push({ d: HOUSE.x + HOUSE.y + 2, f: () => { const [wx, wy] = P(HOUSE.x + 0.8, HOUSE.y + 0.4, 0.9); ctx.fillStyle = rgba(C.sand, (0.5 + 0.3 * Math.sin(t * 2)) * A * Math.max(focus.keys, 0.4)); ctx.fillRect(wx - SU * 0.25, wy - SU * 0.3, SU * 0.5, SU * 0.5) } })
 
             // ---- 01 ORDER: a request travels from the house to the yards ----
