@@ -48,7 +48,7 @@ html[dir='rtl'] .px-title .split-line { white-space: nowrap; }
     animation: px-shadow 1.8s var(--ease-o) .7s both; }
 @keyframes px-drive { from { transform: translate3d(-18%, 2%, 0) scale(.94); opacity: 0; filter: blur(6px); } 60% { opacity: 1; filter: blur(0); } to { transform: none; opacity: 1; } }
 @keyframes px-shadow { from { transform: translateX(-18%) scaleX(.7); opacity: 0; } to { transform: none; opacity: 1; } }
-.px-plate { position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%); font: 500 11px var(--f-mono); letter-spacing: .3em; color: var(--muted);
+.px-plate { display: none; position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%); font: 500 11px var(--f-mono); letter-spacing: .3em; color: var(--muted);
     animation: px-fade .8s ease 2.2s both; }
 
 /* pinned labels (same grammar as the videos) */
