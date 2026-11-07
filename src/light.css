@@ -27,19 +27,18 @@
 .px-main > * { grid-area: a; }
 .px-title-wrap { position: relative; z-index: 1; margin-top: clamp(16px, 3vh, 40px); align-self: start;
     transform: translate3d(0, calc(var(--p) * -14vh), 0); opacity: calc(1 - var(--p) * .7); will-change: transform; }
-.px-title { display: block !important; font-size: clamp(48px, 7vw, 116px) !important; letter-spacing: -.045em !important; line-height: .92 !important; font-weight: 300; max-width: 12ch; }
-html[dir='rtl'] .px-title { font-size: clamp(42px, 5.6vw, 92px) !important; letter-spacing: 0 !important; line-height: 1.12 !important; max-width: none; }
+.px-title { display: block !important; font-size: clamp(48px, 6.1vw, 104px) !important; letter-spacing: -.045em !important; line-height: .92 !important; font-weight: 300; max-width: 12ch; }
+html[dir='rtl'] .px-title { font-size: clamp(42px, 5.2vw, 88px) !important; letter-spacing: 0 !important; line-height: 1.12 !important; max-width: none; }
 html[dir='rtl'] .px-title .split-line { white-space: nowrap; }
 
 /* the car */
 .px-stage { position: relative; z-index: 2; display: flex; justify-content: flex-end; align-items: flex-end;
     align-self: end; pointer-events: none; }
-html[dir='rtl'] .px-stage { justify-content: flex-start; }
 .px-word { position: absolute; inset-inline: 0; bottom: 6%; z-index: -1; text-align: center; white-space: nowrap;
     font: 500 clamp(120px, 27vw, 420px)/.8 var(--f-display); letter-spacing: -.06em;
     color: color-mix(in srgb, var(--accent) 9%, transparent);
     transform: translate3d(calc(var(--p) * -12vw), 0, 0); }
-.px-car { position: relative; width: min(58vw, 860px, calc((100svh - 300px) * 1.82)); aspect-ratio: 1573 / 864;
+.px-car { position: relative; width: min(50vw, 780px, calc((100svh - 300px) * 1.82)); aspect-ratio: 1573 / 864;
     transform: translate3d(calc(var(--p) * 24vw), calc(var(--p) * -8vh), 0) scale(calc(1 - var(--p) * .24));
     transform-origin: 70% 90%; will-change: transform; }
 .px-car img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
@@ -158,11 +157,12 @@ html[dir='rtl'] .bento-all strong { font-family: var(--f-arabic); letter-spacing
     .bento-xl { grid-row: span 2; }
 }
 @media (max-width: 520px) {
-    .bento { grid-auto-rows: 200px; }
+    .bento { grid-auto-rows: 214px; }
     .bento-xl { grid-row: span 1; grid-column: span 2; }
     .bento-xl img { top: 30px; inset-inline: 34% 2%; width: 64%; height: calc(100% - 46px); }
     .bento-xl .bento-body { max-width: 34%; }
-    .bento-card:not(.bento-xl):not(.bento-wide) img { top: 34px; inset-inline: 3%; width: 94%; height: calc(100% - 104px); }
+    .bento-card:not(.bento-xl):not(.bento-wide) img { top: 30px; inset-inline: 3%; width: 94%; height: calc(100% - 124px); }
+    .bento-body h3 { font-size: 16px !important; }
     .bento-card { border-radius: 20px; }
     .bento-go { width: 34px; height: 34px; }
 }
