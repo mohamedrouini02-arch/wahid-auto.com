@@ -70,6 +70,7 @@ export default function PhotoHero({ language, isRTL }: { language: Lang; isRTL: 
                     <span className="latin">{tx.index}</span>
                 </div>
 
+                <div className="px-main">
                 <div className="px-title-wrap">
                     <SplitText as="h1" className="px-title" text={tx.title} delay={900} />
                 </div>
@@ -78,7 +79,7 @@ export default function PhotoHero({ language, isRTL }: { language: Lang; isRTL: 
                     <span className="px-word latin" aria-hidden="true">WAHID</span>
                     <div className="px-car">
                         <span className="px-shadow" aria-hidden="true" />
-                        <img src="/cars/cutouts/kia-sportage.webp" alt="Kia Sportage" width={1286} height={844} decoding="async" />
+                        <img src="/cars/cutouts/kia-sportage.webp" alt="Kia Sportage" width={1573} height={864} decoding="async" />
                         <span className="px-plate latin" aria-hidden="true">{tx.car}</span>
                         {tx.pins.map((pin, i) => (
                             <span className={`px-pin px-pin-${i + 1}`} key={pin.t} aria-hidden="true">
@@ -87,6 +88,8 @@ export default function PhotoHero({ language, isRTL }: { language: Lang; isRTL: 
                             </span>
                         ))}
                     </div>
+                </div>
+
                 </div>
 
                 <div className="px-bottom">

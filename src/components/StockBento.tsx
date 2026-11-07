@@ -12,8 +12,7 @@ const TILES: { id: string; size: 'xl' | 'wide' | 'sq' }[] = [
     { id: 'kia-k5', size: 'wide' },
     { id: 'kia-seltos', size: 'sq' },
     { id: 'kia-k3', size: 'sq' },
-    { id: 'kia-sorento', size: 'wide' },
-    { id: 'hyundai-tucson', size: 'sq' },
+    { id: 'hyundai-tucson', size: 'wide' },
 ]
 
 const copy = {
@@ -48,7 +47,7 @@ export default function StockBento({ language, isRTL }: { language: Lang; isRTL:
                             <span className="bento-go" aria-hidden="true"><Arrow size={18} strokeWidth={1.5} /></span>
                         </Link>
                     ))}
-                    <Link to="/cars" className="bento-card bento-all">
+                    <Link to="/cars" className="bento-card bento-all bento-wide">
                         <strong>{tx.all}</strong>
                         <small>{tx.allSub}</small>
                         <span className="bento-go" aria-hidden="true"><Arrow size={22} strokeWidth={1.5} /></span>
