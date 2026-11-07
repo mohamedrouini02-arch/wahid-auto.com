@@ -74,8 +74,11 @@ export const useSmoothScroll = (pathname: string) => {
             if (!smoothing) { smoothing = true; frame = requestAnimationFrame(tick) }
         }
 
+        // native scrolling (lighter and more direct than eased wheel scrolling); the effects update once per frame
+        let queued = 0
         const onNativeScroll = () => {
-            if (!smoothing) { target = current = window.scrollY; update() }
+            if (smoothing || queued) return
+            queued = requestAnimationFrame(() => { queued = 0; target = current = window.scrollY; update() })
         }
 
         update()
@@ -83,10 +86,11 @@ export const useSmoothScroll = (pathname: string) => {
         const settle = [100, 600, 1500].map(ms => window.setTimeout(update, ms))
         window.addEventListener('scroll', onNativeScroll, { passive: true })
         window.addEventListener('resize', update)
-        if (!reduced && finePointer) window.addEventListener('wheel', onWheel, { passive: false })
+        const easedWheel = false && !reduced && finePointer   // off: native scrolling feels lighter
+        if (easedWheel) window.addEventListener('wheel', onWheel, { passive: false })
 
         return () => {
-            cancelAnimationFrame(frame)
+            cancelAnimationFrame(frame); cancelAnimationFrame(queued)
             settle.forEach(clearTimeout)
             window.removeEventListener('wheel', onWheel)
             window.removeEventListener('scroll', onNativeScroll)

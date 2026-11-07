@@ -1,11 +1,13 @@
 import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
-import WavingFlags from './components/motion/WavingFlags'
+import RouteScene from './components/motion/RouteScene'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
-import { Cursor, Loader, PageTransition } from './components/motion/Shell'
+import { Loader, PageTransition } from './components/motion/Shell'
 import './motion.css'
+import './orbit.css'
+import { useTone } from './lib/tone'
 import { LanguageProvider } from './context/LanguageContext'
 import { useSmoothScroll } from './lib/smoothScroll'
 import About from './pages/About'
@@ -20,7 +22,9 @@ import Stock from './pages/Stock'
 import ShippingForm from './pages/ShippingForm'
 
 function SmoothScroll() {
-    useSmoothScroll(useLocation().pathname)
+    const { pathname } = useLocation()
+    useSmoothScroll(pathname)
+    useTone(pathname)
     return null
 }
 
@@ -32,8 +36,7 @@ function App() {
                 <SmoothScroll />
                 <Loader />
                 <PageTransition />
-                <Cursor />
-                <WavingFlags />
+                <RouteScene />
                 <div className="app">
                     <Header />
                     <main>

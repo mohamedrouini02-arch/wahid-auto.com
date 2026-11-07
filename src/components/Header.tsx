@@ -51,6 +51,11 @@ export default function Header() {
             <header className={`header ${scrolled ? 'is-scrolled' : ''} ${hidden && !open ? 'is-hidden' : ''} ${open ? 'is-open' : ''}`}>
                 <div className="header-bar container">
                     <Link to="/" className="header-logo" aria-label="Wahid Auto"><Logo size={34} /></Link>
+                    <nav className="pill-nav" aria-label={language === 'ar' ? 'التنقل الرئيسي' : 'Navigation principale'}>
+                        {links.slice(1, 6).map(link => (
+                            <Link key={link.path} to={link.path} className={location.pathname === link.path ? 'is-active' : ''}>{t(link.labelKey)}</Link>
+                        ))}
+                    </nav>
                     <div className="header-actions">
                         <button className="lang-btn" onClick={() => setLanguage(language === 'ar' ? 'fr' : 'ar')} aria-label={language === 'ar' ? 'Passer en français' : 'التبديل إلى العربية'}>
                             {language === 'ar' ? 'FR' : 'ع'}
