@@ -119,7 +119,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
                 let ty = 0, shift = 0
                 if (i === 0) {                                  // the car drives towards you and into the middle
                     const a = ease(clamp(s / 0.55))
-                    if (wide) { scale = 1.3 + 0.08 * a; shift = (isRTL ? -15 : 15) * (1 - a) }
+                    if (wide) { scale = 1.36 + 0.06 * a; shift = (isRTL ? -15 : 18) * (1 - a) }
                     else { scale = 1 + 0.14 * a }
                     ty = -2 * a
                 }

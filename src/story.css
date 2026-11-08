@@ -37,7 +37,7 @@ html[dir='rtl'] .ss-card { left: auto; right: -14px; clip-path: inset(0 0 0 calc
 .ss-hero { max-width: 620px; display: grid; gap: 22px; will-change: transform, opacity; }
 .ss-meta { display: flex; gap: 18px; flex-wrap: wrap; justify-content: space-between; color: #2c3a33; }
 .ss-meta > span { display: flex; align-items: center; gap: 10px; }
-.ss-title { display: block !important; font-size: clamp(46px, 5.8vw, 98px) !important; line-height: .95 !important; letter-spacing: -.045em !important; font-weight: 300; color: #0a1712; }
+.ss-title { display: block !important; font-size: clamp(44px, 4.7vw, 86px) !important; line-height: .95 !important; letter-spacing: -.045em !important; font-weight: 300; color: #0a1712; }
 html[dir='rtl'] .ss-title { font-size: clamp(40px, 4.8vw, 80px) !important; line-height: 1.15 !important; letter-spacing: 0 !important; }
 .ss-lead { margin: 0; max-width: 430px; font-size: 17px; line-height: 1.6; color: #24312b; }
 .ss-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 26px; }
