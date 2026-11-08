@@ -58,7 +58,7 @@ html[dir='rtl'] .ss-cap h2 { letter-spacing: 0; line-height: 1.35; }
     display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #fff; }
 .ss-foot .scroll-cue { color: #fff; }
 .ss-progress { display: flex; align-items: center; gap: 14px; margin-inline-start: auto; }
-.ss-count { font: 500 12px var(--f-mono); letter-spacing: .2em; color: #fff; }
+.ss-count { font: 500 12px var(--f-mono); letter-spacing: .2em; color: #fff; white-space: nowrap; }
 .ss-count b { font-weight: 600; }
 .ss-bar { position: relative; width: 120px; height: 2px; background: rgba(255,255,255,.35); border-radius: 2px; overflow: hidden; }
 .ss-bar i { position: absolute; inset: 0; background: #fff; transform-origin: left; transform: scaleX(0); }
