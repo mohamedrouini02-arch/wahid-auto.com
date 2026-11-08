@@ -87,6 +87,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
         const N = FRAMES.length
         let frame = 0
+        let wide = true
 
         // place each photo's pin layer exactly over the rendered photo (cover on wide screens, contain on tall ones)
         const layout = () => {
@@ -94,6 +95,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
             const bw = stage.clientWidth, bh = stage.clientHeight
             const contain = bw / bh < 1.05
             el.dataset.fit = contain ? 'contain' : 'cover'
+            wide = !contain
             fits.forEach((fit, i) => {
                 const [px, py] = FRAMES[i].pos
                 const s = contain ? Math.min(bw / RATIO, bh) : Math.max(bw / RATIO, bh)
@@ -114,14 +116,19 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
                 const out = i === N - 1 ? 0 : ease(clamp((s - i - 0.55) / 0.45))
                 const local = clamp(s - i + 1)          // 0→1 while it arrives, 1→2 while it holds
                 let scale = 1.06 - 0.06 * clamp(local / 1.6)
-                let ty = 0
-                if (i === 0) { const a = ease(clamp(s / 0.55)); scale = 1 + 0.2 * a; ty = -3 * a }   // the car drives towards you
-                const tx = (1 - rev) * 12 - out * 7                                                 // camera travelling
+                let ty = 0, shift = 0
+                if (i === 0) {                                  // the car drives towards you and into the middle
+                    const a = ease(clamp(s / 0.55))
+                    if (wide) { scale = 1.3 + 0.08 * a; shift = (isRTL ? -15 : 15) * (1 - a) }
+                    else { scale = 1 + 0.14 * a }
+                    ty = -2 * a
+                }
+                const tx = shift + (1 - rev) * 12 - out * 7     // camera travelling
                 f.style.visibility = rev <= 0 || out >= 1 ? 'hidden' : 'visible'
                 f.style.clipPath = i === 0 ? 'none' : `inset(0 0 0 ${(1 - rev) * 100}%)`
                 f.style.transform = reduce ? 'none' : `translate3d(${tx}%, ${ty}%, 0) scale(${scale})`
                 // labels show once the angle has settled, and leave before it moves on
-                const hold = i === 0 ? 0 : clamp((s - i + 0.05) / 0.2) * (i === N - 1 ? 1 : 1 - clamp((s - i - 0.35) / 0.15))
+                const hold = i === 0 ? 0 : clamp((s - i + 0.1) / 0.15) * (i === N - 1 ? 1 : 1 - clamp((s - i - 0.45) / 0.1))
                 pins[i].forEach((pin, k) => {
                     const v = clamp(hold * 1.6 - k * 0.25)
                     pin.style.opacity = String(v)
@@ -129,7 +136,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
                 })
                 const cap = caps[i - 1]
                 if (cap) {
-                    const c = clamp((s - i + 0.3) / 0.2) * (i === N - 1 ? 1 : 1 - clamp((s - i - 0.42) / 0.13))
+                    const c = clamp((s - i + 0.3) / 0.2) * (i === N - 1 ? 1 : 1 - clamp((s - i - 0.5) / 0.1))
                     cap.style.opacity = String(c)
                     cap.style.transform = `translate3d(0, ${(1 - c) * 24}px, 0)`
                     cap.style.visibility = c <= 0.01 ? 'hidden' : 'visible'
@@ -151,7 +158,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
         addEventListener('scroll', onScroll, { passive: true })
         addEventListener('resize', onResize)
         return () => { cancelAnimationFrame(frame); removeEventListener('scroll', onScroll); removeEventListener('resize', onResize) }
-    }, [language])
+    }, [language, isRTL])
 
     return (
         <section className="ss" ref={root} data-tone="light" data-scene="photo" style={{ height: `${FRAMES.length * 100 + 40}svh` }}>
