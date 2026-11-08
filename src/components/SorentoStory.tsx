@@ -101,7 +101,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
                 const s = contain ? Math.min(bw / RATIO, bh) : Math.max(bw / RATIO, bh)
                 const w = s * RATIO, h = s
                 fit.style.width = `${w}px`; fit.style.height = `${h}px`
-                fit.style.left = `${(bw - w) * px}px`; fit.style.top = `${contain ? (bh - h) * 0.46 : (bh - h) * py}px`
+                fit.style.left = `${(bw - w) * px}px`; fit.style.top = `${contain ? (bh - h) * (i === 0 ? 0.86 : 0.46) : (bh - h) * py}px`   // phones: first shot sits under the headline
             })
         }
 
