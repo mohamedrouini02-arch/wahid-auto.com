@@ -6,7 +6,7 @@ import BudgetFinder from '../components/BudgetFinder'
 import { ScrubText, SplitText } from '../components/motion/Shell'
 import { Monogram } from '../components/Logo'
 import Journey from '../components/Journey'
-import PhotoHero from '../components/PhotoHero'
+import SorentoStory from '../components/SorentoStory'
 import StockBento from '../components/StockBento'
 import { featuredModelIds, site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
@@ -271,7 +271,7 @@ export default function Home() {
 
     return (
         <div className="home">
-            <PhotoHero language={language} isRTL={isRTL} />
+            <SorentoStory language={language} isRTL={isRTL} />
 
             <StockBento language={language} isRTL={isRTL} />
 

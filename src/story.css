@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Sorento walk-around (home hero): pinned stage, photos move, labels pinned
+   ========================================================================== */
+.ss { position: relative; }
+.ss-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; }
+.ss-stage { position: absolute; inset: 0; background: #e9eef0; overflow: hidden; }
+.ss-frame { position: absolute; inset: 0; overflow: hidden; will-change: transform, clip-path; transform-origin: 50% 60%; }
+.ss-fit { position: absolute; }
+.ss-fit > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+.ss-blur { display: none; position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(26px) saturate(.9) brightness(1.06); }
+.ss[data-fit='contain'] .ss-blur { display: block; }
+.ss-shade { position: absolute; inset: 0; z-index: 20; pointer-events: none;
+    background: linear-gradient(180deg, rgba(244,247,247,.78) 0%, rgba(244,247,247,.35) 26%, transparent 46%),
+                linear-gradient(0deg, rgba(10,23,18,.28) 0%, transparent 22%); }
+
+/* pinned labels, same grammar as the videos */
+.ss-pin { position: absolute; width: 0; height: 0; z-index: 2; opacity: 0; --v: 0; }
+.ss-dot { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--accent);
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 25%, transparent); transform: scale(calc(.4 + var(--v) * .6)); }
+.ss-line { position: absolute; left: -1px; bottom: 7px; width: 2px; height: 70px; background: #fff; box-shadow: 0 0 6px rgba(0,0,0,.25);
+    transform-origin: bottom; transform: scaleY(var(--v)); }
+.ss-card { position: absolute; bottom: 82px; left: -14px; display: grid; gap: 2px; white-space: nowrap; padding: 11px 18px 12px;
+    background: #fff; border-radius: 14px; border-inline-start: 4px solid var(--accent); box-shadow: 0 14px 34px -14px rgba(10,23,18,.45);
+    clip-path: inset(0 calc((1 - var(--v)) * 100%) 0 0); }
+html[dir='rtl'] .ss-card { left: auto; right: -14px; clip-path: inset(0 0 0 calc((1 - var(--v)) * 100%)); }
+.ss-card strong { font-size: 16px; font-weight: 600; color: #0a1712; }
+.ss-card small { font-size: 12.5px; color: #52665d; }
+.ss[data-fit='contain'] .ss-card, .ss[data-fit='contain'] .ss-line { display: none; }
+
+/* text layer */
+.ss-ui { position: absolute; inset: 0; z-index: 30; pointer-events: none;
+    padding-top: calc(var(--header-h, 72px) + env(safe-area-inset-top, 0px) + 28px);
+    padding-bottom: max(22px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px), clamp(16px, 4vw, 56px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px), clamp(16px, 4vw, 56px)); }
+.ss-ui a, .ss-ui button { pointer-events: auto; }
+.ss-hero { max-width: 620px; display: grid; gap: 22px; will-change: transform, opacity; }
+.ss-meta { display: flex; gap: 18px; flex-wrap: wrap; justify-content: space-between; color: #2c3a33; }
+.ss-meta > span { display: flex; align-items: center; gap: 10px; }
+.ss-title { display: block !important; font-size: clamp(46px, 5.8vw, 98px) !important; line-height: .95 !important; letter-spacing: -.045em !important; font-weight: 300; color: #0a1712; }
+html[dir='rtl'] .ss-title { font-size: clamp(40px, 4.8vw, 80px) !important; line-height: 1.15 !important; letter-spacing: 0 !important; }
+.ss-lead { margin: 0; max-width: 430px; font-size: 17px; line-height: 1.6; color: #24312b; }
+.ss-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 26px; }
+
+.ss-cap { position: absolute; bottom: 86px; inset-inline-start: max(16px, clamp(16px, 4vw, 56px)); display: flex; gap: 18px; align-items: flex-start;
+    max-width: min(520px, calc(100% - 32px)); padding: 20px 24px 22px; background: rgba(255,255,255,.94); border-radius: 22px;
+    box-shadow: 0 24px 50px -28px rgba(10,23,18,.5); will-change: transform, opacity; }
+.ss-num { font: 300 46px/1 var(--f-display); color: var(--accent); letter-spacing: -.03em; }
+.ss-cap h2 { margin: 0 0 6px; font-size: clamp(22px, 2.1vw, 30px) !important; line-height: 1.15; letter-spacing: -.02em; color: #0a1712; }
+html[dir='rtl'] .ss-cap h2 { letter-spacing: 0; line-height: 1.35; }
+.ss-cap p { margin: 0; font-size: 15px; line-height: 1.55; color: #3d4c45; }
+.ss-cap-pins { display: none; list-style: none; padding: 0; margin: 10px 0 0; gap: 6px; }
+.ss-cap-pins li { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #0a1712; }
+.ss-cap-pins i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+.ss[data-fit='contain'] .ss-cap-pins { display: grid; }
+
+.ss-foot { position: absolute; bottom: max(22px, env(safe-area-inset-bottom, 0px)); inset-inline: max(16px, clamp(16px, 4vw, 56px));
+    display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #fff; }
+.ss-foot .scroll-cue { color: #fff; }
+.ss-progress { display: flex; align-items: center; gap: 14px; margin-inline-start: auto; }
+.ss-count { font: 500 12px var(--f-mono); letter-spacing: .2em; color: #fff; }
+.ss-count b { font-weight: 600; }
+.ss-bar { position: relative; width: 120px; height: 2px; background: rgba(255,255,255,.35); border-radius: 2px; overflow: hidden; }
+.ss-bar i { position: absolute; inset: 0; background: #fff; transform-origin: left; transform: scaleX(0); }
+html[dir='rtl'] .ss-bar i { transform-origin: right; }
+
+/* tall screens (phones): the photo sits whole in the middle over a soft blur of itself */
+@media (max-aspect-ratio: 21/20) {
+    .ss-shade { background: linear-gradient(180deg, rgba(244,247,247,.7) 0%, transparent 30%), linear-gradient(0deg, rgba(10,23,18,.35) 0%, transparent 28%); }
+    .ss-hero { gap: 16px; }
+    .ss-title { font-size: clamp(40px, 12vw, 60px) !important; }
+    html[dir='rtl'] .ss-title { font-size: clamp(34px, 10vw, 52px) !important; }
+    .ss-lead { font-size: 15px; }
+    .ss-cap { bottom: 70px; padding: 16px 18px 18px; gap: 14px; }
+    .ss-num { font-size: 34px; }
+    .ss-cap p { font-size: 14px; }
+}
+@media (max-width: 640px) {
+    .ss-meta > span:last-child { display: none; }
+    .ss-lead { display: none; }
+    .ss-bar { width: 80px; }
+}
