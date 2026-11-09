@@ -5,8 +5,8 @@ import { Link, useLocation } from 'react-router-dom'
 import BudgetFinder from '../components/BudgetFinder'
 import { ScrubText, SplitText } from '../components/motion/Shell'
 import { Monogram } from '../components/Logo'
-import Journey from '../components/Journey'
-import SorentoStory from '../components/SorentoStory'
+import ExportJourney from '../components/ExportJourney'
+import PhotoHero from '../components/PhotoHero'
 import StockBento from '../components/StockBento'
 import { featuredModelIds, site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
@@ -271,7 +271,7 @@ export default function Home() {
 
     return (
         <div className="home">
-            <SorentoStory language={language} isRTL={isRTL} />
+            <PhotoHero language={language} isRTL={isRTL} />
 
             <StockBento language={language} isRTL={isRTL} />
 
@@ -288,7 +288,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <Journey language={language} />
+            <ExportJourney language={language} />
 
             {/* ---------- MANIFESTO ---------- */}
             <section className="section manifesto" data-tone="dark" data-scene="quiet">

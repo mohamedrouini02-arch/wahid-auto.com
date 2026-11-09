@@ -1,0 +1,34 @@
+/* ==========================================================================
+   Export journey (order → keys): pinned light studio stage, 1600×900 scaled.
+   The car photos have a white studio background (multiply blend): keep this band light.
+   ========================================================================== */
+.xj { position: relative; --brand: #0B0D0C; --sea: #d7e6ec; }
+.xj-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #f3f4f2; isolation: isolate; }
+.xj-stage { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: 0 0; }
+.xj-stage > * { position: absolute; inset: 0; }
+.xj-stage .layer { width: 1600px; height: 900px; overflow: visible; pointer-events: none; }
+.xj-stage .car { inset: auto; left: 0; top: 0; width: 1200px; height: 540px; transform-origin: 0 0; mix-blend-mode: multiply; will-change: transform; }
+.xj-stage .car img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.xj-stage .t { font-family: var(--f-display), 'Jost', sans-serif; }
+html[dir='rtl'] .xj-stage .t-i18n { font-family: var(--f-arabic), 'IBM Plex Sans Arabic', sans-serif; }
+
+.xj-ui { position: absolute; inset: 0; pointer-events: none; z-index: 2;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.xj-cap { position: absolute; top: calc(var(--header-h, 72px) + env(safe-area-inset-top, 0px) + 16px); inset-inline-start: clamp(16px, 5vw, 72px); max-width: min(460px, 82vw); color: #0d1411; }
+.xj-eyebrow { margin: 0 0 18px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #6d7671; }
+html[dir='rtl'] .xj-eyebrow { letter-spacing: 0; font-size: 14px; }
+.xj-cap-step { font: 600 12px var(--f-mono, monospace); letter-spacing: .2em; color: #3f9c7f; margin-bottom: 10px; direction: ltr; unicode-bidi: isolate; text-align: start; }
+.xj-cap h2 { margin: 0 0 10px; font-size: clamp(28px, 3.6vw, 52px) !important; line-height: 1.08; font-weight: 400; letter-spacing: -.02em; color: #0d1411; }
+html[dir='rtl'] .xj-cap h2 { line-height: 1.3; letter-spacing: 0; }
+.xj-cap-text { margin: 0; font-size: clamp(14px, 1.2vw, 17px); line-height: 1.7; color: #4d5852; }
+.xj-cap > * { transition: opacity .45s ease, transform .6s cubic-bezier(.2,.7,.2,1); }
+.xj-cap.swap > :not(.xj-eyebrow) { opacity: 0; transform: translateY(10px); }
+.xj-rail { position: absolute; bottom: max(22px, env(safe-area-inset-bottom, 0px)); inset-inline: clamp(16px, 5vw, 72px); display: flex; gap: 6px; }
+.xj-rail span { flex: 1; height: 3px; border-radius: 3px; background: rgba(13,20,17,.1); overflow: hidden; }
+.xj-rail span i { display: block; height: 100%; width: 100%; background: #0d1411; transform: scaleX(0); transform-origin: left; }
+html[dir='rtl'] .xj-rail span i { transform-origin: right; }
+@media (max-width: 700px) {
+    .xj-cap { top: calc(var(--header-h, 64px) + env(safe-area-inset-top, 0px) + 6px); }
+    .xj-eyebrow { margin-bottom: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .xj-cap > * { transition: none; } }
