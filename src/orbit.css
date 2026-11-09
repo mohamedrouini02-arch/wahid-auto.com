@@ -19,26 +19,18 @@
     --ease-io: cubic-bezier(.77, 0, .18, 1);
 }
 
-/* tone tokens: dark by default, light when a light section is in the middle of the screen */
+/* one light page: white paper, ink type, the brand green for accents */
 body {
-    --bg: var(--deep-0); --fg: #eef4f0; --muted: #8fa39a; --line: rgba(168, 230, 207, .15);
-    --card: rgba(10, 22, 17, .94); --card-solid: #0b1a14; --card-2: rgba(20, 44, 35, .55);
-    --accent: var(--green); --accent-2: var(--mint); --on-accent: #06110d;
-    --btn-bg: #eef4f0; --btn-fg: #06110d;
+    --bg: #ffffff; --fg: #0b0d0c; --muted: #5d6862; --line: rgba(11, 13, 12, .1);
+    --card: #f3f4f2; --card-solid: #f3f4f2; --card-2: #e9ece9;
+    --accent: #3f9c7f; --accent-2: #2e7a62; --on-accent: #fff;
+    --btn-bg: #0b0d0c; --btn-fg: #fff;
     /* older tokens follow */
-    --paper: var(--bg); --paper-2: var(--card-solid); --ink: var(--fg); --ink-2: color-mix(in srgb, var(--fg) 80%, var(--muted));
-    --surface: var(--card); --surface-solid: var(--card-solid); --night: var(--bg); --night-ink: var(--fg);
-    --accent-ink: var(--on-accent); --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+    --paper: var(--bg); --paper-2: var(--card-solid); --ink: var(--fg); --ink-2: #2c3430;
+    --surface: var(--card); --surface-solid: var(--card-solid); --night: var(--fg); --night-ink: #fff;
+    --accent-ink: var(--on-accent); --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
     --font-latin: var(--f-body); --font-family: var(--f-body);
     background: var(--bg); color: var(--fg); font-family: var(--f-body);
-    transition: background-color 1s var(--ease-o), color 1s var(--ease-o);
-    color-scheme: dark;
-}
-body[data-tone='light'] {
-    --bg: var(--mint-paper-0); --fg: #0a1712; --muted: #52665d; --line: rgba(10, 23, 18, .13);
-    --card: rgba(246, 249, 246, .96); --card-solid: #f6f9f6; --card-2: rgba(216, 227, 220, .8);
-    --accent: #1e8a66; --accent-2: var(--brand); --on-accent: #fff;
-    --btn-bg: #0a1712; --btn-fg: #fff;
     color-scheme: light;
 }
 html[dir='rtl'] body { font-family: var(--f-arabic); }

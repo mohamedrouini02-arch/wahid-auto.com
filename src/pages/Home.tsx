@@ -3,15 +3,12 @@ import { Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import BudgetFinder from '../components/BudgetFinder'
-import { ScrubText, SplitText } from '../components/motion/Shell'
+import JourneyHero from '../components/JourneyHero'
 import { Monogram } from '../components/Logo'
-import ExportJourney from '../components/ExportJourney'
-import PhotoHero from '../components/PhotoHero'
-import StockBento from '../components/StockBento'
 import { featuredModelIds, site } from '../config/site'
 import { useLanguage } from '../context/LanguageContext'
+import { cars } from '../data/cars'
 import { budgetRanges, carBrands, carModelsByBrand, wilayas } from '../data/wilayas'
-import { useCountUp, useScrollReveal } from '../lib/motion'
 import { generateReferenceNumber, supabase } from '../lib/supabase'
 import './Home.css'
 
@@ -23,57 +20,35 @@ const OTHER_BUDGET = 'أخرى (حدد الميزانية)'
 
 const copy = {
     ar: {
-        heroEyebrow: 'من كوريا والصين إلى الجزائر',
-        heroTitle: 'سيارتك الجاية من كوريا والصين،\nبسعر واضح من النهار الأول.',
-        heroLead: 'نختارو السيارة معاك، نفحصوها، نشحنوها ونتكفلو بالأوراق. تعرف السعر النهائي قبل ما تخلص.',
-        heroOrder: 'اطلب سيارتك',
-        heroLines: 'من طلبك\nحتى المفاتيح\n*في يدك.*',
-        metaLeft: 'من كوريا والصين إلى الجزائر', metaMid: '6 مراحل · كل شيء واضح وموثّق', metaRight: 'وحيد أوتو / 01',
-        tagTitle: 'نفحصوها بعينينا.', tagText: 'صور وتقرير قبل ما تخلص.',
-        heroNotes: ['كيا', 'هيونداي', 'رينو', 'جيلي'],
-        flow: [['buy', 'الشراء'], ['ship', 'الشحن'], ['customs', 'الجمارك'], ['keys', 'المفاتيح']] as [string, string][],
-        statement: ['طلب واحد.', 'من الطلب حتى المفاتيح.', 'كل شيء واضح.', 'وكل شيء موثّق.'],
-        scrollHint: 'مرّر',
-        manifestoEyebrow: 'وحيد أوتو',
-        manifesto: 'نجيبولك سيارتك من كوريا ولا الصين كيما لازم: نختاروها معاك، نفحصوها بعينينا، نشحنوها ونخلصو أوراقها. أنت تعرف السعر قبل ما تخلص، وتتبع سيارتك من الميناء حتى لباب دارك.',
-        galleryEyebrow: 'الأكثر طلباً',
-        galleryTitle: 'السيارات اللي\n*يختاروها الدزيريين.*',
-        megaCta: 'نبداو؟',
-        heroCars: 'السيارات المتوفرة',
+        promise: ['سيارة تختارها أنت.', 'نفحصوها كأنها تاعنا.', 'وتوصلك بالسعر اللي قلناه.'],
+        promiseText: 'نجيبولك سيارتك من كوريا ولا الصين كيما لازم. نختاروها معاك، نفحصوها بعينينا، نشحنوها ونخلصو أوراقها. تعرف السعر قبل ما تخلص، وتتبع سيارتك من الميناء حتى للمعرض في جيجل.',
+        promiseLink: 'كيف نعمل',
         facts: [
-            { value: 270, suffix: '+', label: 'سيارة سلمناها خلال آخر 12 شهراً' },
-            { value: 20, suffix: '+', label: 'ولاية فيها زبائن وحيد أوتو' },
-            { value: 2, suffix: '', label: 'مصدران: كوريا الجنوبية والصين' }
+            { value: '270+', label: 'سيارة سلمناها خلال آخر 12 شهراً' },
+            { value: '20+', label: 'ولاية فيها زبائن وحيد أوتو' },
+            { value: '2', label: 'مصدران: كوريا الجنوبية والصين' },
+            { value: '1', label: 'معرض في جيجل تشوف فيه سيارتك' }
         ],
-        stepsEyebrow: 'كيف نعمل',
-        stepsTitle: 'أربع خطوات.\n*لا مفاجآت.*',
-        steps: [
-            { title: 'اختر', text: 'قل لنا الموديل والميزانية. نقترح عليك سيارات حقيقية متوفرة الآن.' },
-            { title: 'نفحص', text: 'نفحص السيارة في كوريا أو الصين ونرسل لك الصور والتقرير قبل الشراء.' },
-            { title: 'نشحن', text: 'نشحن السيارة ونرسل لك تحديثات حتى وصولها إلى الميناء.' },
-            { title: 'تستلم', text: 'نتكفل بالجمركة والأوراق، وتستلم سيارتك جاهزة.' }
-        ],
-        modelsEyebrow: 'ابحث عن سيارتك',
-        modelsTitle: 'حرّك الميزانية،\n*شاهد ما يناسبك.*',
-        map: { korea: 'كوريا', china: 'الصين', algeria: 'الجزائر' },
-        roadsEyebrow: 'طريقان، وجهة واحدة',
-        roadsTitle: 'من سيول وشنغهاي\n*إلى باب دارك.*',
-        roadsLead: 'شركاء على الأرض في كوريا والصين، ومعرض في جيجل. اضغط على أي بلد لترى طريقه.',
-        modelsLead: 'الأسعار تقريبية وتتغير مع سعر الصرف. نرسل لك السعر النهائي قبل أي دفع.',
+        carsTitle: 'السيارات اللي يختاروها الدزيريين.',
+        carsText: 'صور حقيقية لسيارات في كوريا. الأسعار تقريبية وتتبع سعر الصرف، والسعر النهائي يوصلك مكتوب قبل أي دفع.',
         allCars: 'كل السيارات',
-        rulesEyebrow: 'قوانين الاستيراد 2026',
-        rulesTitle: 'ما يمكنك استيراده هذا العام.',
+        from: 'من',
+        unit: 'دج',
+        finderTitle: 'حدد ميزانيتك، نوريولك واش يناسبك.',
+        rulesTitle: 'واش تقدر تستورد في 2026.',
+        rulesNote: 'القوانين تتبدل كل عام مع قانون المالية. نتحققو من حالتك قبل الطلب.',
         rules: [
             { title: 'أقل من 3 سنوات', text: 'للمقيمين في الجزائر: سيارة واحدة كل 3 سنوات، عمرها أقل من 3 سنوات.' },
             { title: 'بنزين، هجين أو كهربائية', text: 'سيارات الديزل ممنوعة على الخواص.' },
-            { title: 'امتيازات للكهربائية والهجينة', text: 'تخفيضات كبيرة في الرسوم الجمركية. نحسبها لك بدقة.' },
+            { title: 'امتيازات للكهربائية والهجينة', text: 'تخفيضات كبيرة في الرسوم الجمركية. نحسبوها لك بالدقة.' },
             { title: 'العودة النهائية (CCR)', text: 'للجالية: سيارة أقل من 5 سنوات معفاة من الرسوم منذ 2026.' }
         ],
-        rulesNote: 'القوانين تتغير كل سنة مع قانون المالية. نتحقق من حالتك قبل الطلب.',
-        orderEyebrow: 'اطلب الآن',
-        orderTitle: 'أخبرنا بما تريد.',
-        orderLead: 'نرد عليك خلال يوم عمل بعرض مفصل: سعر السيارة، الشحن، الجمركة والمصاريف.',
-        promises: ['سعر نهائي مكتوب قبل الدفع', 'صور وتقرير فحص لكل سيارة', 'تحديثات الشحن على واتساب', 'الأوراق والجمركة علينا'],
+        orderTitle: 'قول لنا واش تحب.',
+        orderLead: 'نردو عليك في يوم عمل بعرض مفصل: سعر السيارة، الشحن، الجمركة والمصاريف.',
+        promises: ['سعر نهائي مكتوب قبل الدفع', 'صور وتقرير فحص لكل سيارة', 'أخبار الشحن على الواتساب', 'الأوراق والجمركة علينا'],
+        visitTitle: 'تعال شوفها في جيجل.',
+        visitText: 'المعرض مفتوح، والقهوة علينا. اتصل بنا قبل ما تجي باش نحضرولك السيارات اللي تهمك.',
+        whatsapp: 'راسلنا على الواتساب',
         fullName: 'الاسم الكامل',
         phone: 'رقم الهاتف',
         email: 'البريد الإلكتروني (اختياري)',
@@ -97,62 +72,37 @@ const copy = {
         trackLink: 'تتبع طلبك',
         newOrder: 'طلب جديد',
         error: 'لم يتم إرسال الطلب. تحقق من الاتصال وحاول مرة أخرى، أو راسلنا على واتساب.',
-        closingTitle: 'تفضل الحديث مباشرة؟',
-        closingLead: 'راسلنا على واتساب وسنجيبك بالسعر الحالي لأي موديل.',
-        whatsapp: 'راسلنا على واتساب'
     },
     fr: {
-        heroEyebrow: 'De Corée et de Chine vers l’Algérie',
-        heroTitle: 'Votre prochaine voiture,\nau prix clair dès le premier jour.',
-        heroLead: 'Nous choisissons la voiture avec vous, l’inspectons, l’expédions et gérons les papiers. Vous connaissez le prix final avant de payer.',
-        heroOrder: 'Commander',
-        heroLines: 'De votre commande\naux clés\n*dans votre main.*',
-        metaLeft: 'Corée · Chine → Algérie', metaMid: '6 étapes · tout est clair et documenté', metaRight: 'Wahid Auto / 01',
-        tagTitle: 'Inspectée sur place.', tagText: 'Photos et rapport avant de payer.',
-        heroNotes: ['Kia', 'Hyundai', 'Renault', 'Geely'],
-        flow: [['buy', 'Achat'], ['ship', 'Mer'], ['customs', 'Douane'], ['keys', 'Clés']] as [string, string][],
-        statement: ['Une commande.', 'De la demande aux clés.', 'Tout est clair.', 'Tout est documenté.'],
-        scrollHint: 'Défiler',
-        manifestoEyebrow: 'Wahid Auto',
-        manifesto: 'Nous ramenons votre voiture de Corée ou de Chine comme il faut : choisie avec vous, inspectée de près, expédiée et dédouanée. Vous connaissez le prix avant de payer et suivez votre voiture du port jusqu’à chez vous.',
-        galleryEyebrow: 'Les plus demandées',
-        galleryTitle: 'Les voitures que\n*les Algériens choisissent.*',
-        megaCta: 'On commence ?',
-        heroCars: 'Voitures disponibles',
+        promise: ['Une voiture que vous choisissez.', 'Inspectée comme si c’était la nôtre.', 'Livrée au prix annoncé.'],
+        promiseText: 'Nous ramenons votre voiture de Corée ou de Chine comme il faut : choisie avec vous, inspectée de près, expédiée et dédouanée. Vous connaissez le prix avant de payer et suivez votre voiture du port jusqu’au showroom de Jijel.',
+        promiseLink: 'Comment ça marche',
         facts: [
-            { value: 270, suffix: '+', label: 'voitures livrées ces 12 derniers mois' },
-            { value: 20, suffix: '+', label: 'wilayas où vivent nos clients' },
-            { value: 2, suffix: '', label: 'origines : Corée du Sud et Chine' }
+            { value: '270+', label: 'voitures livrées ces 12 derniers mois' },
+            { value: '20+', label: 'wilayas où vivent nos clients' },
+            { value: '2', label: 'origines : Corée du Sud et Chine' },
+            { value: '1', label: 'showroom à Jijel pour voir votre voiture' }
         ],
-        stepsEyebrow: 'Comment ça marche',
-        stepsTitle: 'Quatre étapes.\n*Aucune surprise.*',
-        steps: [
-            { title: 'Choisir', text: 'Donnez-nous le modèle et le budget. Nous proposons de vraies voitures disponibles.' },
-            { title: 'Inspecter', text: 'Nous inspectons la voiture en Corée ou en Chine et vous envoyons photos et rapport avant l’achat.' },
-            { title: 'Expédier', text: 'Nous expédions la voiture et vous tenons informé jusqu’au port.' },
-            { title: 'Recevoir', text: 'Nous gérons le dédouanement et les papiers. Vous recevez une voiture prête.' }
-        ],
-        modelsEyebrow: 'Trouver votre voiture',
-        modelsTitle: 'Bougez le budget,\n*voyez ce qui vous va.*',
-        map: { korea: 'Corée', china: 'Chine', algeria: 'Algérie' },
-        roadsEyebrow: 'Deux routes, une destination',
-        roadsTitle: 'De Séoul et Shanghai\n*jusqu’à chez vous.*',
-        roadsLead: 'Des partenaires sur place en Corée et en Chine, un showroom à Jijel. Touchez un pays pour voir sa route.',
-        modelsLead: 'Prix indicatifs, ils suivent le taux de change. Vous recevez le prix final avant tout paiement.',
+        carsTitle: 'Les voitures que les Algériens choisissent.',
+        carsText: 'De vraies photos de voitures en Corée. Prix indicatifs qui suivent le taux de change ; le prix final vous arrive par écrit avant tout paiement.',
         allCars: 'Toutes les voitures',
-        rulesEyebrow: 'Règles d’importation 2026',
-        rulesTitle: 'Ce que vous pouvez importer cette année.',
+        from: 'dès',
+        unit: 'DA',
+        finderTitle: 'Fixez votre budget, on vous montre ce qui vous va.',
+        rulesTitle: 'Ce que vous pouvez importer en 2026.',
+        rulesNote: 'Les règles changent chaque année avec la loi de finances. Nous vérifions votre cas avant la commande.',
         rules: [
             { title: 'Moins de 3 ans', text: 'Résidents en Algérie : une voiture tous les 3 ans, de moins de 3 ans.' },
             { title: 'Essence, hybride ou électrique', text: 'Le diesel est interdit aux particuliers.' },
             { title: 'Avantages électrique et hybride', text: 'Fortes réductions des droits de douane. Nous les calculons pour vous.' },
             { title: 'Retour définitif (CCR)', text: 'Pour la diaspora : moins de 5 ans, en franchise, depuis 2026.' }
         ],
-        rulesNote: 'Les règles changent chaque année avec la loi de finances. Nous vérifions votre cas avant la commande.',
-        orderEyebrow: 'Commander',
         orderTitle: 'Dites-nous ce que vous cherchez.',
         orderLead: 'Réponse sous un jour ouvré avec une offre détaillée : voiture, transport, dédouanement et frais.',
         promises: ['Prix final écrit avant paiement', 'Photos et rapport d’inspection', 'Suivi d’expédition sur WhatsApp', 'Papiers et douane pris en charge'],
+        visitTitle: 'Venez la voir à Jijel.',
+        visitText: 'Le showroom est ouvert et le café est offert. Appelez avant de passer, nous préparons les voitures qui vous intéressent.',
+        whatsapp: 'Écrire sur WhatsApp',
         fullName: 'Nom complet',
         phone: 'Téléphone',
         email: 'E-mail (facultatif)',
@@ -176,9 +126,6 @@ const copy = {
         trackLink: 'Suivre ma demande',
         newOrder: 'Nouvelle demande',
         error: 'La demande n’est pas partie. Vérifiez votre connexion et réessayez, ou écrivez-nous sur WhatsApp.',
-        closingTitle: 'Vous préférez parler directement ?',
-        closingLead: 'Écrivez-nous sur WhatsApp, nous répondons avec le prix actuel de n’importe quel modèle.',
-        whatsapp: 'Écrire sur WhatsApp'
     }
 }
 
@@ -187,23 +134,14 @@ const emptyForm = {
     carBrand: '', carModel: '', budget: '', customBudget: '', notes: ''
 }
 
-const brands = ['KIA', 'HYUNDAI', 'RENAULT', 'CHEVROLET', 'GEELY', 'MG', 'CHERY', 'BYD', 'LIVAN', 'GAC']
-
-const Fact = ({ value, suffix, label }: { value: number; suffix: string; label: string }) => {
-    const { ref, value: shown } = useCountUp(value)
-    return (
-        <div className="fact">
-            <dt className="fact-value latin num" ref={ref}>{shown}{suffix}</dt>
-            <dd className="fact-label">{label}</dd>
-        </div>
-    )
-}
+const PHONES = ['0557 06 04 78', '0781 66 32 01', '0672 14 73 90']
+const formatDzd = (amount: number, language: 'ar' | 'fr') => new Intl.NumberFormat(language === 'ar' ? 'ar-DZ' : 'fr-DZ').format(amount)
 
 export default function Home() {
-    const { language, isRTL } = useLanguage()
+    const { language } = useLanguage()
     const tx = copy[language]
     const location = useLocation()
-    useScrollReveal()
+    const featured = featuredModelIds.map(id => cars.find(c => c.id === id)!).filter(Boolean)
 
     const [formData, setFormData] = useState(emptyForm)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -271,67 +209,73 @@ export default function Home() {
 
     return (
         <div className="home">
-            <PhotoHero language={language} isRTL={isRTL} />
+            <JourneyHero language={language} />
 
-            <StockBento language={language} isRTL={isRTL} />
-
-            <section className="statement" data-tone="dark" data-scene="sea" aria-label={tx.statement.join(' ')}>
-                <div className="marquee-track" aria-hidden="true">
-                    {[0, 1].map(k => (
-                        <div className="marquee-group" key={k}>
-                            <span>{tx.statement[0]}</span><i className="orb" />
-                            <strong>{tx.statement[1]}</strong><i className="orb" />
-                            <span>{tx.statement[2]}</span><i className="orb" />
-                            <em>{tx.statement[3]}</em><i className="orb" />
+            <section className="h-sec h-promise">
+                <div className="h-wrap">
+                    <div className="h-promise-grid">
+                        <h2>{tx.promise.map(line => <span key={line}>{line}</span>)}</h2>
+                        <div className="h-promise-copy">
+                            <p>{tx.promiseText}</p>
+                            <Link to="/process" className="h-link">{tx.promiseLink}</Link>
                         </div>
-                    ))}
-                </div>
-            </section>
-
-            <ExportJourney language={language} />
-
-            {/* ---------- MANIFESTO ---------- */}
-            <section className="section manifesto" data-tone="dark" data-scene="quiet">
-                <div className="container">
-                    <p className="eyebrow">{tx.manifestoEyebrow}</p>
-                    <ScrubText text={tx.manifesto} />
-                    <dl className="facts">
-                        {tx.facts.map(fact => <Fact key={fact.label} {...fact} />)}
+                    </div>
+                    <dl className="h-facts">
+                        {tx.facts.map(f => (
+                            <div key={f.label}>
+                                <dt className="latin num" dir="ltr">{f.value}</dt>
+                                <dd>{f.label}</dd>
+                            </div>
+                        ))}
                     </dl>
                 </div>
             </section>
 
-            <div className="marquee" aria-hidden="true">
-                <div className="marquee-track latin">
-                    {[...brands, ...brands].map((brand, i) => <span key={i}>{brand}</span>)}
-                </div>
-            </div>
-
-            {/* ---------- BUDGET FINDER ---------- */}
-            <section className="section models" data-tone="light" data-scene="quiet">
-                <div className="container">
-                    <div className="section-header">
-                        <p className="eyebrow">{tx.modelsEyebrow}</p>
-                        <SplitText className="section-title" text={tx.modelsTitle} />
-                        <p className="section-subtitle">{tx.modelsLead}</p>
+            <section className="h-sec h-cars" style={{ paddingTop: 0 }}>
+                <div className="h-wrap">
+                    <div className="h-head">
+                        <h2>{tx.carsTitle}</h2>
+                        <p>{tx.carsText}</p>
                     </div>
-                    <BudgetFinder language={language} featuredIds={featuredModelIds} />
+                    <ul className="h-cars-grid">
+                        {featured.map(car => (
+                            <li key={car.id}>
+                                <Link to={`/cars/${car.id}`} className="h-car">
+                                    <div className="h-car-photo">
+                                        <img src={`/cars/feature/${car.id}.webp`} alt={`${car.brand} ${car.model}`} loading="lazy" width={1500} height={1000} />
+                                    </div>
+                                    <div className="h-car-row">
+                                        <span className="h-car-name"><span className="h-car-brand">{language === 'ar' ? car.brandAr : car.brand}</span> {language === 'ar' ? car.modelAr : car.model}</span>
+                                        <span className="h-car-price">{tx.from} <b className="num">{formatDzd(car.priceMin, language)}</b> {tx.unit}</span>
+                                    </div>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                    <div style={{ marginTop: 44 }}><Link to="/cars" className="h-link">{tx.allCars}</Link></div>
                 </div>
             </section>
 
-            {/* ---------- RULES ---------- */}
-            <section className="section rules" data-tone="light" data-scene="quiet">
-                <div className="container rules-grid">
-                    <div className="section-header">
-                        <p className="eyebrow">{tx.rulesEyebrow}</p>
-                        <h2 className="section-title">{tx.rulesTitle}</h2>
-                        <p className="section-subtitle">{tx.rulesNote}</p>
+            <section className="h-sec h-finder" style={{ paddingTop: 0 }}>
+                <div className="h-wrap">
+                    <div className="h-panel">
+                        <div className="h-head"><h2>{tx.finderTitle}</h2></div>
+                        <BudgetFinder language={language} featuredIds={featuredModelIds} />
                     </div>
-                    <ul className="rules-list" data-reveal>
+                </div>
+            </section>
+
+            <section className="h-sec h-rules" style={{ paddingTop: 0 }}>
+                <div className="h-wrap h-rules-grid">
+                    <div>
+                        <h2>{tx.rulesTitle}</h2>
+                        <p>{tx.rulesNote}</p>
+                    </div>
+                    <ul className="h-rules-list">
                         {tx.rules.map(rule => (
                             <li key={rule.title}>
-                                <h3 className="rule-title">{rule.title}</h3>
-                                <p className="rule-text">{rule.text}</p>
+                                <h3>{rule.title}</h3>
+                                <p>{rule.text}</p>
                             </li>
                         ))}
                     </ul>
@@ -339,22 +283,19 @@ export default function Home() {
             </section>
 
             {/* ---------- ORDER ---------- */}
-            <section className="section order" id="order" data-tone="dark" data-scene="order">
-                <div className="container order-grid">
-                    <div className="order-intro">
-                        <div className="section-header">
-                            <p className="eyebrow">{tx.orderEyebrow}</p>
-                            <h2 className="section-title" data-speed="-0.05">{tx.orderTitle}</h2>
-                            <p className="section-subtitle">{tx.orderLead}</p>
-                        </div>
-                        <ul className="promises">
+            <section className="h-sec h-order" id="order" style={{ paddingTop: 0 }}>
+                <div className="h-wrap h-order-grid">
+                    <div>
+                        <h2>{tx.orderTitle}</h2>
+                        <p className="lead">{tx.orderLead}</p>
+                        <ul className="h-promises">
                             {tx.promises.map(promise => (
                                 <li key={promise}><Check size={18} strokeWidth={1.5} /> {promise}</li>
                             ))}
                         </ul>
                     </div>
 
-                    <div className="order-panel" data-reveal>
+                    <div className="order-panel">
                         {referenceNumber ? (
                             <div className="order-success" role="status">
                                 <Monogram size={56} />
@@ -435,13 +376,21 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ---------- MEGA CTA ---------- */}
-            <section className="closing" data-tone="dark" data-scene="all">
-                <div className="container">
-                    <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="mega-cta">
-                        <span className="mega-cta-label">{tx.megaCta}</span>
-                        <span className="mega-cta-sub">{tx.closingLead}</span>
-                    </a>
+            <section className="h-sec h-visit" style={{ paddingTop: 0 }}>
+                <div className="h-wrap">
+                    <div className="h-visit-grid">
+                        <div className="h-visit-photo">
+                            <img src="/brand/showroom-aerial.jpg" alt={language === 'ar' ? 'معرض وحيد أوتو في جيجل' : 'Le showroom Wahid Auto à Jijel'} loading="lazy" />
+                        </div>
+                        <div className="h-visit-copy">
+                            <h2>{tx.visitTitle}</h2>
+                            <p>{tx.visitText}</p>
+                            <ul className="h-phones">
+                                {PHONES.map(n => <li key={n}><a href={`tel:+213${n.replace(/\s/g, '').slice(1)}`}>{n}</a></li>)}
+                            </ul>
+                            <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" className="h-btn">{tx.whatsapp}</a>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
