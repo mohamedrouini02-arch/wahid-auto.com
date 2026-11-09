@@ -4,17 +4,17 @@
 .ss { position: relative; }
 .ss-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; }
 .ss-stage { position: absolute; inset: 0; background: #e9eef0; overflow: hidden; }
-.ss-frame { position: absolute; inset: 0; overflow: hidden; will-change: transform, clip-path; transform-origin: 50% 60%; }
-.ss-fit { position: absolute; }
-.ss-fit > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
-.ss-blur { display: none; position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(26px) saturate(.9) brightness(1.06); }
-.ss[data-fit='contain'] .ss-blur { display: block; }
+.ss-drive { position: absolute; inset: 0; z-index: 1; transform-origin: 50% 60%; will-change: transform, opacity, filter; }
+.ss-drive img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; user-select: none; -webkit-user-drag: none; }
+.ss[data-fit='contain'] .ss-drive img { object-fit: contain; object-position: 50% 84%; }
+.ss-canvas { position: absolute; inset: 0; z-index: 2; opacity: 0; }
+.ss-pins { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .ss-shade { position: absolute; inset: 0; z-index: 20; pointer-events: none;
     background: linear-gradient(180deg, rgba(244,247,247,.78) 0%, rgba(244,247,247,.35) 26%, transparent 46%),
                 linear-gradient(0deg, rgba(10,23,18,.28) 0%, transparent 22%); }
 
 /* pinned labels, same grammar as the videos */
-.ss-pin { position: absolute; width: 0; height: 0; z-index: 2; opacity: 0; --v: 0; }
+.ss-pin { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; --v: 0; will-change: transform, opacity; }
 .ss-dot { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--accent);
     box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 25%, transparent); transform: scale(calc(.4 + var(--v) * .6)); }
 .ss-line { position: absolute; left: -1px; bottom: 7px; width: 2px; height: 70px; background: #fff; box-shadow: 0 0 6px rgba(0,0,0,.25);

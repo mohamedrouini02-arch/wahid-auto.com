@@ -3,54 +3,30 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { SplitText } from './motion/Shell'
 
-// Scroll-driven walk-around of one car (Kia Sorento X-Pro, one photo shoot).
-// The section is tall; the stage stays pinned while scrolling moves a virtual camera:
-// the car drives towards you, then the camera circles it (front → side → rear → rear three-quarter).
-// Each angle wipes in the way the camera travels, with the same pinned labels as the videos.
-// All motion is written straight to the DOM from one rAF per scroll (no React re-renders).
+// Home hero: a Kia Sorento X-Pro drives in, then the camera orbits the car as you scroll.
+// The orbit is a pre-rendered 150-frame sequence (made from one photo shoot: masks + depth → 2.5D camera
+// moves, with motion-blurred hand-overs between angles), drawn on a canvas. Scroll sets a target; the
+// playhead eases towards it every frame (inertia), and neighbouring frames are blended, so it never steps.
+// Labels ride on the car using positions tracked during the render (orbit.json).
 
 type Lang = 'ar' | 'fr'
-type Pin = { x: number; y: number; ar: string; arS: string; fr: string; frS: string }
-type Frame = { key: string; pos: [number, number]; pins: Pin[]; ar?: [string, string]; fr?: [string, string] }
+type Track = { s: string | null; p: [string, number, number, number][] }
 
-const RATIO = 1.5            // every photo is 3:2
-const FRAMES: Frame[] = [
-    { key: 'drive', pos: [0.5, 0.62], pins: [] },
-    {
-        key: 'front', pos: [0.55, 0.62],
-        ar: ['نشوفوها قبل ما تشريها', 'فحص كامل، صور وتقرير على كل سيارة قبل أي دفع.'],
-        fr: ['Vue avant d’être achetée', 'Inspection complète, photos et rapport avant tout paiement.'],
-        pins: [
-            { x: 0.66, y: 0.53, ar: 'مفحوصة قبل الشراء', arS: 'المحرك، الهيكل والأعطال', fr: 'Inspectée avant achat', frS: 'Moteur, châssis, défauts' },
-            { x: 0.35, y: 0.79, ar: 'العجلات والفرامل', arS: 'مصوّرة في التقرير', fr: 'Pneus et freins', frS: 'Photographiés dans le rapport' },
-        ],
-    },
-    {
-        key: 'side', pos: [0.5, 0.62],
-        ar: ['الصبغة والكيلومترات، بالأرقام', 'نقيسو الصبغة بالجهاز ونتأكدو من العداد والتاريخ.'],
-        fr: ['Peinture et kilométrage, en chiffres', 'Peinture mesurée à la jauge, compteur et historique vérifiés.'],
-        pins: [
-            { x: 0.46, y: 0.56, ar: 'الصبغة مقاسة بالجهاز', arS: 'زيرو صبغة ولا لا، مكتوب', fr: 'Peinture mesurée', frS: 'Zéro peinture ou pas, écrit' },
-            { x: 0.70, y: 0.50, ar: 'تاريخ السيارة', arS: 'الحوادث والصيانة من كوريا', fr: 'Historique', frS: 'Accidents et entretien en Corée' },
-        ],
-    },
-    {
-        key: 'rear', pos: [0.5, 0.55],
-        ar: ['الأوراق علينا', 'الشراء، الشحن والجمركة: ملف كامل ومكتوب باسمك.'],
-        fr: ['Les papiers, c’est nous', 'Achat, transport et douane : un dossier complet à votre nom.'],
-        pins: [
-            { x: 0.50, y: 0.43, ar: 'ملف كامل', arS: 'فاتورة، عقد وشهادة الشحن', fr: 'Dossier complet', frS: 'Facture, contrat, connaissement' },
-        ],
-    },
-    {
-        key: 'rear34', pos: [0.48, 0.6],
-        ar: ['حتى توصل لعندك', 'نتبعو الشحنة معاك خطوة بخطوة، حتى المفاتيح في يدك.'],
-        fr: ['Jusqu’à chez vous', 'Le suivi étape par étape, jusqu’aux clés dans votre main.'],
-        pins: [
-            { x: 0.57, y: 0.44, ar: 'كوريا ← الجزائر', arS: 'شحن مؤمّن وجمركة', fr: 'Corée → Algérie', frS: 'Transport assuré, dédouanement' },
-        ],
-    },
-]
+const SHOTS = ['front', 'rear34', 'rear', 'side'] as const
+const PIN_TEXT: Record<string, { ar: [string, string]; fr: [string, string] }> = {
+    inspect: { ar: ['مفحوصة قبل الشراء', 'المحرك، الهيكل والأعطال'], fr: ['Inspectée avant achat', 'Moteur, châssis, défauts'] },
+    tyres: { ar: ['العجلات والفرامل', 'مصوّرة في التقرير'], fr: ['Pneus et freins', 'Photographiés dans le rapport'] },
+    paint: { ar: ['الصبغة مقاسة بالجهاز', 'زيرو صبغة ولا لا، مكتوب'], fr: ['Peinture mesurée', 'Zéro peinture ou pas, écrit'] },
+    history: { ar: ['تاريخ السيارة', 'الحوادث والصيانة من كوريا'], fr: ['Historique', 'Accidents et entretien en Corée'] },
+    papers: { ar: ['ملف كامل', 'فاتورة، عقد وشهادة الشحن'], fr: ['Dossier complet', 'Facture, contrat, connaissement'] },
+    route: { ar: ['كوريا ← الجزائر', 'شحن مؤمّن وجمركة'], fr: ['Corée → Algérie', 'Transport assuré, dédouanement'] },
+}
+const CAPS: Record<(typeof SHOTS)[number], { ar: [string, string]; fr: [string, string]; pins: string[] }> = {
+    front: { ar: ['نشوفوها قبل ما تشريها', 'فحص كامل، صور وتقرير على كل سيارة قبل أي دفع.'], fr: ['Vue avant d’être achetée', 'Inspection complète, photos et rapport avant tout paiement.'], pins: ['inspect', 'tyres'] },
+    rear34: { ar: ['الصبغة والكيلومترات، بالأرقام', 'نقيسو الصبغة بالجهاز ونتأكدو من العداد والتاريخ.'], fr: ['Peinture et kilométrage, en chiffres', 'Peinture mesurée à la jauge, compteur et historique vérifiés.'], pins: ['paint', 'history'] },
+    rear: { ar: ['الأوراق علينا', 'الشراء، الشحن والجمركة: ملف كامل ومكتوب باسمك.'], fr: ['Les papiers, c’est nous', 'Achat, transport et douane : un dossier complet à votre nom.'], pins: ['papers'] },
+    side: { ar: ['حتى توصل لعندك', 'نتبعو الشحنة معاك خطوة بخطوة، حتى المفاتيح في يدك.'], fr: ['Jusqu’à chez vous', 'Le suivi étape par étape, jusqu’aux clés dans votre main.'], pins: ['route'] },
+}
 
 const copy = {
     ar: {
@@ -65,6 +41,8 @@ const copy = {
     },
 }
 
+const INTRO = 1.1        // screens of scrolling for the drive-in, before the orbit starts
+const ORBIT = 4.6        // screens of scrolling for the full orbit
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
@@ -76,109 +54,182 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
     useEffect(() => {
         const el = root.current
         if (!el) return
-        const frames = Array.from(el.querySelectorAll<HTMLElement>('.ss-frame'))
-        const fits = Array.from(el.querySelectorAll<HTMLElement>('.ss-fit'))
-        const caps = Array.from(el.querySelectorAll<HTMLElement>('.ss-cap'))
-        const pins = frames.map(f => Array.from(f.querySelectorAll<HTMLElement>('.ss-pin')))
-        const hero = el.querySelector<HTMLElement>('.ss-hero')
+        const stage = el.querySelector<HTMLElement>('.ss-stage')!
+        const canvas = el.querySelector<HTMLCanvasElement>('.ss-canvas')!
+        const ctx = canvas.getContext('2d', { alpha: false })!
+        const drive = el.querySelector<HTMLElement>('.ss-drive')!
+        const hero = el.querySelector<HTMLElement>('.ss-hero')!
+        const cue = el.querySelector<HTMLElement>('.ss-cue')
         const bar = el.querySelector<HTMLElement>('.ss-bar i')
         const count = el.querySelector<HTMLElement>('.ss-count b')
-        const cue = el.querySelector<HTMLElement>('.ss-cue')
+        const caps = new Map(Array.from(el.querySelectorAll<HTMLElement>('.ss-cap')).map(c => [c.dataset.shot!, c]))
+        const pins = new Map(Array.from(el.querySelectorAll<HTMLElement>('.ss-pin')).map(p => [p.dataset.pin!, p]))
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-        const N = FRAMES.length
-        let frame = 0
-        let wide = true
 
-        // place each photo's pin layer exactly over the rendered photo (cover on wide screens, contain on tall ones)
-        const layout = () => {
-            const stage = el.querySelector<HTMLElement>('.ss-stage')!
-            const bw = stage.clientWidth, bh = stage.clientHeight
-            const contain = bw / bh < 1.05
-            el.dataset.fit = contain ? 'contain' : 'cover'
-            wide = !contain
-            fits.forEach((fit, i) => {
-                const [px, py] = FRAMES[i].pos
-                const s = contain ? Math.min(bw / RATIO, bh) : Math.max(bw / RATIO, bh)
-                const w = s * RATIO, h = s
-                fit.style.width = `${w}px`; fit.style.height = `${h}px`
-                fit.style.left = `${(bw - w) * px}px`; fit.style.top = `${contain ? (bh - h) * (i === 0 ? 0.86 : 0.46) : (bh - h) * py}px`   // phones: first shot sits under the headline
-            })
-        }
+        let track: Track[] = []
+        let N = 150
+        const frames: (HTMLImageElement | null)[] = []
+        let dead = false
+        const small = () => Math.min(innerWidth, innerHeight) < 700 || innerWidth / innerHeight < 1.05
+        const dir = small() ? 'm' : 'd'
 
-        const update = () => {
-            frame = 0
-            const r = el.getBoundingClientRect()
-            const p = clamp(-r.top / Math.max(1, r.height - innerHeight))
-            const s = p * (N - 0.5)                     // 0 … 4.5 : which angle we're on (the last one holds a little)
-            frames.forEach((f, i) => {
-                // reveal: the last 40 % of the previous unit wipes this angle in
-                const rev = i === 0 ? 1 : ease(clamp((s - (i - 1) - 0.55) / 0.45))
-                const out = i === N - 1 ? 0 : ease(clamp((s - i - 0.55) / 0.45))
-                const local = clamp(s - i + 1)          // 0→1 while it arrives, 1→2 while it holds
-                let scale = 1.06 - 0.06 * clamp(local / 1.6)
-                let ty = 0, shift = 0
-                if (i === 0) {                                  // the car drives towards you and into the middle
-                    const a = ease(clamp(s / 0.55))
-                    if (wide) { scale = 1.36 + 0.06 * a; shift = (isRTL ? -15 : 18) * (1 - a) }
-                    else { scale = 1 + 0.14 * a }
-                    ty = -2 * a
+        // frames load in waves (every 10th, then every 5th, then the rest) so the orbit works at once
+        const load = async () => {
+            try { const r = await fetch('/cars/sorento/orbit/orbit.json'); const j = await r.json(); track = j.track; N = j.frames } catch { /* frames still work without labels */ }
+            const order: number[] = []
+            for (const step of [10, 5, 2, 1]) for (let i = 0; i < N; i += step) if (!order.includes(i)) order.push(i)
+            let next = 0
+            const worker = async () => {
+                while (!dead && next < order.length) {
+                    const i = order[next++]
+                    const img = new Image()
+                    img.src = `/cars/sorento/orbit/${dir}/${String(i).padStart(3, '0')}.webp`
+                    try { await img.decode(); frames[i] = img; need = true } catch { /* skip */ }
                 }
-                const tx = shift + (1 - rev) * 12 - out * 7     // camera travelling
-                f.style.visibility = rev <= 0 || out >= 1 ? 'hidden' : 'visible'
-                f.style.clipPath = i === 0 ? 'none' : `inset(0 0 0 ${(1 - rev) * 100}%)`
-                f.style.transform = reduce ? 'none' : `translate3d(${tx}%, ${ty}%, 0) scale(${scale})`
-                // labels show once the angle has settled, and leave before it moves on
-                const hold = i === 0 ? 0 : clamp((s - i + 0.1) / 0.15) * (i === N - 1 ? 1 : 1 - clamp((s - i - 0.45) / 0.1))
-                pins[i].forEach((pin, k) => {
-                    const v = clamp(hold * 1.6 - k * 0.25)
-                    pin.style.opacity = String(v)
-                    pin.style.setProperty('--v', String(v))
-                })
-                const cap = caps[i - 1]
-                if (cap) {
-                    const c = clamp((s - i + 0.3) / 0.2) * (i === N - 1 ? 1 : 1 - clamp((s - i - 0.5) / 0.1))
-                    cap.style.opacity = String(c)
-                    cap.style.transform = `translate3d(0, ${(1 - c) * 24}px, 0)`
-                    cap.style.visibility = c <= 0.01 ? 'hidden' : 'visible'
-                }
-            })
-            if (hero) {
-                const h = clamp(s / 0.42)
-                hero.style.opacity = String(1 - h)
-                hero.style.transform = `translate3d(0, ${-h * 60}px, 0)`
-                hero.style.visibility = h >= 1 ? 'hidden' : 'visible'
             }
-            if (cue) cue.style.opacity = String(1 - clamp(s / 0.2))
-            if (bar) bar.style.transform = `scaleX(${p})`
-            if (count) count.textContent = String(Math.min(N - 1, Math.max(1, Math.round(s)))).padStart(2, '0')
+            await Promise.all([worker(), worker(), worker(), worker()])
         }
-        const onScroll = () => { if (!frame) frame = requestAnimationFrame(update) }
-        const onResize = () => { layout(); onScroll() }
-        layout(); update()
+        const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); load() } }, { rootMargin: '200% 0px' })
+        io.observe(el)
+
+        const nearest = (i: number, way: number) => {
+            for (let k = 0; k < N; k++) {
+                const j = i + k * way
+                if (j < 0 || j >= N) break
+                if (frames[j]) return j
+            }
+            return -1
+        }
+
+        // canvas sizing: cover on wide screens, contain (full width) on tall ones
+        let cw = 0, ch = 0, fit = { x: 0, y: 0, w: 0, h: 0 }
+        const layout = () => {
+            const dpr = Math.min(2, devicePixelRatio || 1)
+            cw = stage.clientWidth; ch = stage.clientHeight
+            canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr)
+            canvas.style.width = `${cw}px`; canvas.style.height = `${ch}px`
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+            ctx.imageSmoothingQuality = 'high'
+            const r = 1.6
+            const tall = cw / ch < 1.05
+            el.dataset.fit = tall ? 'contain' : 'cover'
+            const s = tall ? Math.min(cw / r, ch) : Math.max(cw / r, ch)
+            const w = s * r, h = s
+            fit = { x: (cw - w) / 2, y: tall ? (ch - h) * 0.5 : (ch - h) * 0.55, w, h }
+            need = true
+        }
+
+        let target = 0, cur = 0, last = performance.now(), need = true, raf = 0
+
+        const readScroll = () => {
+            const r = el.getBoundingClientRect()
+            const px = -r.top / innerHeight        // screens scrolled into the section
+            target = px
+        }
+
+        const draw = (pos: number) => {
+            // intro: the car drives towards you; then the orbit takes over
+            const a = clamp(pos / INTRO)
+            const o = clamp((pos - INTRO * 0.72) / (INTRO * 0.28))       // cross into the orbit
+            const p = clamp((pos - INTRO) / ORBIT)                       // orbit progress
+            const wide = el.dataset.fit === 'cover'
+
+            const da = ease(clamp(a / 0.8))
+            const sc = wide ? 1.36 + 0.1 * da : 1 + 0.16 * da
+            const sh = wide ? (isRTL ? -15 : 18) * (1 - da) : 0
+            drive.style.transform = reduce ? 'none' : `translate3d(${sh}%, ${-2 * da}%, 0) scale(${sc + o * 0.25})`
+            drive.style.opacity = String(1 - o)
+            drive.style.filter = o > 0.01 ? `blur(${o * 14}px)` : 'none'
+            drive.style.visibility = o >= 1 ? 'hidden' : 'visible'
+            canvas.style.opacity = String(o)
+
+            const h = clamp(pos / (INTRO * 0.55))
+            hero.style.opacity = String(1 - h)
+            hero.style.transform = `translate3d(0, ${-h * 60}px, 0)`
+            hero.style.visibility = h >= 1 ? 'hidden' : 'visible'
+            if (cue) cue.style.opacity = String(1 - clamp(pos / 0.3))
+
+            // orbit frame (blend the two nearest frames for sub-frame smoothness)
+            const f = p * (N - 1)
+            const i0 = Math.floor(f), fr = f - i0
+            const A = nearest(i0, -1), B = nearest(Math.min(N - 1, i0 + 1), 1)
+            if (o > 0 && (A >= 0 || B >= 0)) {
+                ctx.fillStyle = '#eef1ee'; ctx.fillRect(0, 0, cw, ch)
+                const ia = A >= 0 ? frames[A]! : frames[B]!
+                ctx.globalAlpha = 1; ctx.drawImage(ia, fit.x, fit.y, fit.w, fit.h)
+                if (B >= 0 && A >= 0 && B !== A) {
+                    const t = clamp((f - A) / (B - A))
+                    if (t > 0.01) { ctx.globalAlpha = t; ctx.drawImage(frames[B]!, fit.x, fit.y, fit.w, fit.h); ctx.globalAlpha = 1 }
+                }
+            }
+
+            // labels from the tracked positions (interpolated between frames)
+            const ta = track[Math.max(0, Math.min(N - 1, i0))], tb = track[Math.max(0, Math.min(N - 1, i0 + 1))]
+            const seen = new Set<string>()
+            if (ta && o > 0.6) {
+                for (const [id, x, y, v] of ta.p) {
+                    const nb = tb?.p.find(q => q[0] === id)
+                    const X = nb ? x + (nb[1] - x) * fr : x, Y = nb ? y + (nb[2] - y) * fr : y
+                    const V = (nb ? v + (nb[3] - v) * fr : v * (1 - fr)) * clamp((o - 0.6) / 0.4)
+                    const pin = pins.get(id)
+                    if (!pin) continue
+                    seen.add(id)
+                    pin.style.transform = `translate3d(${fit.x + X * fit.w}px, ${fit.y + Y * fit.h}px, 0)`
+                    pin.style.opacity = String(V)
+                    pin.style.setProperty('--v', String(clamp(V * 1.3)))
+                }
+            }
+            pins.forEach((pin, id) => { if (!seen.has(id)) { pin.style.opacity = '0'; pin.style.setProperty('--v', '0') } })
+
+            // caption of the angle we're on
+            const shot = (ta?.s ?? tb?.s) || null
+            const shotVis = shot ? Math.max(...(ta?.p.map(q => q[3]) ?? [0]), 0) : 0
+            caps.forEach((c, k) => {
+                const v = k === shot && o > 0.6 ? clamp(shotVis * 1.4) : 0
+                c.style.opacity = String(v)
+                c.style.transform = `translate3d(0, ${(1 - v) * 22}px, 0)`
+                c.style.visibility = v <= 0.01 ? 'hidden' : 'visible'
+            })
+            if (bar) bar.style.transform = `scaleX(${clamp(pos / (INTRO + ORBIT))})`
+            if (count) count.textContent = String(Math.max(1, SHOTS.indexOf((shot ?? 'front') as (typeof SHOTS)[number]) + 1)).padStart(2, '0')
+        }
+
+        const tick = (now: number) => {
+            raf = requestAnimationFrame(tick)
+            const dt = Math.min(0.05, (now - last) / 1000); last = now
+            const k = reduce ? 1 : 1 - Math.exp(-dt * 7.5)       // inertia: eases towards the scroll position
+            const before = cur
+            cur += (target - cur) * k
+            if (Math.abs(target - cur) < 0.0004) cur = target
+            if (cur !== before || need) { need = false; draw(cur) }
+        }
+
+        const onScroll = () => readScroll()
+        const onResize = () => { layout(); readScroll() }
+        layout(); readScroll(); cur = target; draw(cur)
+        raf = requestAnimationFrame(tick)
         addEventListener('scroll', onScroll, { passive: true })
         addEventListener('resize', onResize)
-        return () => { cancelAnimationFrame(frame); removeEventListener('scroll', onScroll); removeEventListener('resize', onResize) }
+        return () => { dead = true; io.disconnect(); cancelAnimationFrame(raf); removeEventListener('scroll', onScroll); removeEventListener('resize', onResize) }
     }, [language, isRTL])
 
     return (
-        <section className="ss" ref={root} data-tone="light" data-scene="photo" style={{ height: `${FRAMES.length * 100 + 40}svh` }}>
+        <section className="ss" ref={root} data-tone="light" data-scene="photo" style={{ height: `${(INTRO + ORBIT + 1) * 100}svh` }}>
             <div className="ss-sticky">
                 <div className="ss-stage">
-                    {FRAMES.map((f, i) => (
-                        <div className="ss-frame" key={f.key} style={{ zIndex: i + 1 }}>
-                            <img className="ss-blur" src={`/cars/sorento/${f.key}-1100.webp`} alt="" aria-hidden="true" decoding="async" loading={i < 2 ? 'eager' : 'lazy'} />
-                            <div className="ss-fit">
-                                <img src={`/cars/sorento/${f.key}-2000.webp`} srcSet={`/cars/sorento/${f.key}-1100.webp 1100w, /cars/sorento/${f.key}-2000.webp 2000w`}
-                                    sizes="100vw" alt={i === 0 ? 'Kia Sorento X-Pro' : ''} decoding="async" loading={i < 2 ? 'eager' : 'lazy'} />
-                                {f.pins.map(pin => (
-                                    <span className="ss-pin" key={pin.ar} style={{ left: `${pin.x * 100}%`, top: `${pin.y * 100}%` }} aria-hidden="true">
-                                        <i className="ss-dot" /><i className="ss-line" />
-                                        <span className="ss-card"><strong>{language === 'ar' ? pin.ar : pin.fr}</strong><small>{language === 'ar' ? pin.arS : pin.frS}</small></span>
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                    <div className="ss-drive">
+                        <img src="/cars/sorento/drive-2000.webp" srcSet="/cars/sorento/drive-1100.webp 1100w, /cars/sorento/drive-2000.webp 2000w" sizes="100vw"
+                            alt="Kia Sorento X-Pro" decoding="async" />
+                    </div>
+                    <canvas className="ss-canvas" aria-hidden="true" />
+                    <div className="ss-pins" aria-hidden="true">
+                        {Object.entries(PIN_TEXT).map(([id, t]) => (
+                            <span className="ss-pin" key={id} data-pin={id}>
+                                <i className="ss-dot" /><i className="ss-line" />
+                                <span className="ss-card"><strong>{t[language][0]}</strong><small>{t[language][1]}</small></span>
+                            </span>
+                        ))}
+                    </div>
                     <div className="ss-shade" aria-hidden="true" />
                 </div>
 
@@ -193,13 +244,13 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
                         </div>
                     </div>
 
-                    {FRAMES.map((f, i) => i > 0 && (
-                        <div className="ss-cap" key={f.key} style={{ opacity: 0, visibility: 'hidden' }}>
-                            <span className="ss-num latin">{String(i).padStart(2, '0')}</span>
+                    {SHOTS.map((k, i) => (
+                        <div className="ss-cap" key={k} data-shot={k} style={{ opacity: 0, visibility: 'hidden' }}>
+                            <span className="ss-num latin">{String(i + 1).padStart(2, '0')}</span>
                             <div>
-                                <h2>{(language === 'ar' ? f.ar : f.fr)?.[0]}</h2>
-                                <p>{(language === 'ar' ? f.ar : f.fr)?.[1]}</p>
-                                <ul className="ss-cap-pins">{f.pins.map(pin => <li key={pin.ar}><i />{language === 'ar' ? pin.ar : pin.fr}</li>)}</ul>
+                                <h2>{CAPS[k][language][0]}</h2>
+                                <p>{CAPS[k][language][1]}</p>
+                                <ul className="ss-cap-pins">{CAPS[k].pins.map(id => <li key={id}><i />{PIN_TEXT[id][language][0]}</li>)}</ul>
                             </div>
                         </div>
                     ))}
@@ -207,7 +258,7 @@ export default function SorentoStory({ language, isRTL }: { language: Lang; isRT
                     <div className="ss-foot">
                         <span className="ss-cue scroll-cue"><i /> {tx.scroll}</span>
                         <span className="ss-progress">
-                            <span className="ss-count latin"><b>01</b> / {String(FRAMES.length - 1).padStart(2, '0')}</span>
+                            <span className="ss-count latin"><b>01</b> / {String(SHOTS.length).padStart(2, '0')}</span>
                             <span className="ss-bar"><i /></span>
                         </span>
                     </div>
