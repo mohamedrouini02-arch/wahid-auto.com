@@ -82,7 +82,7 @@ export default function ExportJourney({ language }: { language: Lang }) {
             g.innerHTML = `<rect width="270" height="48" rx="14" fill="#ffffff" stroke="#dfe3e0" stroke-width="2"/>
               <circle cx="28" cy="24" r="12" fill="#e6e9e7" class="dot"/>
               <path d="M22 24 l4 4 l8 -8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" class="tick" opacity="0"/>
-              <text class="t t-i18n" x="54" y="31" font-size="19" font-weight="600" fill="#0d1411"></text>`
+              <text class="t t-i18n" x="${language === 'ar' ? 252 : 54}" y="31" text-anchor="${language === 'ar' ? 'end' : 'start'}" direction="${language === 'ar' ? 'rtl' : 'ltr'}" font-size="19" font-weight="600" fill="#0d1411"></text>`
             g.querySelector('text')!.textContent = label
             $('checklist').appendChild(g); return g
         })
@@ -252,7 +252,6 @@ export default function ExportJourney({ language }: { language: Lang }) {
                 <div className="xj-stage" dangerouslySetInnerHTML={{ __html: STAGE_SVG }} />
                 <div className="xj-ui">
                     <div className="xj-cap">
-                        <p className="xj-eyebrow">{UI[language].eyebrow}</p>
                         <div className="xj-cap-step latin">01 / 08</div>
                         <h2>{STEPS[0][language][0]}</h2>
                         <p className="xj-cap-text">{STEPS[0][language][1]}</p>
