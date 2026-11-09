@@ -153,10 +153,10 @@ export const STAGE_SVG = `
         </g>
 
         <!-- inspection checklist -->
-        <g id="xj-checklist" opacity="0" transform="translate(1150 260)"></g>
+        <g id="xj-checklist" opacity="0" transform="translate(1150 300)"></g>
 
         <!-- export document + stamp -->
-        <g id="xj-doc" opacity="0" transform="translate(1110 210)">
+        <g id="xj-doc" opacity="0" transform="translate(1110 262)">
           <rect width="330" height="420" rx="14" fill="#ffffff" stroke="#dfe3e0" stroke-width="2"/>
           <text class="t" x="28" y="56" font-size="20" font-weight="800" fill="#0d1411" letter-spacing="2">EXPORT CERTIFICATE</text>
           <g fill="#e6e9e7"><rect x="28" y="88" width="274" height="12" rx="6"/><rect x="28" y="116" width="220" height="12" rx="6"/><rect x="28" y="144" width="250" height="12" rx="6"/><rect x="28" y="190" width="274" height="12" rx="6"/><rect x="28" y="218" width="180" height="12" rx="6"/><rect x="28" y="246" width="230" height="12" rx="6"/></g>
