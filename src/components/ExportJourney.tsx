@@ -106,7 +106,6 @@ export default function ExportJourney({ language }: { language: Lang }) {
         }
 
         // the route map sits on the side away from the caption
-        $('map').setAttribute('transform', language === 'ar' ? 'translate(190 150)' : 'translate(820 150)')
         const route = $('mapRoute') as unknown as SVGPathElement
         const L = route.getTotalLength()
         let shownStep = -1, swapTimer = 0
@@ -222,6 +221,8 @@ export default function ExportJourney({ language }: { language: Lang }) {
             const w = pin.clientWidth, h = pin.clientHeight
             const sc = Math.min(h / 900, w / 1000)            // keeps the middle 1000px visible on phones
             stage.style.transform = `translate(${-800 * sc}px, ${-450 * sc + (w < 700 ? h * 0.1 : 0)}px) scale(${sc})`
+            // route map: on the side away from the caption; centred on phones, where only the middle is visible
+            $('map').setAttribute('transform', w < 700 ? 'translate(500 150)' : language === 'ar' ? 'translate(190 150)' : 'translate(820 150)')
         }
 
         // scroll → target; the playhead eases towards it; the loop only runs while the section is on screen
