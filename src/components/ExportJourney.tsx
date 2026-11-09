@@ -105,6 +105,8 @@ export default function ExportJourney({ language }: { language: Lang }) {
             imgs.forEach((im, k) => { im.style.opacity = String(k === i ? 1 - t : k === j ? t : 0) })
         }
 
+        // the route map sits on the side away from the caption
+        $('map').setAttribute('transform', language === 'ar' ? 'translate(190 150)' : 'translate(820 150)')
         const route = $('mapRoute') as unknown as SVGPathElement
         const L = route.getTotalLength()
         let shownStep = -1, swapTimer = 0
