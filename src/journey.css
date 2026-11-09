@@ -32,3 +32,4 @@ html[dir='rtl'] .xj-rail span i { transform-origin: right; }
     .xj-eyebrow { margin-bottom: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .xj-cap > * { transition: none; } }
+.xj-stage .t:not(.t-i18n) { direction: ltr; unicode-bidi: isolate; }
